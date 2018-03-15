@@ -1,0 +1,20 @@
+.Logup .form .form-input {
+	margin-top: 10px;
+}
+.Logup .logup-form-forgot {
+	float: right;
+}
+.Logup .logup-form-button {
+	width: 100%;
+}
+.Logup .Title {
+	text-align: center;
+	background: #31708f;
+	color: white;
+	border-radius: 4px;
+	padding: 5px 0;
+}
+
+.Logup {
+	padding: 15px;
+}

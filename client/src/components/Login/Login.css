@@ -1,0 +1,21 @@
+.Login .form .form-input {
+	margin-top: 10px;
+}
+.Login .login-form-forgot {
+	float: right;
+}
+.Login .login-form-button {
+	width: 100%;
+}
+.Login .Title {
+	text-align: center;
+	background: #31708f;
+	color: white;
+	border-radius: 4px;
+	padding: 5px 0;
+}
+
+.Login {
+	/*background: #f1f1f1;*/
+	padding: 15px;
+}
