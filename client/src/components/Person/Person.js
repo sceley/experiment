@@ -3,6 +3,7 @@ import { Menu, Layout } from 'antd';
 import { Route, Link } from 'react-router-dom';
 import Info from './Info';
 import Reserve from './Reserve';
+import MyReserve from './MyReserve';
 import './Person.css';
 const { Sider, Content } = Layout;
 
@@ -32,11 +33,15 @@ export default class Person extends Component {
 							<Menu.Item key="reserve">
 								<Link to={`${this.props.match.url}/reserve`}>预约实验室</Link>
 							</Menu.Item>
+							<Menu.Item key="myreserve">
+								<Link to={`${this.props.match.url}/myreserve`}>我的预约</Link>
+							</Menu.Item>
 						</Menu>
 					</Sider>
 					<Content>
 						<Route exact path={`${this.props.match.url}`} component={Info}/>
 						<Route path={`${this.props.match.url}/reserve`} component={Reserve}/>
+						<Route path={`${this.props.match.url}/myreserve`} component={MyReserve}/>
 					</Content>
 				</Layout>
 			</div>
