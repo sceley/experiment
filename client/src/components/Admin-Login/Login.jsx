@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
-import { Form, Button, Input, Icon, message } from 'antd';
+import { Input, Icon, message, Button, Form } from 'antd';
 import HeaderForLog from '../../common/Header-Log';
 import config from '../../config';
-import './Logup.css';
 const FormItem = Form.Item;
 
-class Logup extends Component {
+class Login extends Component {
 	handleSubmit = (e) => {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				fetch(`${config.server}/api/logup`, {
+				fetch(`${config.server}/api/admin/login`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
@@ -22,8 +21,10 @@ class Logup extends Component {
 					}
 				}).then(json => {
 					if (json && !json.err) {
+						localStorage.admin_token = json.token;
+						this.props.history.push('/admin');
 						message.info(json.msg);
-					} else if (json) {
+					} else if(json) {
 						message.error(json.msg);
 					}
 				});
@@ -34,29 +35,20 @@ class Logup extends Component {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
-			<div className="Logup-Wrap">
-			<div className="Logup">
+			<div className="Login-Wrap">
+			<div className="Login">
 				<HeaderForLog/>
 				<div className="Title">
-					账号注册
+					管理员登录
 				</div>
 				<Form onSubmit={this.handleSubmit}>
 					<FormItem
-						label="学号"
+						label="帐号"
 					>
 						{getFieldDecorator('Account', {
-							rules: [{ required: true, message: '学号不能为空!' }],
+							rules: [{ required: true, message: '账号不能为空!' }],
 						})(
-							<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="8位数字的学号" />
-							)}
-					</FormItem>
-					<FormItem
-						label="手机号"
-					>
-						{getFieldDecorator('Mobile', {
-							rules: [{ required: true, message: '手机号不能为空!' }],
-						})(
-							<Input prefix={<Icon type="mobile" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="11位数字的手机号" />
+							<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="手机号/学号" />
 							)}
 					</FormItem>
 					<FormItem
@@ -69,8 +61,8 @@ class Logup extends Component {
 							)}
 					</FormItem>
 					<FormItem>
-						<Button type="primary" htmlType="submit" className="logup-form-button">
-							Log up
+						<Button type="primary" htmlType="submit" className="login-form-button">
+							Log in
 						</Button>
 					</FormItem>
 				</Form>
@@ -79,4 +71,4 @@ class Logup extends Component {
 		);
 	}
 };
-export default Form.create()(Logup);
+export default Form.create()(Login);

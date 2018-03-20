@@ -17,7 +17,7 @@ class Info extends Component {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
-						'x-access-token': localStorage.token
+						'x-access-token': localStorage.user_token
 					},
 					body: JSON.stringify(values),
 				}).then(res => {

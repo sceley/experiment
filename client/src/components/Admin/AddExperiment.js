@@ -59,7 +59,7 @@ class AddExperiment extends Component {
 						{getFieldDecorator('TableCount', {
 							rules: [{ required: true, message: '数量不能为空!' }],
 						})(
-							<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="数字" />
+							<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}  placeholder="数字" />
 							)}
 					</FormItem>
 					<FormItem

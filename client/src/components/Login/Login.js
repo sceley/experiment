@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Input, Icon, message, Button, Form } from 'antd';
+import HeaderForLog from '../../common/Header-Log';
 import config from '../../config';
 import './Login.css';
 const FormItem = Form.Item;
@@ -21,8 +23,9 @@ class Login extends Component {
 					}
 				}).then(json => {
 					if (json && !json.err) {
-						localStorage.token = json.token;
+						localStorage.user_token = json.token;
 						message.info(json.msg);
+						this.props.history.push('/user');
 					} else if(json) {
 						message.error(json.msg);
 					}
@@ -34,7 +37,9 @@ class Login extends Component {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
+			<div className="Login-Wrap">
 			<div className="Login">
+				<HeaderForLog/>
 				<div className="Title">
 					账号登录
 				</div>
@@ -62,9 +67,10 @@ class Login extends Component {
 						<Button type="primary" htmlType="submit" className="login-form-button">
 							Log in
 						</Button>
-						<a href="/logup">现在注册!</a>
+						<Link to="/user/logup">现在注册!</Link>
 					</FormItem>
 				</Form>
+			</div>
 			</div>
 		);
 	}

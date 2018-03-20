@@ -45,15 +45,19 @@ const table4 = `create table if not exists Tab (
 
 const table5 = `create table if not exists Reserve (
 				id int unsigned auto_increment,
+				createAt datetime,
 				user_id int unsigned,
 				exp_id int unsigned,
+				pass boolean default 0,
 				table_id int unsigned,
-				precious_thing varchar(30),
+				equipment varchar(30),
 				status boolean default 0,
 				approver varchar(15),
 				complete_status boolean default 0,
 				primary key(id))
 				charset=utf8`;
+
+// const table6 = `create table if not exists `;
 				
 connection.query(table1);
 connection.query(table2);

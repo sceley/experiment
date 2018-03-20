@@ -1,57 +1,76 @@
 import React, { Component } from 'react';
-import { Form, Button, Input, Icon, Radio, Select, Cascader } from 'antd';
+import { Form, Button, Input, Icon, Radio, Select, Cascader, message } from 'antd';
 import config from '../../config';
 const RadioGroup = Radio.Group;
 const { Option } = Select;
 const FormItem = Form.Item;
 
 class Reserve extends Component {
+	state = {
+		experiments: ''
+	}
 	handleSubmit = (e) => {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				console.log(values);
-				// fetch('http://localhost:8080/login', {
-				// 	method: 'POST',
-				// 	headers: {
-				// 		'Content-Type': 'application/json'
-				// 	},
-				// 	credentials: 'include',
-				// 	body: JSON.stringify(values)
-				// }).then(res => {
-				// 	if (res.ok) {
-				// 		return res.json();
-				// 	}
-				// }).then(json => {
-				// 	if (!json.err) {
-				// 	}
-				// });
+				fetch(`${config.server}/api/addreserve`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'x-access-token': localStorage.user_token
+					},
+					body: JSON.stringify(values)
+				}).then(res => {
+					if (res.ok) {
+						return res.json();
+					}
+				}).then(json => {
+					if (!json.err) {
+						message.info(json.msg);
+					}
+				});
 			}
 		});
 	}
+
+	componentWillMount = () => {
+		fetch(`${config.server}/api/experiments`)
+		.then(res => {
+			if (res.ok) {
+				return res.json();
+			}
+		}).then(json => {
+			if (json && !json.err) {
+				for (let i = 0; i < json.experiments.length; i++) {
+					json.experiments[i].tables = [];
+				}
+				for (let i = 0; i < json.tables.length; i++) {
+					let id = json.tables[i].exp_id;
+					json.experiments[id - 1].tables.push(json.tables[i]);
+				}
+				this.setState({
+					experiments: json.experiments
+				});
+			}
+		});
+	}
+
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		const formItemLayout = {
-		      labelCol: {
-		        xs: { span: 24 },
-		        sm: { span: 8 },
-		      },
-		      wrapperCol: {
-		        xs: { span: 24 },
-		        sm: { span: 16 },
-		      },
-		};
 		const residences = [];
-		for (let i = 1; i <= 3; i++) {
+		for (let i = 1; i <= this.state.experiments.length; i++) {
 			let item = {
-				value: `EXP1${i}`,
+				value: `${i}`,
 				label: `实验室${i}`,
+				disabled: Boolean(this.state.experiments[i - 1].experiment_status),
 				children: []
 			};
-			for (let j = 1; j <= 10; j++) {
+			for (let j = 1; j <= this.state.experiments[i - 1].tables.length; j++) {
 				item.children.push({
-					value: `Tab${j}`,
-					label: `实验桌${j}`
+					value: `${j}`,
+					label: `实验桌${j}`,
+					disabled: Boolean(this.state.experiments[i - 1].tables[j - 1].status)
 				});
 			}
 			residences.push(item);

@@ -1,0 +1,17 @@
+.Logo {
+	display: flex;
+	align-items: center;
+	height: 64px;
+    background: #002140;
+    padding-left: 24px;
+}
+.Logo .logo {
+    height: 40px;
+    margin-right: 5px;
+}
+.Logo span {
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    font-family: Myriad Pro,Helvetica Neue,Arial,Helvetica,sans-serif;
+}

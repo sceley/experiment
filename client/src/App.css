@@ -1,9 +1,6 @@
-/*.App {
-  text-align: center;
-}*/
+.App {
+	height: 100%;
+}
 .App-header h1 {
   color: white;
-}
-.App-body {
-  margin-top: 20px;
 }

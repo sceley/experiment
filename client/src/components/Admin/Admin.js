@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Route, Link } from 'react-router-dom';
-import { Menu, Layout } from 'antd';
+import { Menu, Layout, message } from 'antd';
 import MonitorExp from './MonitorExp';
 import ManageUser from './ManageUser';
+import Header_c from '../../common/Header';
+import Logo from '../../common/Logo';
 import ManageReserve from './ManageReserve';
 import AddExperiment from './AddExperiment';
 import Notify from './Notify';
@@ -18,11 +20,22 @@ export default class Admin extends Component {
 			current: e.key
 		});
 	}
+	handleLogout = () => {
+		localStorage.admin_token = null;
+		this.props.history.push('/admin/login');
+	}
+	componentWillMount = () => {
+		if (!localStorage.admin_token) {
+			message.error('请先进行登陆');
+			this.props.history.push('/admin/login');
+		}
+	}
 	render () {
 		return (
 			<div className="Admin">
 				<Layout>
-					<Sider>
+					<Sider width={256}>
+						<Logo/>
 						<Menu
 							onClick={this.handleClick}
 							selectedKeys={[this.state.current]}
@@ -57,11 +70,16 @@ export default class Admin extends Component {
 						</Menu>
 					</Sider>
 					<Content>
-						<Route exact path={`${this.props.match.url}`} component={MonitorExp}/>
-						<Route path={`${this.props.match.url}/user`} component={ManageUser}/>
-						<Route path={`${this.props.match.url}/reserve`} component={ManageReserve}/>
-						<Route path={`${this.props.match.url}/notify`} component={Notify}/>
-						<Route path={`${this.props.match.url}/addexperiment`} component={AddExperiment}/>
+						<Layout>
+							<Header_c handleLogout={this.handleLogout}/>
+							<Content>
+								<Route exact path={`${this.props.match.url}`} component={MonitorExp}/>
+								<Route path={`${this.props.match.url}/user`} component={ManageUser}/>
+								<Route path={`${this.props.match.url}/reserve`} component={ManageReserve}/>
+								<Route path={`${this.props.match.url}/notify`} component={Notify}/>
+								<Route path={`${this.props.match.url}/addexperiment`} component={AddExperiment}/>
+							</Content>
+						</Layout>
 					</Content>
 				</Layout>
 			</div>
