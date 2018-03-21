@@ -23,6 +23,7 @@ class Login extends Component {
 					}
 				}).then(json => {
 					if (json && !json.err) {
+						// console.log(json);
 						localStorage.user_token = json.token;
 						message.info(json.msg);
 						this.props.history.push('/user');

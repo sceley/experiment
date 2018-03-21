@@ -26,21 +26,26 @@ export default class Person extends Component {
 		});
 	}
 	handleLogout = () => {
-		localStorage.user_token = null;
+		delete localStorage.user_token
 		this.props.history.push('/user/login');
 	}
 	componentWillMount = () => {
 		if (!localStorage.user_token) {
-			message.error("请先登陆");
-			this.props.history.push('/user/login');
+			// message.error("请先登陆");
+			// this.props.history.push('/user/login');
 		}
+	}
+	handleBack = () => {
+		this.setState({
+			current: 'info'
+		});
 	}
 	render () {
 		return (
 			<div className="Person">
 				<Layout>
 					<Sider width={256} className="Person-sider">
-						<Logo />
+						<Link onClick={this.handleBack} to={`${this.props.match.url}`}><Logo /></Link>
 						<Menu
 							onClick={this.handleClick}
 							selectedKeys={[this.state.current]}

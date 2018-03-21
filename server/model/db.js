@@ -26,11 +26,11 @@ const table2 = `create table if not exists User (
 
 const table3 = `create table if not exists Experiment (
 				id int unsigned auto_increment,
-				ip varchar(20),
 				name varchar(15),
+				ip varchar(20),
 				address varchar(15),
-				experiment_status boolean default 0,
 				door boolean default 0,
+				status boolean default 0,
 				primary key(id))
 				charset=utf8`;
 
@@ -42,22 +42,37 @@ const table4 = `create table if not exists Tab (
 				primary key(id), 
 				foreign key(exp_id) references Experiment(id))
 				charset=utf8`;
-
+/*status:
+	0 空闲
+	1 占用
+*/
+/*power_status:
+	0 关闭状态
+	1 打开状态
+*/
 const table5 = `create table if not exists Reserve (
 				id int unsigned auto_increment,
 				createAt datetime,
+				date date,
+				start int,
+				end int,
+				equipment varchar(30),
+				approver varchar(15),
+				status boolean default 0,
+				complete_status boolean default 0,
 				user_id int unsigned,
 				exp_id int unsigned,
-				pass boolean default 0,
 				table_id int unsigned,
-				equipment varchar(30),
-				status boolean default 0,
-				approver varchar(15),
-				complete_status boolean default 0,
 				primary key(id))
 				charset=utf8`;
-
-// const table6 = `create table if not exists `;
+/*status:
+	0 审核中
+	1 审核通过
+*/
+/*complete_status:
+	0 未完成
+	1 完成
+*/
 				
 connection.query(table1);
 connection.query(table2);

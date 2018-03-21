@@ -16,13 +16,26 @@
 .logo-container {
 	padding-left: 24px;
 }
-.Person .Person-body {
-	/*margin: 24px 24px 0;*/
-}
 .Person .Person-sider {
 	box-shadow: 2px 0 6px rgba(0,21,41,.35);
 }
 
 .User-Wrap {
 	margin: 24px 24px 0;
+}
+
+.Reserve .Stime {
+	display: flex;
+	align-items: center;
+}
+.Reserve .Stime .media-body {
+	margin: 0 10px;
+	font-size: 20px;
+	font-weight: 600px;
+	display: flex;
+	align-items: center;
+}
+.Reserve .Stime .media-footer {
+	display: flex;
+	align-items: center;
 }

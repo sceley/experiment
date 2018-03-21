@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Table, Divider, Icon } from 'antd';
+import { Table, Divider, Icon, message } from 'antd';
 import config from '../../config';
 export default class MyReserve extends Component {
     state = {
         reserves: []
     }
-    componentWillMount = () => {
+    componentDidMount = () => {
         fetch(`${config.server}/api/onereserves`, {
             method: 'GET',
             headers: {
@@ -19,12 +19,37 @@ export default class MyReserve extends Component {
         }).then(json => {
             if (json && !json.err) {
                 this.setState({
-                    reserves: json.reserves
+                    reserves: json.reserves || []
                 });
             }
         });
     }
-    render() {
+    cancelReserve = (id) => {
+        fetch(`${config.server}/api/reserve/${id}`, {
+            method: 'delete',
+            headers: {
+                'x-access-token': localStorage.user_token
+            }
+        }).then(res => {
+            if (res.ok) {
+                return res.json();
+            }
+        }).then(json => {
+            if (json && !json.err) {
+                let reserves = this.state.reserves;
+                reserves = reserves.filter(reserve => {
+                    return reserve.id != id;
+                });
+                this.setState({
+                    reserves: reserves
+                });
+                message.info(json.msg);
+            } else {
+                message.error(json.msg);
+            }
+        });
+    } 
+    render () {
         const columns = [{
             title: '序列',
             dataIndex: 'id',
@@ -34,7 +59,7 @@ export default class MyReserve extends Component {
             title: '时间',
             dataIndex: 'createAt',
             key: '2',
-            render: text => moment(text).format("YYYY-DD-MM HH:MM:SS")
+            render: text => moment(text).format("YYYY-DD-MM")
         }, {
             title: '实验室',
             dataIndex: 'exp_id',
@@ -56,7 +81,7 @@ export default class MyReserve extends Component {
             render: text => text || '无'
         }, {
             title: '状态',
-            dataIndex: 'pass',
+            dataIndex: 'status',
             key: '7',
             render: text => {
                 if (text === 0)
@@ -66,11 +91,15 @@ export default class MyReserve extends Component {
             }
         }, {
             title: '操作',
-            key: 'action',
-            render: () => {
+            dataIndex: 'id',
+            key: '8',
+            render: (id) => {
+                let handleCancel = () => {
+                    this.cancelReserve(id);
+                };
                 return (
                     <a>
-                        <Icon type="delete"/>
+                        <Icon onClick={handleCancel} type="delete"/>
                     </a>
                 );
             }

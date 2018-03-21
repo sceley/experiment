@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from './logo1.png';
+import logo from './logo.png';
 export default class HeaderForLog extends Component {
 	render () {
 		return (

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-exports.session = async (req, res, next) => {
+exports.user_session = async (req, res, next) => {
 	let token = req.headers['x-access-token'];
 	try {
 		let session = await new Promise((resolve, reject) => {
@@ -11,9 +11,10 @@ exports.session = async (req, res, next) => {
 					resolve(session);
 			});
 		});
-		req.session = session;	
+		req.user_session = session;	
 		next();
 	} catch (e) {
+		console.log(e);
 		res.json({
 			err: 1,
 			msg: '用户还未登陆'
@@ -21,7 +22,7 @@ exports.session = async (req, res, next) => {
 	}
 };
 
-exports.admin_session = async (req, res) => {
+exports.admin_session = async (req, res, next) => {
 	let token = req.headers['x-access-token'];
 	try {
 		let session = await new Promise((resolve, reject) => {
@@ -32,7 +33,8 @@ exports.admin_session = async (req, res) => {
 					resolve(session);
 			});
 		});
-		req.session = session;
+		req.admin_session = session;
+		next();
 	} catch (e) {
 		res.json({
 			err: 1,

@@ -21,7 +21,7 @@ export default class Admin extends Component {
 		});
 	}
 	handleLogout = () => {
-		localStorage.admin_token = null;
+		delete localStorage.admin_token;
 		this.props.history.push('/admin/login');
 	}
 	componentWillMount = () => {

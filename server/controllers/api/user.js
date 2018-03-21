@@ -1,7 +1,7 @@
 const db = require('../../model/db');
 exports.editInfo = async (req, res) => {
 	let body = req.body;
-	let id = req.session.uid;
+	let id = req.user_session.uid;
 	try {
 		let users = await new Promise((resolve, reject) => {
 			let sql = 'select id from User where account=?';
@@ -50,7 +50,7 @@ exports.editInfo = async (req, res) => {
 
 exports.showInfo = async (req, res) => {
 	let body = req.body;
-	let id = req.session.uid;
+	let id = req.user_session.uid;
 	try {
 		let user = await new Promise((resolve, reject) => {
 			let sql = 'select * from User where id=?';
