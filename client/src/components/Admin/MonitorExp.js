@@ -44,7 +44,7 @@ export default class MonitorExp extends Component {
 			}
 		];
 		return (
-			<div className="MonitorExp">
+			<div className="MonitorExp Admin-Other-Container">
 				<Table columns={columns}/>
 			</div>
 		);

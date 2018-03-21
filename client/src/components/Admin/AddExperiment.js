@@ -8,7 +8,7 @@ class AddExperiment extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				fetch(`${config.server}/api/addexperiment`, {
+				fetch(`${config.server}/api/admin/addexperiment`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'
@@ -33,7 +33,7 @@ class AddExperiment extends Component {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
-			<div className="AddExperiment">
+			<div className="AddExperiment Admin-Other-Container">
 				<Form onSubmit={this.handleSubmit}>
 					<FormItem
 						label="名称"

@@ -17,8 +17,12 @@
 	padding-left: 24px;
 }
 .Person .Person-body {
-	margin: 24px 24px 0;
+	/*margin: 24px 24px 0;*/
 }
 .Person .Person-sider {
 	box-shadow: 2px 0 6px rgba(0,21,41,.35);
+}
+
+.User-Wrap {
+	margin: 24px 24px 0;
 }

@@ -4,7 +4,7 @@ import { Table, Divider, Icon } from 'antd';
 import config from '../../config';
 export default class MyReserve extends Component {
     state = {
-        reserves: ''
+        reserves: []
     }
     componentWillMount = () => {
         fetch(`${config.server}/api/onereserves`, {
@@ -28,36 +28,36 @@ export default class MyReserve extends Component {
         const columns = [{
             title: '序列',
             dataIndex: 'id',
-            key: 'id',
+            key: '1',
             render: text => text,
         }, {
             title: '时间',
             dataIndex: 'createAt',
-            key: 'createAt',
+            key: '2',
             render: text => moment(text).format("YYYY-DD-MM HH:MM:SS")
         }, {
             title: '实验室',
             dataIndex: 'exp_id',
-            key: 'exp_id',
+            key: '3',
             render: text => `实验室${text}`
         }, {
             title: '座位',
             dataIndex: 'table_id',
-            key: 'table_id',
+            key: '4',
             render: text => `${text}`
         }, {
             title: '地点',
             dataIndex: 'address',
-            key: 'address'
+            key: '5'
         }, {
             title: '其他设备',
             dataIndex: 'equipment',
-            key: 'equipment',
+            key: '6',
             render: text => text || '无'
         }, {
             title: '状态',
             dataIndex: 'pass',
-            key: 'pass',
+            key: '7',
             render: text => {
                 if (text === 0)
                     return '审核中'
@@ -76,8 +76,8 @@ export default class MyReserve extends Component {
             }
         }];
         return (
-            <div className="MyReserve">
-                <Table size="small" bordered={true} columns={columns} pagination={false} dataSource={this.state.reserves}/>
+            <div className="MyReserve User-Wrap">
+                <Table rowKey="id" bordered={true} columns={columns} pagination={false} dataSource={this.state.reserves}/>
             </div>
         );
     }

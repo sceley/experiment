@@ -37,6 +37,6 @@ router.post('/api/logup', logup);
 router.post('/api/userinfo/edit', session, editInfo);
 router.post('/api/addreserve', session, addReserve);
 router.post('/api/admin/login', adminLogin);
-router.post('/api/addexperiment', admin_session, addExperiment);
+router.post('/api/admin/addexperiment', admin_session, addExperiment);
 
 module.exports = router;

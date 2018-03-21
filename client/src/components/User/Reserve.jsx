@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Button, Input, Icon, Radio, Select, Cascader, message } from 'antd';
+import { Form, Button, Input, Icon, Radio, Select, Cascader, message, Calendar, DatePicker } from 'antd';
 import config from '../../config';
+import moment from 'moment';
 const RadioGroup = Radio.Group;
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -14,46 +15,54 @@ class Reserve extends Component {
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
 				console.log(values);
-				fetch(`${config.server}/api/addreserve`, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'x-access-token': localStorage.user_token
-					},
-					body: JSON.stringify(values)
-				}).then(res => {
-					if (res.ok) {
-						return res.json();
-					}
-				}).then(json => {
-					if (!json.err) {
-						message.info(json.msg);
-					}
-				});
+				// fetch(`${config.server}/api/addreserve`, {
+				// 	method: 'POST',
+				// 	headers: {
+				// 		'Content-Type': 'application/json',
+				// 		'x-access-token': localStorage.user_token
+				// 	},
+				// 	body: JSON.stringify(values)
+				// }).then(res => {
+				// 	if (res.ok) {
+				// 		return res.json();
+				// 	}
+				// }).then(json => {
+				// 	if (!json.err) {
+				// 		message.info(json.msg);
+				// 	}
+				// });
 			}
 		});
 	}
 
 	componentWillMount = () => {
 		fetch(`${config.server}/api/experiments`)
-		.then(res => {
-			if (res.ok) {
-				return res.json();
-			}
-		}).then(json => {
-			if (json && !json.err) {
-				for (let i = 0; i < json.experiments.length; i++) {
-					json.experiments[i].tables = [];
+			.then(res => {
+				if (res.ok) {
+					return res.json();
 				}
-				for (let i = 0; i < json.tables.length; i++) {
-					let id = json.tables[i].exp_id;
-					json.experiments[id - 1].tables.push(json.tables[i]);
+			}).then(json => {
+				if (json && !json.err) {
+					for (let i = 0; i < json.experiments.length; i++) {
+						json.experiments[i].tables = [];
+					}
+					for (let i = 0; i < json.tables.length; i++) {
+						let id = json.tables[i].exp_id;
+						json.experiments[id - 1].tables.push(json.tables[i]);
+					}
+					this.setState({
+						experiments: json.experiments
+					});
 				}
-				this.setState({
-					experiments: json.experiments
-				});
-			}
-		});
+			});
+	}
+	disabledDate = (date) => {
+		let days = moment(date).diff(moment(), 'days');
+		if (days >= 0 && days < 7) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	render() {
@@ -76,22 +85,49 @@ class Reserve extends Component {
 			residences.push(item);
 		}
 		return (
-			<div className="Reserve">
+			<div className="Reserve User-Wrap">
 				<Form onSubmit={this.handleSubmit}>
 					<FormItem
-					label="位置选择"
+						label="日期"
 					>
-					{getFieldDecorator('Location', {
-						rules: [{ type: 'array', required: true, message: '请选择位置!' }],
-					})(
-					<Cascader options={residences} placeholder="选择位置" />
-					)}
+						{getFieldDecorator('Date', {
+							rules: [{ required: true, message: '请选择日期!' }],
+						})(
+							<DatePicker disabledDate={this.disabledDate} placeholder="选择日期"/>
+						)}
+					</FormItem>
+					<FormItem
+						label="起始时间"
+					>
+						{getFieldDecorator('Start', {
+							rules: [{ required: true, message: '请输入起始时间!' }],
+						})(
+							<Input placeholder="起始时间" />
+						)}
+					</FormItem>
+					<FormItem
+						label="结束时间"
+					>
+						{getFieldDecorator('End', {
+							rules: [{ required: true, message: '请输入结束时间!' }],
+						})(
+							<Input placeholder="结束时间" />
+						)}
+					</FormItem>
+					<FormItem
+						label="位置选择"
+					>
+						{getFieldDecorator('Location', {
+							rules: [{ type: 'array', required: true, message: '请选择位置!' }],
+						})(
+							<Cascader options={residences} placeholder="选择位置" />
+						)}
 					</FormItem>
 					<FormItem
 						label="贵重仪器(可选)"
 					>
 						{getFieldDecorator('Equipment', {
-							rules: [{ required: false}],
+							rules: [{ required: false }],
 						})(
 							<Input prefix={<Icon type="mobile" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="贵重仪器" />
 						)}
