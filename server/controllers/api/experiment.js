@@ -56,7 +56,7 @@ exports.addExperiment = async (req, res) => {
 	}
 };
 
-exports.showExperiment = async (req, res) => {
+exports.monitorExperiment = async (req, res) => {
 	try {
 		let experiments = await new Promise((resolve, reject) => {
 			let sql = 'select * from Experiment';

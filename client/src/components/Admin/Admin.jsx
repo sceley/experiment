@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import { Route, Link } from 'react-router-dom';
 import { Menu, Layout, message } from 'antd';
-import MonitorExp from './MonitorExp';
-import ManageUser from './ManageUser';
 import Header_c from '../../common/Header';
 import Logo from '../../common/Logo';
-import ManageReserve from './ManageReserve';
-import AddExperiment from './AddExperiment';
+import MonitorExp from './MonitorExp';
+import MonitorUser from './MonitorUser';
+import MonitorReserve from './MonitorReserve';
+// import AddExp from './AddExp';
+import Exps from './Exps';
 import Notify from './Notify';
 import './Admin.css';
 const { Sider, Content } = Layout;
 
 export default class Admin extends Component {
 	state = {
-		current: 'exp'
+		current: 'monitorexp'
 	}
 	handleClick = (e) => {
 		this.setState({
@@ -42,7 +43,7 @@ export default class Admin extends Component {
 							mode="inline"
 							theme="dark"
 						>
-							<Menu.Item key="exp">
+							<Menu.Item key="monitorexp">
 								<Link to={`${this.props.match.url}`}>
 									实验室监控
 								</Link>
@@ -57,9 +58,9 @@ export default class Admin extends Component {
 									预约管理
 								</Link>
 							</Menu.Item>
-							<Menu.Item key="addexperiment">
-								<Link to={`${this.props.match.url}/addexp`}>
-									添加实验室
+							<Menu.Item key="exps">
+								<Link to={`${this.props.match.url}/exps`}>
+									我的实验室
 								</Link>
 							</Menu.Item>
 							<Menu.Item key="notify">
@@ -74,10 +75,10 @@ export default class Admin extends Component {
 							<Header_c handleLogout={this.handleLogout}/>
 							<Content>
 								<Route exact path={`${this.props.match.url}`} component={MonitorExp} />
-								<Route path={`${this.props.match.url}/user`} component={ManageUser}/>
-								<Route path={`${this.props.match.url}/reserve`} component={ManageReserve}/>
+								<Route path={`${this.props.match.url}/user`} component={MonitorUser}/>
+								<Route path={`${this.props.match.url}/reserve`} component={MonitorUser}/>
 								<Route path={`${this.props.match.url}/notify`} component={Notify}/>
-								<Route path={`${this.props.match.url}/addexp`} component={AddExperiment}/>
+								<Route path={`${this.props.match.url}/exps`} component={Exps}/>
 							</Content>
 						</Layout>
 					</Content>

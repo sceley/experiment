@@ -33,7 +33,7 @@ class AddExperiment extends Component {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
-			<div className="AddExperiment Admin-Other-Container">
+			<div className="AddExperiment">
 				<Form onSubmit={this.handleSubmit}>
 					<FormItem
 						label="名称"

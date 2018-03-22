@@ -8,7 +8,7 @@ const editInfo = require('./controllers/api/user').editInfo;
 const showInfo = require('./controllers/api/user').showInfo;
 const showUsers = require('./controllers/api/user').showUsers;
 const addExperiment = require('./controllers/api/experiment').addExperiment;
-const showExperiment = require('./controllers/api/experiment').showExperiment;
+const monitorExperiment = require('./controllers/api/experiment').monitorExperiment;
 const monitorExp = require('./controllers/api/experiment').monitorExp;
 const addReserve = require('./controllers/api/reserve').addReserve;
 const showOneReserves = require('./controllers/api/reserve').showOneReserves;
@@ -29,7 +29,7 @@ let router = Router();
 
 // router.get('/devices/:id', powerSwitch);
 router.get('/api/userinfo', user_session, showInfo);
-router.get('/api/experiments', showExperiment);
+router.get('/api/experiments', monitorExperiment);
 router.get('/api/reserves', showReserves);
 router.get('/api/onereserves', user_session, showOneReserves);
 router.get('/api/admin/monitorexp/:id', monitorExp);
