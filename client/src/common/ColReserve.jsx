@@ -1,40 +1,55 @@
 import React, { Component } from 'react';
-import { Table, Icon, Switch } from 'antd';
 import moment from 'moment';
-import config from '../../config';
-export default class ManageReserve extends Component {
+import { Table, message, Icon } from 'antd';
+import config from '../config'
+export default class ConReserve extends Component {
 	state = {
 		reserves: []
 	}
 	componentWillMount = () => {
-		fetch(`${config.server}/api/reserves?status=0`)
-		.then(res => {
-			if (res.ok) {
-				return res.json();
-			}
-		}).then(json => {
-			if (json && !json.err) {
-				this.setState({
-					reserves: json.reserves
-				});
-			}
-		});
-	}
-	permission = (id) => {
-		fetch(`${config.server}/api/admin/monitorreserve/${id}`, {
+		let complete = this.props.complete;
+		fetch(`${config.server}/api/onereserves?complete=${complete}`, {
 			method: 'GET',
 			headers: {
-				'x-access-token': localStorage.admin_token
+				'x-access-token': localStorage.user_token
 			}
 		}).then(res => {
 			if (res.ok) {
 				return res.json();
 			}
 		}).then(json => {
-			console.log(json);
+			if (json && !json.err) {
+				this.setState({
+					reserves: json.reserves || []
+				});
+			}
 		});
-		
 	}
+	cancelReserve = (id) => {
+		fetch(`${config.server}/api/reserve/${id}`, {
+			method: 'delete',
+			headers: {
+				'x-access-token': localStorage.user_token
+			}
+		}).then(res => {
+			if (res.ok) {
+				return res.json();
+			}
+		}).then(json => {
+			if (json && !json.err) {
+				let reserves = this.state.reserves;
+				reserves = reserves.filter(reserve => {
+					return reserve.id != id;
+				});
+				this.setState({
+					reserves: reserves
+				});
+				message.info(json.msg);
+			} else {
+				message.error(json.msg);
+			}
+		});
+	} 
 	render () {
 		const columns = [{
 			title: '序列',
@@ -92,18 +107,20 @@ export default class ManageReserve extends Component {
 			dataIndex: 'id',
 			key: '8',
 			render: (id) => {
-				let handleChange = () => {
-					this.permission(id);
+				let handleCancel = () => {
+					this.cancelReserve(id);
 				};
 				return (
-					<Switch onChange={handleChange} checkedChildren="允许" unCheckedChildren="不允许" defaultChecked={false} />
+					<a>
+						<Icon onClick={handleCancel} type="delete" />
+					</a>
 				);
 			}
 		}];
 		return (
-			<div className="ManageReserve Admin-Other-Container">
-				<Table rowKey="id" columns={columns} dataSource={this.state.reserves}/>
+			<div>
+				<Table rowKey="id" columns={columns} bordered={true} dataSource={this.state.reserves} />
 			</div>
 		);
 	}
-};
+}

@@ -72,4 +72,27 @@ exports.showInfo = async (req, res) => {
 			msg: '服务器出错了'
 		});
 	}
-}
+};
+
+exports.showUsers = async (req, res) => {
+	try {
+		let users = await new Promise((resolve, reject) => {
+			let sql = 'select * from User';
+			db.query(sql, (err, users) => {
+				if (err) 
+					reject(err);
+				else
+					resolve(users);
+			});
+		});
+		res.json({
+			err: 0,
+			users
+		});
+	} catch (e) {
+		res.json({
+			err: 1,
+			msg: '服务出错了'
+		});
+	}
+};

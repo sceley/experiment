@@ -11,10 +11,16 @@ exports.user_session = async (req, res, next) => {
 					resolve(session);
 			});
 		});
-		req.user_session = session;	
-		next();
+		if (session.uid) {
+			req.user_session = session;	
+			next();
+		} else {
+			res.json({
+				err: 1,
+				msg: '用户还未登陆'
+			});
+		}
 	} catch (e) {
-		console.log(e);
 		res.json({
 			err: 1,
 			msg: '用户还未登陆'
@@ -33,12 +39,19 @@ exports.admin_session = async (req, res, next) => {
 					resolve(session);
 			});
 		});
-		req.admin_session = session;
-		next();
+		if (session.admin) {
+			req.admin_session = session;
+			next();
+		} else {
+			res.json({
+				err: 1,
+				msg: '用户还未登陆'
+			});
+		}
 	} catch (e) {
 		res.json({
 			err: 1,
 			msg: '用户还未登陆'
 		});
 	}
-}
+};

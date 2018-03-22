@@ -57,14 +57,14 @@ export default class Admin extends Component {
 									预约管理
 								</Link>
 							</Menu.Item>
+							<Menu.Item key="addexperiment">
+								<Link to={`${this.props.match.url}/addexp`}>
+									添加实验室
+								</Link>
+							</Menu.Item>
 							<Menu.Item key="notify">
 								<Link to={`${this.props.match.url}/notify`}>
 									发布公告
-								</Link>
-							</Menu.Item>
-							<Menu.Item key="addexperiment">
-								<Link to={`${this.props.match.url}/addexperiment`}>
-									添加实验室
 								</Link>
 							</Menu.Item>
 						</Menu>
@@ -73,11 +73,11 @@ export default class Admin extends Component {
 						<Layout>
 							<Header_c handleLogout={this.handleLogout}/>
 							<Content>
-								<Route exact path={`${this.props.match.url}`} component={MonitorExp}/>
+								<Route exact path={`${this.props.match.url}`} component={MonitorExp} />
 								<Route path={`${this.props.match.url}/user`} component={ManageUser}/>
 								<Route path={`${this.props.match.url}/reserve`} component={ManageReserve}/>
 								<Route path={`${this.props.match.url}/notify`} component={Notify}/>
-								<Route path={`${this.props.match.url}/addexperiment`} component={AddExperiment}/>
+								<Route path={`${this.props.match.url}/addexp`} component={AddExperiment}/>
 							</Content>
 						</Layout>
 					</Content>

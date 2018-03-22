@@ -30,6 +30,7 @@ export default class Person extends Component {
 		this.props.history.push('/user/login');
 	}
 	componentWillMount = () => {
+		console.log("User");
 		if (!localStorage.user_token) {
 			// message.error("请先登陆");
 			// this.props.history.push('/user/login');

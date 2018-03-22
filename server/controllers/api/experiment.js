@@ -87,4 +87,27 @@ exports.showExperiment = async (req, res) => {
 			msg: '服务器出错了'
 		});
 	}
-}
+};
+exports.monitorExp = async (req, res) => {
+	let id = req.params.id;
+	try {
+		let tables = await new Promise((resolve, reject) => {
+			let sql = 'select * from Tab where exp_id=?';
+			db.query(sql, [id], (err, tables) => {
+				if (err) 
+					reject(err);
+				else
+					resolve(tables);
+			});
+		});
+		res.json({
+			err: 0,
+			tables
+		});
+	} catch (e) {
+		res.json({
+			err: 1,
+			msg: '服务器出错了'
+		});
+	}
+};

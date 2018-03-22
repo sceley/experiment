@@ -9,22 +9,22 @@ import Admin from '../Admin/Admin';
 export default class Home extends Component {
 	componentWillMount = () => {
         if (localStorage.admin_token) {
-            // this.props.history.push('/admin');
+            this.props.history.push('/admin');
         } else if (localStorage.user_token) {
-            // this.props.history.push('/user');
+            this.props.history.push('/user');
         } else {
-        	// this.props.history.push('/user/login');
+        	this.props.history.push('/user/login');
         }
     }
 	render () {
 		return (
 			<div style={{height: '100%'}} className="Home">
 				<Switch>
-					<Route path={`${this.props.match.url}login/user`} component={UserLogin}/>
-					<Route path={`${this.props.match.url}logup/user`} component={UserLogup} />
-					{/*<Route path={`${this.props.match.url}login/admin`} component={AdminLogin} />*/}
+					<Route path={`${this.props.match.url}user/login`} component={UserLogin}/>
+					<Route path={`${this.props.match.url}user/logup`} component={UserLogup} />
+					<Route path={`${this.props.match.url}admin/login`} component={AdminLogin} />
 					<Route path={`${this.props.match.url}user`} component={User} />
-					{/*<Route path={`${this.props.match.url}admin`} component={Admin} />*/}
+					<Route path={`${this.props.match.url}admin`} component={Admin} />
 				</Switch>
 			</div>
 		);

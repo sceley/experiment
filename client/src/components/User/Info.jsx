@@ -38,7 +38,7 @@ class Info extends Component {
 		fetch(`${config.server}/api/userinfo`, {
 			method: 'GET',
 			headers: {
-				'x-access-token': localStorage.token
+				'x-access-token': localStorage.user_token
 			}
 		}).then(res => {
 			if (res.ok)

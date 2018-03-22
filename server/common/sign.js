@@ -1,18 +1,18 @@
 const jwt = require('jsonwebtoken');
-const moment = require('moment');
 const config = require('../config');
-exports.sign = async (name, id) => {
+exports.sign = async (key, value) => {
 	let obj = {
-		exp: Math.floor(Date.now() / 1000) + (60 * 60)
-	};
-	// let obj = {};
-	obj[name] = id;
-	// console.log(obj);
-	// console.log(config.jsonwebtoken.secret);
-	let token = jwt.sign(obj, config.jsonwebtoken.secret);
-	// let token = jwt.sign(obj, config.jsonwebtoken.secret, {
-	// 	expiresIn: '1h'
-	// });
-	// console.log(token);
+		exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24)
+	};//a day
+	obj[key] = value;
+	console.log(obj);
+	let token = await new Promise((resolve, reject) => {
+		jwt.sign(obj, config.jsonwebtoken.secret, (err, token) => {
+			if (err) 
+				reject(err);
+			else
+				resolve(token);
+		});
+	});
 	return token;
 };

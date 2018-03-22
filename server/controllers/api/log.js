@@ -31,6 +31,7 @@ exports.login = async (req, res) => {
 		});
 		if (result) {
 			let token = await sign("uid", user.id);
+			console.log(token);
 			res.json({
 				err: 0,
 				msg: '登录成功',

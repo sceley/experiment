@@ -24,28 +24,28 @@ exports.login = async (req, res) => {
 	}
 };
 
-exports.monitorExp = async (req, res) => {
-	try {
-		let data = await new Promise((resolve, reject) => {
-			let sql = 'select * from Tab';
-			db.query(sql, (err, data) => {
-				if (err)
-					reject(err);
-				else
-					resolve(data);
-			});
-		});
-		res.json({
-			err: 0,
-			data
-		});
-	} catch (e) {
-		res.json({
-			err: 1,
-			msg: '服务器出错了'
-		});
-	}
-};
+// exports.monitorExp = async (req, res) => {
+// 	try {
+// 		let data = await new Promise((resolve, reject) => {
+// 			let sql = 'select * from Tab';
+// 			db.query(sql, (err, data) => {
+// 				if (err)
+// 					reject(err);
+// 				else
+// 					resolve(data);
+// 			});
+// 		});
+// 		res.json({
+// 			err: 0,
+// 			data
+// 		});
+// 	} catch (e) {
+// 		res.json({
+// 			err: 1,
+// 			msg: '服务器出错了'
+// 		});
+// 	}
+// };
 
 exports.monitorUser = async (req, res) => {
 	try {
