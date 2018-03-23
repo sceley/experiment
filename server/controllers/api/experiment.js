@@ -111,3 +111,27 @@ exports.monitorExp = async (req, res) => {
 		});
 	}
 };
+exports.showExps = async (req, res) => {
+	try {
+		let exps = await new Promise((resolve, reject) => {
+			let sql = `select Experiment.id, ip, count(Tab.id) as tablesCount, 
+			address, name from Experiment left join Tab on Experiment.id=Tab.exp_id group by Experiment.id`;
+			db.query(sql, (err, exps) => {
+				if (err)
+					reject(err);
+				else
+					resolve(exps);
+			});
+		});
+		res.json({
+			err: 0,
+			exps
+		});
+	} catch (e) {
+		console.log(e);
+		res.json({
+			err: 1,
+			msg: '服务器出错了'
+		});
+	}
+};

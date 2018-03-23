@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table } from 'antd';
+import { Table, Switch, message } from 'antd';
 import config from '../config';
 export default class ColMonitorExp extends Component {
     state = {
@@ -21,6 +21,30 @@ export default class ColMonitorExp extends Component {
                 this.setState({
                     tables: json.tables
                 });
+                console.log(json);
+            }
+        });
+    }
+    handleSwitch = (id, e) => {
+        let body = {
+            id,
+            power: e
+        };
+        fetch(`${config.server}/api/admin/switchpower`, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-access-token': localStorage.admin_token
+            },
+            body: JSON.stringify(body)
+        }).then(res => {
+            if (res.ok)
+                return res.json();
+        }).then(json => {
+            if (json && !json.err) {
+                message.info(json.msg);
+            } else {
+                message.error(json.msg);
             }
         });
     }
@@ -58,7 +82,13 @@ export default class ColMonitorExp extends Component {
                 dataIndex: 'id',
                 key: '4',
                 render: id => {
-                    return id;
+                    let power = Boolean(this.state.tables[id - 1] && this.state.tables[id - 1].power_status);
+                    let handleChange = (e) => {
+                        this.handleSwitch(id, e);
+                    };
+                    return (
+                        <Switch onChange={handleChange} checkedChildren="开" unCheckedChildren="关" defaultChecked={power} />
+                    );
                 }
             }
         ];

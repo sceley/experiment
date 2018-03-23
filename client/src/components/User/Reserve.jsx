@@ -54,10 +54,10 @@ class Reserve extends Component {
 				}
 			}).then(json => {
 				if (json && !json.err) {
-					for (let i = 0; i < json.experiments.length; i++) {
+					for (let i = 0; i < 3; i++) {
 						json.experiments[i].tables = [];
 					}
-					for (let i = 0; i < json.tables.length; i++) {
+					for (let i = 0; i < 10; i++) {
 						let id = json.tables[i].exp_id;
 						json.experiments[id - 1].tables.push(json.tables[i]);
 					}
@@ -87,7 +87,7 @@ class Reserve extends Component {
 				label: `实验室${i}`,
 				children: []
 			};
-			for (let j = 1; j <= this.state.experiments[i - 1].tables.length; j++) {
+			for (let j = 1; j <= this.state.experiments[i].tables.length; j++) {
 				item.children.push({
 					value: `${j}`,
 					label: `实验桌${j}`,

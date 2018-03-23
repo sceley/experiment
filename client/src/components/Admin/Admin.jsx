@@ -6,7 +6,6 @@ import Logo from '../../common/Logo';
 import MonitorExp from './MonitorExp';
 import MonitorUser from './MonitorUser';
 import MonitorReserve from './MonitorReserve';
-// import AddExp from './AddExp';
 import Exps from './Exps';
 import Notify from './Notify';
 import './Admin.css';
@@ -76,7 +75,7 @@ export default class Admin extends Component {
 							<Content>
 								<Route exact path={`${this.props.match.url}`} component={MonitorExp} />
 								<Route path={`${this.props.match.url}/user`} component={MonitorUser}/>
-								<Route path={`${this.props.match.url}/reserve`} component={MonitorUser}/>
+								<Route path={`${this.props.match.url}/reserve`} component={MonitorReserve}/>
 								<Route path={`${this.props.match.url}/notify`} component={Notify}/>
 								<Route path={`${this.props.match.url}/exps`} component={Exps}/>
 							</Content>

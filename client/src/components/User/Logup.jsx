@@ -23,6 +23,7 @@ class Logup extends Component {
 				}).then(json => {
 					if (json && !json.err) {
 						message.info(json.msg);
+						this.props.history.push('/user/login');
 					} else if (json) {
 						message.error(json.msg);
 					}

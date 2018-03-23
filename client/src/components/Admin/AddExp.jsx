@@ -11,7 +11,8 @@ class AddExperiment extends Component {
 				fetch(`${config.server}/api/admin/addexperiment`, {
 					method: 'POST',
 					headers: {
-						'Content-Type': 'application/json'
+						'Content-Type': 'application/json',
+						'x-access-token': localStorage.admin_token
 					},
 					body: JSON.stringify(values)
 				}).then(res => {
@@ -22,6 +23,7 @@ class AddExperiment extends Component {
 					if (json && !json.err) {
 						localStorage.token = json.token;
 						message.info(json.msg);
+						this.props.handleCancel();
 					} else if(json) {
 						message.error(json.msg);
 					}

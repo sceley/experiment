@@ -4,7 +4,7 @@ const sign = require('../../common/sign').sign;
 exports.login = async (req, res) => {
 	let body = req.body;
 	try {
-		if (body.Account == config.admin.user && body.Password == config.admin.user) {
+		if (body.Account == config.admin.user && body.Password == config.admin.pass) {
 			let token = await sign('admin', 1);
 			res.json({
 				token,
