@@ -63,7 +63,7 @@ export default class Exps extends Component {
 			render: text => text
 		}]
 		return (
-			<div className="Exps Admin-Other-Container">
+			<div className="Exps Container">
 				<Card>
 					<Button onClick={this.showModal} className="add-btn">Add</Button>
 					<Table bordered={true} rowKey="ip" boredered={true} columns={columns} dataSource={this.state.exps}/>

@@ -110,7 +110,7 @@ class Reserve extends Component {
 			Options.push(<Option key={i} value={i}>{`${i}时`}</Option>);
 		}
 		return (
-			<div className="Reserve User-Wrap">
+			<div className="Reserve Container">
 				<Card>
 				<Form onSubmit={this.handleSubmit}>
 					<FormItem
@@ -122,7 +122,7 @@ class Reserve extends Component {
 							<DatePicker disabledDate={this.disabledDate} placeholder="选择日期" />
 						)}
 					</FormItem>
-					<div className="Stime">
+					<div className="media">
 						<div className="media-header">
 							<FormItem
 								label="时间段选择"

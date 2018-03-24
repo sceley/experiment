@@ -101,7 +101,7 @@ export default class ManageUser extends Component {
 			}
 		];
 		return (
-			<div className="ManageUser Admin-Other-Container">
+			<div className="ManageUser Container">
 				<Card>
 					<Table rowKey="id" columns={columns} bordered={true} dataSource={this.state.users}/>
 				</Card>

@@ -101,7 +101,7 @@ export default class ManageReserve extends Component {
 			}
 		}];
 		return (
-			<div className="ManageReserve Admin-Other-Container">
+			<div className="ManageReserve Container">
 				<Card>
 					<Table rowKey="id" bordered={true} columns={columns} dataSource={this.state.reserves}/>
 				</Card>

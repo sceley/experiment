@@ -3,7 +3,7 @@ import { Form, Button, Input, Icon, message } from 'antd';
 import config from '../../config';
 const FormItem = Form.Item;
 
-class AddExperiment extends Component {
+class AddExp extends Component {
 	handleSubmit = (e) => {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
@@ -35,7 +35,7 @@ class AddExperiment extends Component {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
-			<div className="AddExperiment">
+			<div className="AddExp">
 				<Form onSubmit={this.handleSubmit}>
 					<FormItem
 						label="名称"
@@ -83,4 +83,4 @@ class AddExperiment extends Component {
 		);
 	}
 };
-export default Form.create()(AddExperiment);
+export default Form.create()(AddExp);

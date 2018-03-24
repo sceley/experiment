@@ -6,7 +6,7 @@ class Notify extends Component {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
-			<div className="Notify Admin-Other-Container">
+			<div className="Notify Container">
 				<Card>
 					<Form onSubmit={this.handleSubmit}>
 						<FormItem

@@ -54,7 +54,7 @@ class Info extends Component {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
-			<div className="Info User-Wrap">
+			<div className="Info Container">
 				<Card>
 					<Form onSubmit={this.handleSubmit}>
 						<FormItem
@@ -74,7 +74,7 @@ class Info extends Component {
 								rules: [{ required: true, message: '学号不能为空!' }],
 								initialValue: this.state.user && this.state.user.account
 							})(
-								<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="8位数字的学号" />
+								<Input disabled={true} prefix={<Icon type="code" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="8位数字的学号" />
 								)}
 						</FormItem>
 						<FormItem
@@ -107,7 +107,7 @@ class Info extends Component {
 								rules: [{ required: true, message: '专业不能为空!' }],
 								initialValue: this.state.user && this.state.user.major
 							})(
-								<Input prefix={<Icon type="mobile" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="专业" />
+								<Input prefix={<Icon type="flag" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="专业" />
 								)}
 						</FormItem>
 						<FormItem

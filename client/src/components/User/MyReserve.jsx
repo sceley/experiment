@@ -10,16 +10,16 @@ export default class MyReserve extends Component {
     }
     render () {
         return (
-            <div className="MyReserve User-Wrap">
+            <div className="MyReserve Container">
                 <Card>
-                <Tabs defaultActiveKey="1">
-                    <TabPane tab="未执行" key="1">
-                        <ColReserve complete={0}/>
-                    </TabPane>
-                    <TabPane tab="已执行" key="2">
-                        <ColReserve complete={1} />
-                    </TabPane>
-                </Tabs>
+                    <Tabs defaultActiveKey="1">
+                        <TabPane tab="未执行" key="1">
+                            <ColReserve complete={0}/>
+                        </TabPane>
+                        <TabPane tab="已执行" key="2">
+                            <ColReserve complete={1} />
+                        </TabPane>
+                    </Tabs>
                 </Card>
             </div>
         );

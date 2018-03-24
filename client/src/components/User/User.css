@@ -1,7 +1,6 @@
-/* .Info, .Reserve {
-	background: white;
-	padding: 10px;
-} */
+.Container {
+	margin: 24px 24px 0;
+}
 .header-container {
 	padding-right: 12px;
 	background: #fff;
@@ -19,16 +18,11 @@
 .Person .Person-sider {
 	box-shadow: 2px 0 6px rgba(0,21,41,.35);
 }
-
-.User-Wrap {
-	margin: 24px 24px 0;
-}
-
-.Reserve .Stime {
+.Reserve .media {
 	display: flex;
 	align-items: center;
 }
-.Reserve .Stime .media-body {
+.Reserve .media-body {
 	margin: 0 10px;
 	font-size: 20px;
 	font-weight: 600px;
@@ -36,5 +30,5 @@
 	align-items: center;
 }
 .Reserve .media-header, .Reserve .media-footer {
-	width: 50%;
+	flex: 1;
 }

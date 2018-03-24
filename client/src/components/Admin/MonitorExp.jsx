@@ -7,7 +7,7 @@ const TabPane = Tabs.TabPane;
 export default class MonitorExp extends Component {
 	render () {
 		return (
-			<div className="MonitorExp Admin-Other-Container">
+			<div className="MonitorExp Container">
 				<Card>
 					<Tabs defaultActiveKey="1">
 						<TabPane tab="实验室1" key="1">
