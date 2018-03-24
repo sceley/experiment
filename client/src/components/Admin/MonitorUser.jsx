@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Switch, message} from 'antd';
+import { Table, Switch, message, Card} from 'antd';
 import config from '../../config';
 export default class ManageUser extends Component {
 	state = {
@@ -102,7 +102,9 @@ export default class ManageUser extends Component {
 		];
 		return (
 			<div className="ManageUser Admin-Other-Container">
-				<Table rowKey="id" columns={columns} bordered={true} dataSource={this.state.users}/>
+				<Card>
+					<Table rowKey="id" columns={columns} bordered={true} dataSource={this.state.users}/>
+				</Card>
 			</div>
 		);
 	}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Button, Modal } from 'antd';
+import { Table, Button, Modal, Card } from 'antd';
 import AddExp from './AddExp';
 import config from '../../config';
 export default class Exps extends Component {
@@ -64,16 +64,18 @@ export default class Exps extends Component {
 		}]
 		return (
 			<div className="Exps Admin-Other-Container">
-				<Button onClick={this.showModal} className="add-btn">Add</Button>
-				<Table rowKey="ip" boredered={true} columns={columns} dataSource={this.state.exps}/>
-				<Modal
-					visible={this.state.visible}
-					closable={false}
-					onCancel={this.handleCancel}
-					footer={null}
-				>
-					<AddExp handleCancel={this.handleCancel}/>
-				</Modal>
+				<Card>
+					<Button onClick={this.showModal} className="add-btn">Add</Button>
+					<Table bordered={true} rowKey="ip" boredered={true} columns={columns} dataSource={this.state.exps}/>
+					<Modal
+						visible={this.state.visible}
+						closable={false}
+						onCancel={this.handleCancel}
+						footer={null}
+					>
+						<AddExp handleCancel={this.handleCancel}/>
+					</Modal>
+				</Card>
 			</div>
 		);
 	}

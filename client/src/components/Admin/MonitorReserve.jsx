@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Icon, Switch } from 'antd';
+import { Table, Icon, Switch, Card } from 'antd';
 import moment from 'moment';
 import config from '../../config';
 export default class ManageReserve extends Component {
@@ -102,7 +102,9 @@ export default class ManageReserve extends Component {
 		}];
 		return (
 			<div className="ManageReserve Admin-Other-Container">
-				<Table rowKey="id" columns={columns} dataSource={this.state.reserves}/>
+				<Card>
+					<Table rowKey="id" bordered={true} columns={columns} dataSource={this.state.reserves}/>
+				</Card>
 			</div>
 		);
 	}
