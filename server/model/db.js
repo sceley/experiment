@@ -21,6 +21,8 @@ const table2 = `create table if not exists User (
 				major varchar(25),
 				mobile varchar(11),
 				grade varchar(10),
+				forbidden boolean default false,
+				active boolean default false,
 				primary key(id))
 				charset=utf8`;
 

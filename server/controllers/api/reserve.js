@@ -45,8 +45,8 @@ exports.showOneReserves = async (req, res) => {
     let complete = req.query.complete;
     try {
         let reserves = await new Promise((resolve, reject) => {
-            let sql = `select exp_id, table_id, createAt, Reserve.id, equipment,  
-            address, status, start, end from Reserve left join Experiment 
+            let sql = `select exp_id, table_id, Reserve.id, equipment, date,
+            address, Reserve.status, start, end from Reserve left join Experiment 
             on Reserve.exp_id=Experiment.id where user_id=? and complete_status=?`;
             db.query(sql, [id, complete], (err, reserves) => {
                 if (err)
@@ -60,6 +60,7 @@ exports.showOneReserves = async (req, res) => {
             reserves
         });
     } catch (e) {
+        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'

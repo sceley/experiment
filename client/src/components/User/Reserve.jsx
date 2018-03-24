@@ -7,7 +7,8 @@ const FormItem = Form.Item;
 
 class Reserve extends Component {
 	state = {
-		experiments: ''
+		exps: [],
+		reserves: []
 	}
 	handleSubmit = (e) => {
 		e.preventDefault();
@@ -42,30 +43,9 @@ class Reserve extends Component {
 		if (End <= Start) {
 			cb("请选择合适的时间段");
 		} else {
+			this.handleRequset();
 			cb();
 		}
-	}
-
-	componentWillMount = () => {
-		fetch(`${config.server}/api/experiments`)
-			.then(res => {
-				if (res.ok) {
-					return res.json();
-				}
-			}).then(json => {
-				if (json && !json.err) {
-					for (let i = 0; i < 3; i++) {
-						json.experiments[i].tables = [];
-					}
-					for (let i = 0; i < 10; i++) {
-						let id = json.tables[i].exp_id;
-						json.experiments[id - 1].tables.push(json.tables[i]);
-					}
-					this.setState({
-						experiments: json.experiments
-					});
-				}
-			});
 	}
 	disabledDate = (date) => {
 		let days = moment(date).diff(moment(), 'days');
@@ -75,25 +55,55 @@ class Reserve extends Component {
 			return true;
 		}
 	}
+	handleRequset = () => {
+		let Date = moment(this.props.form.getFieldValue('Date')).format("YYYY-MM-DD");
+		let Start = this.props.form.getFieldValue('Start');
+		let End = this.props.form.getFieldValue('End');
+		let body = {
+			Date,
+			Start,
+			End,
+		};
+		fetch(`${config.server}/api/restexps`, {
+			method: 'post',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(body)
+		}).then(res => {
+			if (res.ok) 
+				return res.json();
+		}).then(json => {
+			if (json && !json.err) {
+				this.setState({
+					exps: json.exps,
+					reserves: json.reserves
+				});
+			}
+		});
+	}
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		const residences = [];
-					// disabled: Boolean(this.state.experiments[i - 1].tables[j - 1].status)
-				// disabled: Boolean(this.state.experiments[i - 1].experiment_status),
-		for (let i = 1; i <= this.state.experiments.length; i++) {
+		for (let i = 1; i <= this.state.exps.length; i++) {
 			let item = {
 				value: `${i}`,
 				label: `实验室${i}`,
 				children: []
 			};
-			for (let j = 1; j <= this.state.experiments[i].tables.length; j++) {
+			for (let j = 1; j <= this.state.exps[i - 1].tablesCount; j++) {
 				item.children.push({
 					value: `${j}`,
 					label: `实验桌${j}`,
 				});
 			}
 			residences.push(item);
+		}
+		for (let i = 0; i < this.state.reserves.length; i++) {
+			let reserves = this.state.reserves[i];
+			residences[reserves.exp_id - 1].children[reserves.table_id - 1].disabled = true;
+			residences[reserves.exp_id - 1].children[reserves.table_id - 1].label += '(被占用)';
 		}
 		let Options = [];
 		for (let i = 8; i <= 22; i++) {

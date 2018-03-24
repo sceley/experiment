@@ -6,7 +6,8 @@ export default class ConReserve extends Component {
 	state = {
 		reserves: []
 	}
-	componentWillMount = () => {
+	componentDidMount = () => {
+		this.mounted = true;
 		let complete = this.props.complete;
 		fetch(`${config.server}/api/onereserves?complete=${complete}`, {
 			method: 'GET',
@@ -20,7 +21,7 @@ export default class ConReserve extends Component {
 		}).then(json => {
 			if (json && !json.err) {
 				this.setState({
-					reserves: json.reserves || []
+					reserves: json.reserves
 				});
 			}
 		});
@@ -57,24 +58,31 @@ export default class ConReserve extends Component {
 			key: '1',
 			render: text => text,
 		}, {
-			title: '时间',
-			dataIndex: 'createAt',
-			key: '2',
-			render: text => moment(text).format("YYYY-MM-DD")
-		}, {
 			title: '实验室',
 			dataIndex: 'exp_id',
-			key: '3',
+			key: '2',
 			render: text => `实验室${text}`
 		}, {
 			title: '座位',
 			dataIndex: 'table_id',
-			key: '4',
+			key: '3',
 			render: text => `${text}`
+		}, {
+			title: '预约时间',
+			dataIndex: 'id',
+			key: '4',
+			render: id => {
+				let date = moment(this.state.reserves[id - 1] && this.state.reserves[id - 1].date)
+				.format("YYYY-MM-DD");
+				let start = this.state.reserves[id - 1] && this.state.reserves[id - 1].start;
+				let end = this.state.reserves[id - 1] && this.state.reserves[id - 1].end;
+				return `${date} ${start}-${end}时`
+			}
 		}, {
 			title: '地点',
 			dataIndex: 'address',
-			key: '5'
+			key: '5',
+			render: text => text
 		}, {
 			title: '其他设备',
 			dataIndex: 'equipment',
@@ -89,18 +97,6 @@ export default class ConReserve extends Component {
 					return '审核中'
 				else
 					return '通过'
-			}
-		}, {
-			title: '开始时间',
-			dataIndex: 'start',
-			render: text => {
-				return text;
-			}
-		}, {
-			title: '结束时间',
-			dataIndex: 'end',
-			render: text => {
-				return `${text}`;
 			}
 		}, {
 			title: '操作',

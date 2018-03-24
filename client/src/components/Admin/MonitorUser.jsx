@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table } from 'antd';
+import { Table, Switch, message} from 'antd';
 import config from '../../config';
 export default class ManageUser extends Component {
 	state = {
@@ -13,9 +13,33 @@ export default class ManageUser extends Component {
 			}
 		}).then(json => {
 			if (json && !json.err) {
+				console.log(json.users);
 				this.setState({
 					users: json.users
 				});
+			}
+		});
+	}
+	handleSwitch = (id, e) => {
+		let body = {
+			id,
+			forbidden: e
+		};
+		fetch(`${config.server}/api/admin/monitoruser`, {
+			method: 'post',
+			headers: {
+				'Content-Type': 'application/json',
+				'x-access-token': localStorage.admin_token
+			},
+			body: JSON.stringify(body)
+		}).then(res => {
+			if (res.ok)
+				return res.json();
+		}).then(json => {
+			if (json && !json.err) {
+				message.info(json.msg);
+			} else {
+				message.error(json.msg);
 			}
 		});
 	}
@@ -42,21 +66,43 @@ export default class ManageUser extends Component {
 				key: '4',
 				render: text => text,
 			}, {
-				title: '手机号码',
-				dataIndex: 'mobile',
+				title: '年级',
+				dataIndex: 'grade',
 				key: '5',
 				render: text => text,
 			}, {
-				title: '操作',
+				title: '手机号码',
+				dataIndex: 'mobile',
 				key: '6',
-				render: () => {
-					return "操作"
+				render: text => text,
+			}, {
+				title: '激活状态',
+				dataIndex: 'active',
+				key: '7',
+				render: text => {
+					if (text)
+						return '是';
+					else
+						return '否';
+				}
+			}, {
+				title: '操作',
+				dataIndex: 'id',
+				key: '7',
+				render: id => {
+					let forbidden = this.state.users[id] && this.state.users[id].forbidden;
+					let handleChange = e => {
+						this.handleSwitch(id, e);
+					}
+					return (
+						<Switch onChange={handleChange} checkedChildren="禁止" unCheckedChildren="允许" defaultChecked={forbidden} />
+					)
 				}
 			}
 		];
 		return (
 			<div className="ManageUser Admin-Other-Container">
-				<Table columns={columns} bordered={true} dataSource={this.state.users}/>
+				<Table rowKey="id" columns={columns} bordered={true} dataSource={this.state.users}/>
 			</div>
 		);
 	}

@@ -135,3 +135,39 @@ exports.showExps = async (req, res) => {
 		});
 	}
 };
+
+exports.showRestExps = async (req, res) => {
+	let body = req.body;
+	console.log(body);
+	try {
+		let reserves = await new Promise((resolve, reject) => {
+			let sql = 'select exp_id, table_id from Reserve where date=? and ((start<? and start>=?) or (end<=? and end>?) or (start=? and end=?))';
+			db.query(sql, [body.Date, body.End, body.Start, body.End, body.Start, body.Start, body.End], (err, reserves) => {
+				if (err) 
+					reject(err);
+				else
+					resolve(reserves);
+			});
+		});
+		let exps = await new Promise((resolve, reject) => {
+			let sql = 'select Experiment.id, count(Tab.id) as tablesCount from Experiment left join Tab on Experiment.id=Tab.exp_id group by Experiment.id';
+			db.query(sql, (err, exps) => {
+				if (err)
+					reject(err);
+				else 
+					resolve(exps);
+			});
+		});
+		res.json({
+			err: 0,
+			reserves,
+			exps
+		});
+	} catch (e) {
+		console.log(e);
+		res.json({
+			err: 1,
+			msg: '服务器出错了'
+		});
+	}
+};
