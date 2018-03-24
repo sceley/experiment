@@ -20,6 +20,11 @@ export default class Admin extends Component {
 			current: e.key
 		});
 	}
+	handleBack = () => {
+		this.setState({
+			current: 'monitorexp'
+		});
+	}
 	handleLogout = () => {
 		delete localStorage.admin_token;
 		this.props.history.push('/admin/login');
@@ -35,7 +40,9 @@ export default class Admin extends Component {
 			<div className="Admin">
 				<Layout>
 					<Sider width={256}>
-						<Logo/>
+						<Link onClick={this.handleBack} to="/admin">
+							<Logo/>
+						</Link>
 						<Menu
 							onClick={this.handleClick}
 							selectedKeys={[this.state.current]}

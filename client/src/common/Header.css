@@ -3,7 +3,9 @@
 	justify-content: flex-end;
 }
 .logout-wrap {
-	padding: 0 10px;
+	display: block;
+	padding: 0 24px;
+	margin-right: 12px;
 }
 .logout-wrap:hover {
 	background: #e6f7ff;
