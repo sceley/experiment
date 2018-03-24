@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Button, Input, Icon, Select, message, DatePicker, Cascader, Row, Col } from 'antd';
+import { Form, Button, Input, Icon, Select, message, DatePicker, Cascader, Row, Col, Card } from 'antd';
 import config from '../../config';
 import moment from 'moment';
 const { Option } = Select;
@@ -111,6 +111,7 @@ class Reserve extends Component {
 		}
 		return (
 			<div className="Reserve User-Wrap">
+				<Card>
 				<Form onSubmit={this.handleSubmit}>
 					<FormItem
 						label="日期"
@@ -122,14 +123,14 @@ class Reserve extends Component {
 						)}
 					</FormItem>
 					<div className="Stime">
-						<div>
+						<div className="media-header">
 							<FormItem
 								label="时间段选择"
 							>
 								{getFieldDecorator('Start', {
 									rules: [{ required: true, message: '请输入起始时间!' }],
 								})(
-									<Select style={{ width: '194px' }}>
+									<Select>
 										{Options}
 									</Select>
 								)}
@@ -147,7 +148,7 @@ class Reserve extends Component {
 										validator: this.checkHour
 									}],
 								})(
-									<Select style={{ width: '194px' }}>
+									<Select>
 										{Options}
 									</Select>
 								)}
@@ -178,6 +179,7 @@ class Reserve extends Component {
 						</Button>
 					</FormItem>
 				</Form>
+				</Card>
 			</div>
 		);
 	}

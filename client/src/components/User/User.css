@@ -1,7 +1,7 @@
-.Info, .Reserve {
+/* .Info, .Reserve {
 	background: white;
 	padding: 10px;
-}
+} */
 .header-container {
 	padding-right: 12px;
 	background: #fff;
@@ -35,7 +35,6 @@
 	display: flex;
 	align-items: center;
 }
-.Reserve .Stime .media-footer {
-	display: flex;
-	align-items: center;
+.Reserve .media-header, .Reserve .media-footer {
+	width: 50%;
 }
