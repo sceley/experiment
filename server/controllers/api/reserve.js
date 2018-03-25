@@ -1,6 +1,6 @@
 const moment = require('moment');
 const db = require('../../model/db');
-const d = require('../tcp/socket');
+const send = require('../tcp/socket').send;
 exports.addReserve = async (req, res) => {
     let id = req.user_session.uid;
     let body = req.body;
@@ -45,7 +45,7 @@ exports.addReserve = async (req, res) => {
                 msg: '该时间段不能预约'
             });
         }
-        if (body.Equipment)
+        if (body.Equipment) {
             await new Promise((resolve, reject) => {
                 let sql = `insert into Reserve(user_id, exp_id, table_id, start, 
                 end, date, createAt, equipment) values(?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -56,7 +56,7 @@ exports.addReserve = async (req, res) => {
                         resolve();
                 });
             });
-        else
+        } else {
             await new Promise((resolve, reject) => {
                 let sql = `insert into Reserve(user_id, exp_id, table_id, start,
                 end, date, createAt, status) values(?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -67,11 +67,46 @@ exports.addReserve = async (req, res) => {
                         resolve();
                 });
             });
+            let reserve_id = await new Promise((resolve, reject) => {
+                let sql = `select id from Reserve where exp_id=? and table_id=? 
+                and date=? and start=? and end=?`;
+                db.query(sql, [body.Exp, body.Tab, body.Date, body.Start, body.End], (err, reserves) => {
+                    if (err)
+                        reject(err);
+                    else
+                        resolve(reserves[0].id);
+                });
+            });
+            let school_number = await new Promise((resolve, reject) => {
+                let sql = 'select account from User where id=?';
+                db.query(sql, [id], (err, users) => {
+                    if (err)
+                        reject(err);
+                    else
+                        resolve(users[0].account);
+                });
+            });
+            let exp = await new Promise((resolve, reject) => {
+                let sql = 'select ip, port from Experiment where id=?';
+                db.query(sql, [body.Exp], (err, exps) => {
+                    if (err)
+                        reject(err);
+                    else
+                        resolve(exps[0]);
+                });
+            });
+            body.reserve_id = reserve_id;
+            body.id = school_number;
+            body.port = exp.port;
+            body.ip = exp.ip;
+            send(body);
+        }
         res.json({
             err: 0,
             msg: '预约成功'
         });
     } catch (e) {
+        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'

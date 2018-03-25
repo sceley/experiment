@@ -114,7 +114,7 @@ export default class Exps extends Component {
 			dataIndex: 'name',
 			render: (text, record) => EditableCell(text, record, "name")
 		}, {
-			title: '实验室ip',
+			title: '实验室IP',
 			key: '2',
 			dataIndex: 'ip',
 			render: (text, record) => EditableCell(text, record, "ip")

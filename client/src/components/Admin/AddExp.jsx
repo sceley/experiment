@@ -26,7 +26,7 @@ class AddExp extends Component {
 						this.props.handleCancel();
 						this.props.addExp({
 							name: values.Name,
-							ip: values.Ip,
+							ip: values.IP,
 							port: values.Port,
 							tablesCount: values.TableCount,
 							address: values.Address

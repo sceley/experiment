@@ -1,12 +1,12 @@
-// const db = require('../model/db');
-
+const db = require('../../model/db');
 const net = require('net');
 exports.socket = async socket => {
 	try {
 		let res = await new Promise((resolve, reject) => {
-			socket.on('data', data => {
-				let obj = splitData(data.toString());
-				resolve(obj);
+			socket.on('data', buf => {
+				// let obj = splitData(data.toString());
+				// resolve(obj);
+				resolve(buf.toString());
 			});
 		});
 		console.log(res);
@@ -16,10 +16,12 @@ exports.socket = async socket => {
 	}
 };
 exports.send = async (options) => {
-	const client = net.createConnection({ port: 8124 }, () => {
-		//'connect' listener
-		console.log('connected to server!');
-		client.write('world!\r\n');
+	let msg = `NUM${options.reserve_id}EXP${options.Exp}ID${options.id}POW${1}DOR${1}`;
+	// console.log(msg);
+	const client = net.createConnection({ host: options.ip, port: options.port }, () => {
+		client.write(msg);
+		client.end();
+		// client.close();
 	});
 };
 
