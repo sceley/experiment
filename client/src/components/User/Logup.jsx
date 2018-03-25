@@ -11,7 +11,7 @@ class Logup extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				fetch(`${config.server}/api/logup`, {
+				fetch(`${config.server}/api/user/logup`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'

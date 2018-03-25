@@ -24,6 +24,12 @@ class AddExp extends Component {
 						localStorage.token = json.token;
 						message.info(json.msg);
 						this.props.handleCancel();
+						this.props.addExp({
+							name: values.Name,
+							ip: values.Ip,
+							tablesCount: values.TableCount,
+							address: values.Adderss
+						});
 					} else if(json) {
 						message.error(json.msg);
 					}
@@ -43,7 +49,7 @@ class AddExp extends Component {
 						{getFieldDecorator('Name', {
 							rules: [{ required: true, message: '名称不能为空!' }],
 						})(
-							<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="输入格式为EXP开头加数字，如EXP1" />
+							<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="实验室名称" />
 							)}
 					</FormItem>
 					<FormItem

@@ -35,6 +35,7 @@ export default class Notification extends Component {
 		});
 	}
 	componentWillMount = () => {
+		this.mounted = true;
 		fetch(`${config.server}/api/notifications`)
 		.then(res => {
 			if (res.ok)

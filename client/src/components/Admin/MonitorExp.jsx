@@ -6,7 +6,7 @@ const TabPane = Tabs.TabPane;
 
 export default class MonitorExp extends Component {
 	state = {
-		count: ''
+		exps: []
 	}
 	componentWillMount = () => {
 		fetch(`${config.server}/api/expscount`)
@@ -17,17 +17,16 @@ export default class MonitorExp extends Component {
 		}).then(json => {
 			if (json && !json.err) {
 				this.setState({
-					count: json.count
+					exps: json.exps
 				});
 			}
 		});
 	}
 	render () {
-		let count = this.state.count;
 		let tabs = [];
-		for (let i = 1; i <= count; i++) {
+		for (let i = 1; i <= this.state.exps.length; i++) {
 			tabs.push(
-				<TabPane tab={`实验室${i}`} key={i}>
+				<TabPane tab={this.state.exps[i - 1].name} key={i}>
 					<ColMonitorExp id={i} />
 				</TabPane>
 			);

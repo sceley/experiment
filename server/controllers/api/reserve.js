@@ -83,8 +83,8 @@ exports.showOneReserves = async (req, res) => {
     let complete = req.query.complete;
     try {
         let reserves = await new Promise((resolve, reject) => {
-            let sql = `select exp_id, table_id, Reserve.id, equipment, date,
-            address, Reserve.status, start, end from Reserve left join Experiment 
+            let sql = `select exp_id, table_id, Reserve.id, equipment, date, name,
+            address, Reserve.status, start, end, approver from Reserve left join Experiment 
             on Reserve.exp_id=Experiment.id where user_id=? and complete_status=?`;
             db.query(sql, [id, complete], (err, reserves) => {
                 if (err)
@@ -110,7 +110,7 @@ exports.showReserves = async (req, res) => {
     try {
         let reserves = await new Promise((resolve, reject) => {
             let sql = `select exp_id, table_id, createAt, Reserve.id, equipment,  
-            address, Reserve.status, start, end from Reserve left join Experiment 
+            address, Reserve.status, start, end, approver, name from Reserve left join Experiment 
             on Reserve.exp_id=Experiment.id`;
             db.query(sql, (err, reserves) => {
                 if (err)
@@ -157,7 +157,7 @@ exports.deleteReserve = async (req, res) => {
 
 exports.monitorReserve = async (req, res) => {
     let body = req.body;
-    let approver = req.user_session.name;
+    let approver = req.admin_session.admin;
     try {
         await new Promise((resolve, reject) => {
             let sql = 'update Reserve set status=?, approver=? where id=?';
@@ -170,7 +170,7 @@ exports.monitorReserve = async (req, res) => {
         });
         res.json({
             err: 0,
-            msg: 'success'
+            msg: '设置成功'
         });
     } catch (e) {
         res.json({

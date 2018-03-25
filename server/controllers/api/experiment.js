@@ -119,7 +119,7 @@ exports.showRestExps = async (req, res) => {
 			});
 		});
 		let exps = await new Promise((resolve, reject) => {
-			let sql = 'select Experiment.id, count(Tab.id) as tablesCount from Experiment left join Tab on Experiment.id=Tab.exp_id group by Experiment.id';
+			let sql = 'select Experiment.id, name, count(Tab.id) as tablesCount from Experiment left join Tab on Experiment.id=Tab.exp_id group by Experiment.id';
 			db.query(sql, (err, exps) => {
 				if (err)
 					reject(err);
@@ -143,18 +143,18 @@ exports.showRestExps = async (req, res) => {
 
 exports.expsCount = async (req, res) => {
 	try {
-		let count = await new Promise((resolve, reject) => {
-			let sql = 'select count(id) as count from Experiment';
+		let exps = await new Promise((resolve, reject) => {
+			let sql = 'select id, name from Experiment';
 			db.query(sql, (err, exps) => {
 				if (err)
 					reject(err);
 				else 
-					resolve(exps[0].count);
+					resolve(exps);
 			});
 		});
 		res.json({
 			err: 0,
-			count
+			exps
 		});
 	} catch (e) {
 		res.json({
@@ -163,3 +163,48 @@ exports.expsCount = async (req, res) => {
 		});
 	}
 };
+
+exports.editExp = async (req, res) => {
+	let body = req.body;
+	try {
+		await new Promise((resolve, reject) => {
+			let sql = 'update Experiment set name=?, ip=?, address=? where id=?';
+			db.query(sql, [body.name, body.ip, body.address, body.id], err => {
+				if (err)
+					reject(err);
+				else
+					resolve();
+			});
+		});
+		await new Promise((resolve, reject) => {
+			let sql = 'delete from Tab where exp_id=?';
+			db.query(sql, [body.id], err => {
+				if (err)
+					reject(err);
+				else
+					resolve();
+			});
+		});
+		for (let i = 0; i <= body.tablesCount; i++) {
+			await new Promise((resolve, reject) => {
+				let sql = 'insert into Tab(exp_id) values(?)';
+				db.query(sql, [body.id], err => {
+					if (err)
+						reject(err);
+					else
+						resolve();
+				});
+			});
+		}
+		res.json({
+			err: 0,
+			msg: '修改成功'
+		});
+	} catch (e) {
+		console.log(e);
+		res.json({
+			err: 1,
+			msg: '服务器出错了'
+		});
+	}
+}

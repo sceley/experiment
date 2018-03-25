@@ -11,7 +11,7 @@ class Login extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				fetch(`${config.server}/api/login`, {
+				fetch(`${config.server}/api/user/login`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json'

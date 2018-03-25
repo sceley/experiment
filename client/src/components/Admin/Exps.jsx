@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Button, Modal, Card, Input, Icon, Popconfirm, Divider } from 'antd';
+import { Table, Button, Modal, Card, Input, Icon, Popconfirm, Divider, message } from 'antd';
 import AddExp from './AddExp';
 import config from '../../config';
 export default class Exps extends Component {
@@ -13,29 +13,70 @@ export default class Exps extends Component {
 		});
 	}
 	handleEdit = (id) => {
-		let exps = this.state.exps;
-		exps[id - 1].editable = true
-		this.setState({
-			exps: exps
-		});
+		const newExps = [...this.state.exps];
+		const target = newExps.filter(item => id === item.id)[0];
+		if (target) {
+			target.editable = true;
+			this.setState({
+				exps: newExps
+			});
+		}
 	}
 	handleCancelEdit = (id) => {
-		let exps = this.state.exps;
-		exps[id - 1].editable = null;
-		this.setState({
-			exps: exps
-		});
+		const newExps = [...this.state.exps];
+		const target = newExps.filter(item => id === item.id)[0];
+		if (target) {
+			Object.assign(target, this.cacheExps.filter(item => id === item.id)[0]);
+			delete target.editable;
+			this.setState({
+				exps: newExps
+			});
+		}
+	}
+	handleChange = (id, key, value) => {
+		const newExps = [...this.state.exps];
+		const target = newExps.filter(item => id === item.id)[0];
+		if (target) {
+			target[key] = value;
+			this.setState({ exps: newExps });
+		}
 	}
 	handleSavaEdit = (id) => {
-		let exps = this.state.exps;
-		exps[id - 1].editable = null;
-		this.setState({
-			exps: exps
+		const newExps = [...this.state.exps];
+		const target = newExps.filter(item => id === item.id)[0];
+		if (!target)
+			return;
+		delete target.editable;
+		fetch(`${config.server}/api/admin/exp/edit`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'x-access-token': localStorage.admin_token
+			},
+			body: JSON.stringify(target)
+		}).then(res => {
+			if (res.ok)
+				return res.json();
+		}).then(json => {
+			if (json && !json.err) {
+				message.info(json.msg);
+				this.setState({
+					exps: newExps
+				});
+				this.cacheData = newExps.map(item => ({ ...item }));
+			}
 		});
 	}
 	showModal = () => {
 		this.setState({
 			visible: true
+		});
+	}
+	addExp = (option) => {
+		let exps = this.state.exps;
+		exps.push(option);
+		this.setState({
+			exps: exps
 		});
 	}
 	componentWillMount = () => {
@@ -53,40 +94,40 @@ export default class Exps extends Component {
 				this.setState({
 					exps: json.exps
 				});
+				this.cacheExps = json.exps;
 			}
 		});
 	}
 	render () {
-		const EditableCell = (value, record) => (
+		const EditableCell = (value, record, name) => (
 			<div>
 				{	record.editable? 
-					<Input style={{ margin: '-5px 0' }} defaultValue={value}/>
+					<Input onChange={(e) => this.handleChange(record.id, name, e.target.value)} style={{ margin: '-5px 0' }} defaultValue={value}/>
 					:
 					value
 				}
 			</div>
 		);
-
 		let columns = [{
 			title: '实验室',
 			key: '1',
 			dataIndex: 'name',
-			render: (text, record) => EditableCell(text, record)
+			render: (text, record) => EditableCell(text, record, "name")
 		}, {
 			title: '实验室ip',
 			key: '2',
 			dataIndex: 'ip',
-			render: (text, record) => EditableCell(text, record)
+			render: (text, record) => EditableCell(text, record, "ip")
 		}, {
 			title: '实验室台数',
 			key: '3',
 			dataIndex: 'tablesCount',
-			render: (text, record) => EditableCell(text, record)
+			render: (text, record) => EditableCell(text, record, "tablesCount")
 		}, {
 			title: '地点',
 			key: '4',
 			dataIndex: 'address',
-			render: (text, record) => EditableCell(text, record)
+			render: (text, record) => EditableCell(text, record, "address")
 		}, {
 			title: '操作',
 			key: '5',
@@ -122,7 +163,7 @@ export default class Exps extends Component {
 						onCancel={this.handleCancel}
 						footer={null}
 					>
-						<AddExp handleCancel={this.handleCancel}/>
+						<AddExp addExp={this.addExp} handleCancel={this.handleCancel}/>
 					</Modal>
 				</Card>
 			</div>

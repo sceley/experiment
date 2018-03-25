@@ -13,7 +13,7 @@ class Info extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				fetch(`${config.server}/api/userinfo/edit`, {
+				fetch(`${config.server}/api/user/info/edit`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ class Info extends Component {
 		});
 	}
 	componentWillMount = () => {
-		fetch(`${config.server}/api/userinfo`, {
+		fetch(`${config.server}/api/user/info`, {
 			method: 'GET',
 			headers: {
 				'x-access-token': localStorage.user_token

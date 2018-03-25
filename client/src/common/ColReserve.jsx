@@ -8,10 +8,8 @@ export default class ConReserve extends Component {
 	}
 	componentWillMount = () => {
 		this.mounted = true;
-	}
-	componentDidMount = () => {
 		let complete = this.props.complete;
-		fetch(`${config.server}/api/onereserves?complete=${complete}`, {
+		fetch(`${config.server}/api/user/onereserves?complete=${complete}`, {
 			method: 'GET',
 			headers: {
 				'x-access-token': localStorage.user_token
@@ -29,7 +27,7 @@ export default class ConReserve extends Component {
 		});
 	}
 	cancelReserve = (id) => {
-		fetch(`${config.server}/api/reserve/${id}`, {
+		fetch(`${config.server}/api/user/reserve/${id}`, {
 			method: 'delete',
 			headers: {
 				'x-access-token': localStorage.user_token
@@ -61,9 +59,9 @@ export default class ConReserve extends Component {
 			render: text => text,
 		}, {
 			title: '实验室',
-			dataIndex: 'exp_id',
+			dataIndex: 'name',
 			key: '2',
-			render: text => `实验室${text}`
+			render: text => text
 		}, {
 			title: '座位',
 			dataIndex: 'table_id',

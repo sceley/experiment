@@ -12,17 +12,11 @@ const { Sider, Content, Header } = Layout;
 
 export default class Person extends Component {
 	state={
-		current: 'info',
-		collapsed: false
+		current: 'info'
 	}
 	handleClick = (e) => {
 		this.setState({
 			current: e.key
-		});
-	}
-	toggleCollapsed = () => {
-		this.setState({
-			collapsed: !this.state.collapsed,
 		});
 	}
 	handleLogout = () => {
@@ -30,10 +24,9 @@ export default class Person extends Component {
 		this.props.history.push('/user/login');
 	}
 	componentWillMount = () => {
-		console.log("User");
 		if (!localStorage.user_token) {
-			// message.error("请先登陆");
-			// this.props.history.push('/user/login');
+			message.error("请先登陆");
+			this.props.history.push('/user/login');
 		}
 	}
 	handleBack = () => {
@@ -52,7 +45,6 @@ export default class Person extends Component {
 							selectedKeys={[this.state.current]}
 							mode="inline"
 							theme="dark"
-							inlineCollapsed={this.state.collapsed}
 						>
 							<Menu.Item key="info">
 								<Link to={`${this.props.match.url}`}>

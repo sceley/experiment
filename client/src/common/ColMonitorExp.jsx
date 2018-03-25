@@ -41,6 +41,16 @@ export default class ColMonitorExp extends Component {
                 return res.json();
         }).then(json => {
             if (json && !json.err) {
+                let tables = this.state.tables;
+                tables = tables.map(table => {
+                    if (table.id == id) {
+                        table.power_status = e;
+                    }
+                    return table;
+                });
+                this.setState({
+                    tables: tables
+                });
                 message.info(json.msg);
             } else {
                 message.error(json.msg);
@@ -53,7 +63,7 @@ export default class ColMonitorExp extends Component {
                 title: '座位',
                 dataIndex: 'id',
                 key: '1',
-                render: text => text
+                render: text => parseInt(text) % 10
             }, {
                 title: '状态',
                 dataIndex: 'status',
@@ -92,8 +102,8 @@ export default class ColMonitorExp extends Component {
                 title: '电源操作',
                 dataIndex: 'id',
                 key: '4',
-                render: id => {
-                    let power = this.state.tables[id - 1] && this.state.tables[id - 1].power_status;
+                render: (id, record) => {
+                    let power = record.power_status;
                     let handleChange = () => {
                         this.handleSwitch(id, !power);
                     };

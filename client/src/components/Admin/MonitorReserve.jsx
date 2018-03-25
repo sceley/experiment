@@ -7,8 +7,12 @@ export default class ManageReserve extends Component {
 		reserves: []
 	}
 	componentWillMount = () => {
-		fetch(`${config.server}/api/reserves?status=0`)
-		.then(res => {
+		fetch(`${config.server}/api/admin/reserves?status=0`, {
+			method: 'get',
+			headers: {
+				'x-access-token': localStorage.admin_token
+			}
+		}).then(res => {
 			if (res.ok) {
 				return res.json();
 			}
@@ -39,6 +43,16 @@ export default class ManageReserve extends Component {
 		}).then(json => {
 			if (json && !json.err) {
 				message.info(json.msg);
+				let reserves = this.state.reserves;
+				reserves = reserves.map(item => {
+					if (item.id === id) {
+						item.status = !item.status;
+					}
+					return item;
+				});
+				this.setState({
+					reserves: reserves
+				});
 			} else {
 				message.error(json.msg);
 			}
@@ -58,9 +72,9 @@ export default class ManageReserve extends Component {
 			render: text => moment(text).format("YYYY-MM-DD")
 		}, {
 			title: '实验室',
-			dataIndex: 'exp_id',
+			dataIndex: 'name',
 			key: '3',
-			render: text => `实验室${text}`
+			render: text => text
 		}, {
 			title: '座位',
 			dataIndex: 'table_id',
@@ -76,9 +90,14 @@ export default class ManageReserve extends Component {
 			key: '6',
 			render: text => text || '无'
 		}, {
+			title: '审核人',
+			dataIndex: 'approver',
+			key: '7',
+			render: text => text || '无'
+		}, {
 			title: '状态',
 			dataIndex: 'status',
-			key: '7',
+			key: '8',
 			render: text => {
 				if (text === 0)
 					return '审核中'
@@ -88,21 +107,23 @@ export default class ManageReserve extends Component {
 		}, {
 			title: '开始时间',
 			dataIndex: 'start',
+			key: '9',
 			render: text => {
 				return text;
 			}
 		}, {
 			title: '结束时间',
 			dataIndex: 'end',
+			key: '10',
 			render: text => {
 				return `${text}`;
 			}
 		}, {
 			title: '操作',
 			dataIndex: 'id',
-			key: '8',
-			render: (id) => {
-				let status = this.state.reserves[id - 1].status;
+			key: '11',
+			render: (id, record) => {
+				let status = record.status;
 				let handleChange = () => {
 					this.permission(id, !status);
 				};

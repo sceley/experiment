@@ -181,7 +181,7 @@ exports.showInfo = async (req, res) => {
 exports.showUsers = async (req, res) => {
 	try {
 		let users = await new Promise((resolve, reject) => {
-			let sql = 'select name, grade, major, sex, mobile, account, forbidden from User';
+			let sql = 'select id, name, grade, major, sex, mobile, account, forbidden, active from User';
 			db.query(sql, (err, users) => {
 				if (err) 
 					reject(err);

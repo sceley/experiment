@@ -5,7 +5,6 @@ exports.sign = async (key, value) => {
 		exp: Math.floor(Date.now() / 1000) + (60 * 60 * 24)
 	};//a day
 	obj[key] = value;
-	console.log(obj);
 	let token = await new Promise((resolve, reject) => {
 		jwt.sign(obj, config.jsonwebtoken.secret, (err, token) => {
 			if (err) 

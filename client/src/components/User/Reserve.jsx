@@ -18,7 +18,7 @@ class Reserve extends Component {
 				values.Tab = values.Location[1];
 				values.Date = moment(values.Date).format("YYYY-MM-DD");
 				delete values.Location;
-				fetch(`${config.server}/api/addreserve`, {
+				fetch(`${config.server}/api/user/addreserve`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -32,6 +32,8 @@ class Reserve extends Component {
 				}).then(json => {
 					if (!json.err) {
 						message.info(json.msg);
+					} else if (json) {
+						message.warning(json.msg);
 					}
 				});
 			}
@@ -89,7 +91,7 @@ class Reserve extends Component {
 		for (let i = 1; i <= this.state.exps.length; i++) {
 			let item = {
 				value: `${i}`,
-				label: `实验室${i}`,
+				label: this.state.exps[i - 1].name,
 				children: []
 			};
 			for (let j = 1; j <= this.state.exps[i - 1].tablesCount; j++) {
@@ -161,7 +163,7 @@ class Reserve extends Component {
 						{getFieldDecorator('Location', {
 							rules: [{ type: 'array', required: true, message: '请选择位置!' }],
 						})(
-							<Cascader style={{ width: 'auto' }} options={residences} placeholder="选择位置" />
+							<Cascader options={residences} placeholder="选择位置" />
 						)}
 					</FormItem>
 					<FormItem
