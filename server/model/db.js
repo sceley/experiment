@@ -30,6 +30,7 @@ const table3 = `create table if not exists Experiment (
 				id int unsigned auto_increment,
 				name varchar(15),
 				ip varchar(20),
+				port varchar(10),
 				address varchar(15),
 				door boolean default 0,
 				status boolean default 0,

@@ -3,7 +3,7 @@ const http = require('http');
 const net = require('net');
 const config = require('./config');
 const router = require('./router');
-const socket = require('./controllers/tcp/socket');
+const socket = require('./controllers/tcp/socket').socket;
 
 let app = express();
 let server = http.createServer(app);

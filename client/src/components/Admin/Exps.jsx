@@ -119,18 +119,23 @@ export default class Exps extends Component {
 			dataIndex: 'ip',
 			render: (text, record) => EditableCell(text, record, "ip")
 		}, {
-			title: '实验室台数',
+			title: '实验室IP端口',
 			key: '3',
+			dataIndex: 'port',
+			render: (text, record) => EditableCell(text, record, "port")
+		}, {
+			title: '实验室台数',
+			key: '4',
 			dataIndex: 'tablesCount',
 			render: (text, record) => EditableCell(text, record, "tablesCount")
 		}, {
 			title: '地点',
-			key: '4',
+			key: '5',
 			dataIndex: 'address',
 			render: (text, record) => EditableCell(text, record, "address")
 		}, {
 			title: '操作',
-			key: '5',
+			key: '6',
 			dataIndex: 'id',
 			render: (text, record) => {
 				if (record.editable) {

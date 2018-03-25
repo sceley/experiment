@@ -27,8 +27,9 @@ class AddExp extends Component {
 						this.props.addExp({
 							name: values.Name,
 							ip: values.Ip,
+							port: values.Port,
 							tablesCount: values.TableCount,
-							address: values.Adderss
+							address: values.Address
 						});
 					} else if(json) {
 						message.error(json.msg);
@@ -60,6 +61,15 @@ class AddExp extends Component {
 						})(
 							<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="实验室IP" />
 							)}
+					</FormItem>
+					<FormItem
+						label="实验室IP端口"
+					>
+						{getFieldDecorator('Port', {
+							rules: [{ required: true, message: '实验室IP端口不能为空!' }],
+						})(
+							<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="实验室IP端口" />
+						)}
 					</FormItem>
 					<FormItem
 						label="实验台数"

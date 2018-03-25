@@ -24,7 +24,7 @@ const notify = require('./controllers/api/notification').notify;
 const notifications = require('./controllers/api/notification').notifications;
 const deleteNotification = require('./controllers/api/notification').deleteNotification;
 const switchPower = require('./controllers/api/tab').switchPower;
- 
+
 //middleware
 const user_session = require('./middleware/oauth').user_session;
 const admin_session = require('./middleware/oauth').admin_session;

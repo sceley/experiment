@@ -17,8 +17,8 @@ exports.addExperiment = async (req, res) => {
 				msg: '该实验室已经存在'
 			});
 		await new Promise((resolve, reject) => {
-			let sql = 'insert into Experiment(name, ip, address) values(?, ?, ?)';
-			db.query(sql, [body.Name, body.IP, body.Address], (err) => {
+			let sql = 'insert into Experiment(name, ip, port, address) values(?, ?, ?, ?)';
+			db.query(sql, [body.Name, body.IP, body.Port, body.Address], (err) => {
 				if (err)
 					reject(err);
 				else
@@ -83,7 +83,7 @@ exports.monitorExp = async (req, res) => {
 exports.showExps = async (req, res) => {
 	try {
 		let exps = await new Promise((resolve, reject) => {
-			let sql = `select Experiment.id, ip, count(Tab.id) as tablesCount, 
+			let sql = `select Experiment.id, ip, port, count(Tab.id) as tablesCount, 
 			address, name from Experiment left join Tab on 
 			Experiment.id=Tab.exp_id group by Experiment.id`;
 			db.query(sql, (err, exps) => {
@@ -168,8 +168,8 @@ exports.editExp = async (req, res) => {
 	let body = req.body;
 	try {
 		await new Promise((resolve, reject) => {
-			let sql = 'update Experiment set name=?, ip=?, address=? where id=?';
-			db.query(sql, [body.name, body.ip, body.address, body.id], err => {
+			let sql = 'update Experiment set name=?, ip=?, port=?, address=? where id=?';
+			db.query(sql, [body.name, body.ip, body.port, body.address, body.id], err => {
 				if (err)
 					reject(err);
 				else
@@ -201,7 +201,6 @@ exports.editExp = async (req, res) => {
 			msg: '修改成功'
 		});
 	} catch (e) {
-		console.log(e);
 		res.json({
 			err: 1,
 			msg: '服务器出错了'

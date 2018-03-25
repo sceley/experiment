@@ -1,5 +1,6 @@
-// const db = require('../model/db');
-module.exports = async socket => {
+const db = require('../model/db');
+const net = require('net');
+exports.socket = async socket => {
 	try {
 		let res = await new Promise((resolve, reject) => {
 			socket.on('data', data => {
@@ -12,6 +13,9 @@ module.exports = async socket => {
 	} catch (e) {
 		console.log(e);
 	}
+};
+exports.send = async (options) => {
+
 };
 
 //let data = "NUM1234EXP12TAB10ID16051223POW1DOR1FAU1";
