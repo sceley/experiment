@@ -4,7 +4,46 @@ exports.addReserve = async (req, res) => {
     let id = req.user_session.uid;
     let body = req.body;
     let createAt = moment(new Date()).format('YYYY-MM-DD');
+    if (!body.Date) {
+        res.json({
+            err: 1,
+            msg: '请选择日期'
+        });
+    }
+    if (!(body.Start && body.End)) {
+        res.json({
+            err: 1,
+            msg: '请选择合适的时间段'
+        });
+    }
+    if (!body.Exp) {
+        res.json({
+            err: 1,
+            msg: '请选择实验室'
+        });
+    }
+    if (!body.Tab) {
+        res.json({
+            err: 1,
+            msg: '请选择位置'
+        });
+    }
     try {
+        let reserves = await new Promise((resolve, reject) => {
+            let sql = 'select exp_id, table_id from Reserve where date=? and ((start<? and start>=?) or (end<=? and end>?) or (start=? and end=?))';
+            db.query(sql, [body.Date, body.End, body.Start, body.End, body.Start, body.Start, body.End], (err, reserves) => {
+                if (err)
+                    reject(err);
+                else
+                    resolve(reserves);
+            });
+        });
+        if (reserves.length > 0) {
+            return res.json({
+                err: 1,
+                msg: '该时间段不能预约'
+            });
+        }
         if (body.Equipment)
             await new Promise((resolve, reject) => {
                 let sql = `insert into Reserve(user_id, exp_id, table_id, start, 
@@ -32,7 +71,6 @@ exports.addReserve = async (req, res) => {
             msg: '预约成功'
         });
     } catch (e) {
-        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'
@@ -60,7 +98,6 @@ exports.showOneReserves = async (req, res) => {
             reserves
         });
     } catch (e) {
-        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'
@@ -75,7 +112,7 @@ exports.showReserves = async (req, res) => {
             let sql = `select exp_id, table_id, createAt, Reserve.id, equipment,  
             address, Reserve.status, start, end from Reserve left join Experiment 
             on Reserve.exp_id=Experiment.id`;
-            db.query(sql, [status], (err, reserves) => {
+            db.query(sql, (err, reserves) => {
                 if (err)
                     reject(err);
                 else
@@ -87,7 +124,6 @@ exports.showReserves = async (req, res) => {
             reserves
         });
     } catch (e) {
-        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'
