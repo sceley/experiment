@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Switch, message, Card} from 'antd';
+import { Table, Switch, message, Card, Popconfirm} from 'antd';
 import config from '../../config';
 export default class ManageUser extends Component {
 	state = {
@@ -88,22 +88,32 @@ export default class ManageUser extends Component {
 			}, {
 				title: '操作',
 				dataIndex: 'id',
-				key: '7',
+				key: '8',
 				render: id => {
 					let forbidden = this.state.users[id] && this.state.users[id].forbidden;
-					let handleChange = e => {
-						this.handleSwitch(id, e);
+					let handleChange = () => {
+						this.handleSwitch(id, !forbidden);
 					}
-					return (
-						<Switch onChange={handleChange} checkedChildren="禁止" unCheckedChildren="允许" defaultChecked={forbidden} />
-					)
+					if (!forbidden) {
+						return (
+							<Popconfirm title="确定禁止?" onConfirm={handleChange} okText="Yes" cancelText="No">
+								<a>禁止</a>
+							</Popconfirm>
+						);
+					} else {
+						return (
+							<Popconfirm title="确定允许?" onConfirm={handleChange} okText="Yes" cancelText="No">
+								<a>允许</a>
+							</Popconfirm>
+						);
+					}
 				}
 			}
 		];
 		return (
 			<div className="ManageUser Container">
 				<Card>
-					<Table rowKey="id" columns={columns} bordered={true} dataSource={this.state.users}/>
+					<Table pagination={false} rowKey="id" columns={columns} bordered={true} dataSource={this.state.users}/>
 				</Card>
 			</div>
 		);

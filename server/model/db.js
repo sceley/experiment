@@ -75,11 +75,18 @@ const table5 = `create table if not exists Reserve (
 	0 未完成
 	1 完成
 */
+const table6 = `create table if not exists Notification (
+				id int unsigned auto_increment,
+				createAt date,
+				msg longtext,
+				primary key(id)
+				)`;
 				
 connection.query(table1);
 connection.query(table2);
 connection.query(table3);
 connection.query(table4);
 connection.query(table5);
+connection.query(table6);
 
 module.exports = connection;

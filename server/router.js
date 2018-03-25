@@ -18,8 +18,11 @@ const showReserves = require('./controllers/api/reserve').showReserves;
 const monitorReserve = require('./controllers/api/reserve').monitorReserve;
 const deleteReserve = require('./controllers/api/reserve').deleteReserve;
 const showRestExps = require('./controllers/api/experiment').showRestExps;
+const expsCount = require('./controllers/api/experiment').expsCount;
 const adminLogin = require('./controllers/api/admin').login;
-// const monitorUser = require('./controllers/api/admin').monitorUser;
+const notify = require('./controllers/api/notification').notify;
+const notifications = require('./controllers/api/notification').notifications;
+const deleteNotification = require('./controllers/api/notification').deleteNotification;
 const switchPower = require('./controllers/api/tab').switchPower;
  
 //middleware
@@ -35,12 +38,14 @@ router.get('/api/experiments', monitorExperiment);
 router.get('/api/reserves', showReserves);
 router.get('/api/onereserves', user_session, showOneReserves);
 router.get('/api/admin/monitorexp/:id', monitorExp);
-router.get('/api/admin/monitorreserve/:id', admin_session, monitorReserve);
 router.get('/api/users', showUsers);
 router.get('/api/admin/exps', showExps);
+router.get('/api/notifications', notifications);
+router.get('/api/expscount', expsCount);
 
 //delete
 router.delete('/api/reserve/:id', deleteReserve);
+router.delete('/api/admin/notification/:id', admin_session, deleteNotification);
 //middleware
 router.use(bodyparser.json());
 //post
@@ -50,8 +55,10 @@ router.post('/api/restexps', showRestExps);
 router.post('/api/userinfo/edit', user_session, editInfo);
 router.post('/api/addreserve', user_session, addReserve);
 router.post('/api/admin/login', adminLogin);
+router.post('/api/admin/monitorreserve', admin_session, monitorReserve);
 router.post('/api/admin/monitoruser', monitorUser);
 router.post('/api/admin/addexperiment', admin_session, addExperiment);
 router.post('/api/admin/switchpower', admin_session, switchPower);
+router.post('/api/admin/notify', admin_session, notify);
 
 module.exports = router;

@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { Table, message, Icon } from 'antd';
+import { Table, message, Icon, Popconfirm } from 'antd';
 import config from '../config'
 export default class ConReserve extends Component {
 	state = {
 		reserves: []
 	}
-	componentDidMount = () => {
+	componentWillMount = () => {
 		this.mounted = true;
+	}
+	componentDidMount = () => {
 		let complete = this.props.complete;
 		fetch(`${config.server}/api/onereserves?complete=${complete}`, {
 			method: 'GET',
@@ -102,20 +104,22 @@ export default class ConReserve extends Component {
 			title: '操作',
 			dataIndex: 'id',
 			key: '8',
-			render: (id) => {
+			render: (id, record) => {
 				let handleCancel = () => {
 					this.cancelReserve(id);
 				};
 				return (
-					<a>
-						<Icon onClick={handleCancel} type="delete" />
-					</a>
+					<Popconfirm title="确定取消?" okText="Yes" cancelText="No" onConfirm={handleCancel}>
+						<a>
+							取消
+  						</a>
+					</Popconfirm>
 				);
 			}
 		}];
 		return (
 			<div>
-				<Table rowKey="id" columns={columns} bordered={true} dataSource={this.state.reserves} />
+				<Table pagination={false} rowKey="id" columns={columns} bordered={true} dataSource={this.state.reserves} />
 			</div>
 		);
 	}

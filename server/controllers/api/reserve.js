@@ -73,8 +73,8 @@ exports.showReserves = async (req, res) => {
     try {
         let reserves = await new Promise((resolve, reject) => {
             let sql = `select exp_id, table_id, createAt, Reserve.id, equipment,  
-            address, status, start, end from Reserve left join Experiment 
-            on Reserve.exp_id=Experiment.id where status=?`;
+            address, Reserve.status, start, end from Reserve left join Experiment 
+            on Reserve.exp_id=Experiment.id`;
             db.query(sql, [status], (err, reserves) => {
                 if (err)
                     reject(err);
@@ -87,6 +87,7 @@ exports.showReserves = async (req, res) => {
             reserves
         });
     } catch (e) {
+        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'
@@ -119,21 +120,12 @@ exports.deleteReserve = async (req, res) => {
 };
 
 exports.monitorReserve = async (req, res) => {
-    let id = req.params.id;
+    let body = req.body;
+    console.log(body);
     try {
-        let reserve = await new Promise((resolve, reject) => {
-            let sql = 'select status from Reserve where id=?';
-            db.query(sql, [id], (err, reserves) => {
-                if (err) 
-                    reject(err);
-                else 
-                    resolve(reserves[0]);
-            });
-        });
-        console.log(reserve);
         await new Promise((resolve, reject) => {
             let sql = 'update Reserve set status=? where id=?';
-            db.query(sql, [!reserve.status, id], (err) => {
+            db.query(sql, [body.status, body.id], (err) => {
                 if (err)
                     reject(err);
                 else 
@@ -145,7 +137,6 @@ exports.monitorReserve = async (req, res) => {
             msg: 'success'
         });
     } catch (e) {
-        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'

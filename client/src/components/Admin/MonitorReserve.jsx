@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Icon, Switch, Card } from 'antd';
+import { Table, Icon, Switch, Card, Popconfirm, message } from 'antd';
 import moment from 'moment';
 import config from '../../config';
 export default class ManageReserve extends Component {
@@ -20,18 +20,28 @@ export default class ManageReserve extends Component {
 			}
 		});
 	}
-	permission = (id) => {
-		fetch(`${config.server}/api/admin/monitorreserve/${id}`, {
-			method: 'GET',
+	permission = (id, status) => {
+		let body = {
+			id,
+			status
+		};
+		fetch(`${config.server}/api/admin/monitorreserve`, {
+			method: 'POST',
 			headers: {
+				'Content-Type': 'application/json',
 				'x-access-token': localStorage.admin_token
-			}
+			},
+			body: JSON.stringify(body)
 		}).then(res => {
 			if (res.ok) {
 				return res.json();
 			}
 		}).then(json => {
-			console.log(json);
+			if (json && !json.err) {
+				message.info(json.msg);
+			} else {
+				message.error(json.msg);
+			}
 		});
 		
 	}
@@ -92,18 +102,29 @@ export default class ManageReserve extends Component {
 			dataIndex: 'id',
 			key: '8',
 			render: (id) => {
+				let status = this.state.reserves[id - 1].status;
 				let handleChange = () => {
-					this.permission(id);
+					this.permission(id, !status);
 				};
-				return (
-					<Switch onChange={handleChange} checkedChildren="允许" unCheckedChildren="不允许" defaultChecked={false} />
-				);
+				if (status) {
+					return (
+						<Popconfirm title="确定不允许?" onConfirm={handleChange} okText="Yes" cancelText="No">
+							<a>不允许</a>
+						</Popconfirm>
+					);
+				} else {
+					return (
+						<Popconfirm title="确定允许?" onConfirm={handleChange} okText="Yes" cancelText="No">
+							<a>允许</a>
+						</Popconfirm>
+					);
+				}
 			}
 		}];
 		return (
 			<div className="ManageReserve Container">
 				<Card>
-					<Table rowKey="id" bordered={true} columns={columns} dataSource={this.state.reserves}/>
+					<Table pagination={false} rowKey="id" bordered={true} columns={columns} dataSource={this.state.reserves}/>
 				</Card>
 			</div>
 		);

@@ -138,7 +138,6 @@ exports.showExps = async (req, res) => {
 
 exports.showRestExps = async (req, res) => {
 	let body = req.body;
-	console.log(body);
 	try {
 		let reserves = await new Promise((resolve, reject) => {
 			let sql = 'select exp_id, table_id from Reserve where date=? and ((start<? and start>=?) or (end<=? and end>?) or (start=? and end=?))';
@@ -165,6 +164,29 @@ exports.showRestExps = async (req, res) => {
 		});
 	} catch (e) {
 		console.log(e);
+		res.json({
+			err: 1,
+			msg: '服务器出错了'
+		});
+	}
+};
+
+exports.expsCount = async (req, res) => {
+	try {
+		let count = await new Promise((resolve, reject) => {
+			let sql = 'select count(id) as count from Experiment';
+			db.query(sql, (err, exps) => {
+				if (err)
+					reject(err);
+				else 
+					resolve(exps[0].count);
+			});
+		});
+		res.json({
+			err: 0,
+			count
+		});
+	} catch (e) {
 		res.json({
 			err: 1,
 			msg: '服务器出错了'
