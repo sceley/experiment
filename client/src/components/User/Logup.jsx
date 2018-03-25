@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Button, Input, Icon, message } from 'antd';
 import HeaderForLog from '../../common/Header-Log';
+import Notifications from '../../common/Notifications';
 import config from '../../config';
 import './Logup.css';
 const FormItem = Form.Item;
@@ -76,6 +77,7 @@ class Logup extends Component {
 						</FormItem>
 					</Form>
 				</div>
+				<Notifications/>
 			</div>
 		);
 	}

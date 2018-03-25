@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { List, Card, Button, Modal, Icon, message } from 'antd';
+import { List, Card, Button, Modal, Icon, message, Popconfirm } from 'antd';
 import Notify from '../../common/Notify';
 import config from '../../config';
 export default class Notification extends Component {
@@ -57,7 +57,12 @@ export default class Notification extends Component {
 					renderItem={item => (
 						<List.Item>
 							<Card
-								actions={[<Icon type="delete" onClick={() => this.handleDelete(item.id)}/>]}
+								title={item.title}
+								actions={[
+									<Popconfirm title="确定取消?" onConfirm={() => this.handleDelete(item.id)} okText="Yes" cancelText="No">
+										<Icon type="delete"/>
+									</Popconfirm>
+								]}
 							>{item.msg}</Card>
 						</List.Item>
 					)}

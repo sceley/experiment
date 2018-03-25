@@ -35,6 +35,17 @@ class Notify extends Component {
             <div className="Notify">
                 <Form onSubmit={this.handleSubmit}>
                     <FormItem
+                        label="标题"
+                    >
+                        {getFieldDecorator('Title', {
+                            rules: [{
+                                required: true, message: '请输入你的消息标题!',
+                            }],
+                        })(
+                            <Input placeholder="标题" />
+                        )}
+                    </FormItem>
+                    <FormItem
                         label="消息"
                     >
                         {getFieldDecorator('Notification', {
@@ -42,7 +53,7 @@ class Notify extends Component {
                                 required: true, message: '请输入你要发布的消息!',
                             }],
                         })(
-                            <TextArea rows={8} />
+                            <TextArea placeholder="消息主体" rows={8} />
                         )}
                     </FormItem>
                     <FormItem>

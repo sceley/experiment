@@ -39,39 +39,39 @@ class Login extends Component {
 		const { getFieldDecorator } = this.props.form;
 		return (
 			<div className="Login-Wrap">
-			<div className="Login">
-				<HeaderForLog/>
-				<div className="Title">
-					账号登录
+				<div className="Login">
+					<HeaderForLog/>
+					<div className="Title">
+						账号登录
+					</div>
+					<Form onSubmit={this.handleSubmit}>
+						<FormItem
+							label="帐号"
+						>
+							{getFieldDecorator('Account', {
+								rules: [{ required: true, message: '账号不能为空!' }],
+							})(
+								<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="手机号/学号" />
+								)}
+						</FormItem>
+						<FormItem
+							label="密码"
+						>
+							{getFieldDecorator('Password', {
+								rules: [{ required: true, message: '密码不能为空!' }],
+							})(
+								<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="6-16位字符（字母、数字、符号的组合）" />
+								)}
+						</FormItem>
+						<FormItem>
+							<a className="login-form-forgot" href="/forgetpassword">忘记密码</a>
+							<Button type="primary" htmlType="submit" className="login-form-button">
+								Log in
+							</Button>
+							<Link to="/user/logup">现在注册!</Link>
+						</FormItem>
+					</Form>
 				</div>
-				<Form onSubmit={this.handleSubmit}>
-					<FormItem
-						label="帐号"
-					>
-						{getFieldDecorator('Account', {
-							rules: [{ required: true, message: '账号不能为空!' }],
-						})(
-							<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="手机号/学号" />
-							)}
-					</FormItem>
-					<FormItem
-						label="密码"
-					>
-						{getFieldDecorator('Password', {
-							rules: [{ required: true, message: '密码不能为空!' }],
-						})(
-							<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="6-16位字符（字母、数字、符号的组合）" />
-							)}
-					</FormItem>
-					<FormItem>
-						<a className="login-form-forgot" href="/forgetpassword">忘记密码</a>
-						<Button type="primary" htmlType="submit" className="login-form-button">
-							Log in
-						</Button>
-						<Link to="/user/logup">现在注册!</Link>
-					</FormItem>
-				</Form>
-			</div>
 			</div>
 		);
 	}

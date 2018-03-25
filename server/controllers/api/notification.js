@@ -5,8 +5,8 @@ exports.notify = async (req, res) => {
     let createAt = moment().format("YYYY-MM-DD");
     try {
         await new Promise((resolve, reject) => {
-            let sql = 'insert into Notification(msg, createAt) values(?, ?)';
-            db.query(sql, [body.Notification, createAt], err => {
+            let sql = 'insert into Notification(msg, createAt, title) values(?, ?, ?)';
+            db.query(sql, [body.Notification, createAt, body.Title], err => {
                 if (err) {
                     reject(err);
                 } else {

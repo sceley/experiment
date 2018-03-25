@@ -60,7 +60,7 @@ export default class Exps extends Component {
 		const EditableCell = (value, record) => (
 			<div>
 				{	record.editable? 
-					<Input style={{ margin: '-5px 0' }} value={value}/>
+					<Input style={{ margin: '-5px 0' }} defaultValue={value}/>
 					:
 					value
 				}
@@ -97,7 +97,7 @@ export default class Exps extends Component {
 						<span>
 							<a onClick={() => this.handleSavaEdit(record.id)}>Save</a>
 							<Divider type="vertical" />
-							<Popconfirm title="确定取消?" onConfirm={() => this.handleCancelEdit(record.id)}>
+							<Popconfirm title="确定取消?" onConfirm={() => this.handleCancelEdit(record.id)} okText="Yes" cancelText="No">
 								<a>Cancel</a>
 							</Popconfirm>
 						</span>
