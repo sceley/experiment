@@ -157,11 +157,11 @@ exports.deleteReserve = async (req, res) => {
 
 exports.monitorReserve = async (req, res) => {
     let body = req.body;
-    console.log(body);
+    let approver = req.user_session.name;
     try {
         await new Promise((resolve, reject) => {
-            let sql = 'update Reserve set status=? where id=?';
-            db.query(sql, [body.status, body.id], (err) => {
+            let sql = 'update Reserve set status=?, approver=? where id=?';
+            db.query(sql, [body.status, approver, body.id], (err) => {
                 if (err)
                     reject(err);
                 else 
