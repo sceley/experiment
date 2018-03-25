@@ -1,4 +1,5 @@
-const db = require('../model/db');
+// const db = require('../model/db');
+
 const net = require('net');
 exports.socket = async socket => {
 	try {
@@ -15,7 +16,11 @@ exports.socket = async socket => {
 	}
 };
 exports.send = async (options) => {
-
+	const client = net.createConnection({ port: 8124 }, () => {
+		//'connect' listener
+		console.log('connected to server!');
+		client.write('world!\r\n');
+	});
 };
 
 //let data = "NUM1234EXP12TAB10ID16051223POW1DOR1FAU1";
