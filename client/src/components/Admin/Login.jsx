@@ -48,7 +48,7 @@ class Login extends Component {
 						{getFieldDecorator('Account', {
 							rules: [{ required: true, message: '账号不能为空!' }],
 						})(
-							<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="手机号/学号" />
+							<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="账号" />
 							)}
 					</FormItem>
 					<FormItem

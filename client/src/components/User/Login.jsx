@@ -23,7 +23,6 @@ class Login extends Component {
 					}
 				}).then(json => {
 					if (json && !json.err) {
-						// console.log(json);
 						localStorage.user_token = json.token;
 						message.info(json.msg);
 						this.props.history.push('/user');
@@ -34,7 +33,20 @@ class Login extends Component {
 			}
 		});
 	}
-
+	checkAccount = (rule, value, cb) => {
+		if (value && (value.length == 11 || value.length == 8)) {
+			cb();
+		} else {
+			cb("账号格式不正确");
+		}
+	}
+	checkPassword = (rule, value, cb) => {
+		if (value && (value.length >= 6 && value.length <= 16)) {
+			cb();
+		} else {
+			cb("密码格式不正确");
+		}
+	}
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
@@ -49,7 +61,10 @@ class Login extends Component {
 							label="帐号"
 						>
 							{getFieldDecorator('Account', {
-								rules: [{ required: true, message: '账号不能为空!' }],
+								rules: [{ required: true, message: '账号不能为空!' 
+								}, {
+									validator: this.checkAccount
+								}],
 							})(
 								<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="手机号/学号" />
 								)}
@@ -58,13 +73,15 @@ class Login extends Component {
 							label="密码"
 						>
 							{getFieldDecorator('Password', {
-								rules: [{ required: true, message: '密码不能为空!' }],
+								rules: [{ required: true, message: '密码不能为空!' 
+								}, {
+									validator: this.checkPassword
+								}],
 							})(
 								<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="6-16位字符（字母、数字、符号的组合）" />
 								)}
 						</FormItem>
 						<FormItem>
-							<a className="login-form-forgot" href="/forgetpassword">忘记密码</a>
 							<Button type="primary" htmlType="submit" className="login-form-button">
 								Log in
 							</Button>
