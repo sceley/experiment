@@ -26,4 +26,7 @@ netServar.listen(config.netServer.port, () => {
 	console.log(`netServar run at port=>${config.netServer.port}`);
 });
 
-// process.on('uncaugth');
+process.on('uncaugthException', e => {
+	console.log(e);
+	process.exit(1);
+});

@@ -30,16 +30,16 @@ exports.addReserve = async (req, res) => {
         });
     }
     try {
-        let reserves = await new Promise((resolve, reject) => {
-            let sql = 'select exp_id, table_id from Reserve where date=? and ((start<? and start>=?) or (end<=? and end>?) or (start=? and end=?))';
-            db.query(sql, [body.Date, body.End, body.Start, body.End, body.Start, body.Start, body.End], (err, reserves) => {
+        let reserves_count = await new Promise((resolve, reject) => {
+            let sql = 'select count(id) as count from Reserve where exp_id=? and table_id=? and date=? and ((start<? and start>=?) or (end<=? and end>?) or (start=? and end=?))';
+            db.query(sql, [body.Exp, body.Tab, body.Date, body.End, body.Start, body.End, body.Start, body.Start, body.End], (err, reserves) => {
                 if (err)
                     reject(err);
                 else
-                    resolve(reserves);
+                    resolve(reserves[0].count);
             });
         });
-        if (reserves.length > 0) {
+        if (reserves_count > 0) {
             return res.json({
                 err: 1,
                 msg: '该时间段不能预约'

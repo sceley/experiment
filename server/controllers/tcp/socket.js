@@ -53,13 +53,17 @@ exports.send = async (options) => {
 		options.Tab = '0' + options.Tab;
 	}
 	let msg = `NUM${options.reserve_id}EXP${options.Exp}TAB${options.Tab}ID${options.id}POW${1}DOR${1}FAU${1}`;
-	const client = net.createConnection({ host: options.ip, port: options.port }, () => {
-		client.write(msg);
-		client.end();
-		client.on("close", () => {
-			console.log("关闭成功");
+	try {
+		const client = net.createConnection({ host: options.ip, port: options.port }, () => {
+			client.write(msg);
+			client.end();
+			client.on("close", () => {
+				console.log("关闭成功");
+			});
 		});
-	});
+	} catch (e) {
+		console.log(e);
+	}
 };
 
 //let data = "NUM1234EXP12TAB10ID16051223POW1DOR1FAU1";
