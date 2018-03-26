@@ -25,3 +25,5 @@ server.listen(config.server.port, () => {
 netServar.listen(config.netServer.port, () => {
 	console.log(`netServar run at port=>${config.netServer.port}`);
 });
+
+// process.on('uncaugth');
