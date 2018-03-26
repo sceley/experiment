@@ -71,11 +71,10 @@ export default class ConReserve extends Component {
 			title: '预约时间',
 			dataIndex: 'id',
 			key: '4',
-			render: id => {
-				let date = moment(this.state.reserves[id - 1] && this.state.reserves[id - 1].date)
-				.format("YYYY-MM-DD");
-				let start = this.state.reserves[id - 1] && this.state.reserves[id - 1].start;
-				let end = this.state.reserves[id - 1] && this.state.reserves[id - 1].end;
+			render: (id, record) => {
+				let date = moment(record.date).format("YYYY-MM-DD");
+				let start = record.start;
+				let end = record.end;
 				return `${date} ${start}-${end}时`
 			}
 		}, {
