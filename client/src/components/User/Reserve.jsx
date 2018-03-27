@@ -109,7 +109,11 @@ class Reserve extends Component {
 		}
 		let Options = [];
 		for (let i = 8; i <= 22; i++) {
-			Options.push(<Option key={i} value={i}>{`${i}时`}</Option>);
+			let disabled = false;
+			let hour = new Date().getHours();
+			if (i < hour)
+				disabled = true;
+			Options.push(<Option disabled={disabled} key={i} value={i}>{`${i}时`}</Option>);
 		}
 		return (
 			<div className="Reserve Container">

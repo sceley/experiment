@@ -80,6 +80,7 @@ export default class Exps extends Component {
 		});
 	}
 	componentWillMount = () => {
+		this.mounted = true;
 		fetch(`${config.server}/api/admin/exps`, {
 			method: 'get',
 			headers: {
@@ -161,7 +162,7 @@ export default class Exps extends Component {
 			<div className="Exps Container">
 				<Card>
 					<Button onClick={this.showModal} className="add-btn">Add</Button>
-					<Table pagination={false} bordered={true} rowKey="ip" boredered={true} columns={columns} dataSource={this.state.exps}/>
+					<Table pagination={false} bordered={true} rowKey="id" boredered={true} columns={columns} dataSource={this.state.exps}/>
 					<Modal
 						visible={this.state.visible}
 						closable={false}
