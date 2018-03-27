@@ -144,7 +144,7 @@ exports.showRestExps = async (req, res) => {
 exports.expsCount = async (req, res) => {
 	try {
 		let exps = await new Promise((resolve, reject) => {
-			let sql = 'select id, name from Experiment';
+			let sql = 'select id, name, door, status from Experiment';
 			db.query(sql, (err, exps) => {
 				if (err)
 					reject(err);
@@ -206,4 +206,28 @@ exports.editExp = async (req, res) => {
 			msg: '服务器出错了'
 		});
 	}
-}
+};
+
+exports.switchExp = async (req, res) => {
+	let body = req.body;
+	try {
+		await new Promise((resolve, reject) => {
+			let sql = 'update Experiment set door=? where id=?';
+			db.query(sql, [body.status, body.id], err => {
+				if (err)
+					reject(err);
+				else
+					resolve();
+			});
+		});
+		res.json({
+			err: 0,
+			msg: '开关拨动成功'
+		});
+	} catch (e) {
+		res.json({
+			err: 1,
+			msg: '服务器出错了'
+		});
+	}
+};

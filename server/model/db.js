@@ -79,7 +79,7 @@ const table5 = `create table if not exists Reserve (
 const table6 = `create table if not exists Notification (
 				id int unsigned auto_increment,
 				title varchar(50),
-				createAt date,
+				createAt datetime,
 				msg longtext,
 				primary key(id)
 				)`;

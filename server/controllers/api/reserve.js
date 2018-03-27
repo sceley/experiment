@@ -4,27 +4,28 @@ const send = require('../tcp/socket').send;
 exports.addReserve = async (req, res) => {
     let id = req.user_session.uid;
     let body = req.body;
+    let hour = new Date().getHours();
     let createAt = moment(new Date()).format('YYYY-MM-DD');
     if (!body.Date) {
-        res.json({
+        return res.json({
             err: 1,
             msg: '请选择日期'
         });
     }
-    if (!(body.Start && body.End)) {
-        res.json({
+    if (!(body.Start && body.End && body.Start > body.End && body.Start >= hour)) {
+        return res.json({
             err: 1,
             msg: '请选择合适的时间段'
         });
     }
     if (!body.Exp) {
-        res.json({
+        return res.json({
             err: 1,
             msg: '请选择实验室'
         });
     }
     if (!body.Tab) {
-        res.json({
+        return res.json({
             err: 1,
             msg: '请选择位置'
         });

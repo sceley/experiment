@@ -2,7 +2,7 @@ const db = require('../../model/db');
 const moment = require('moment');
 exports.notify = async (req, res) => {
     let body = req.body;
-    let createAt = moment().format("YYYY-MM-DD");
+    let createAt = moment().format("YYYY-MM-DD HH:MM");
     try {
         await new Promise((resolve, reject) => {
             let sql = 'insert into Notification(msg, createAt, title) values(?, ?, ?)';

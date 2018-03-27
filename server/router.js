@@ -14,6 +14,7 @@ const showRestExps = require('./controllers/api/experiment').showRestExps;
 const expsCount = require('./controllers/api/experiment').expsCount;
 const showExps = require('./controllers/api/experiment').showExps;
 const editExp = require('./controllers/api/experiment').editExp;
+const switchExp = require('./controllers/api/experiment').switchExp;
 const addReserve = require('./controllers/api/reserve').addReserve;
 const showOneReserves = require('./controllers/api/reserve').showOneReserves;
 const showReserves = require('./controllers/api/reserve').showReserves;
@@ -61,5 +62,6 @@ router.post('/api/admin/addexperiment', admin_session, addExperiment);
 router.post('/api/admin/switchpower', admin_session, switchPower);
 router.post('/api/admin/notify', admin_session, notify);
 router.post('/api/admin/exp/edit', admin_session, editExp);
+router.post('/api/admin/exp/switch', admin_session, switchExp);
 
 module.exports = router;
