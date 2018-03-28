@@ -69,6 +69,19 @@ exports.addReserve = async (req, res) => {
                         resolve();
                 });
             });
+            let NUM = await new Promise((resolve, reject) => {
+                let sql = `select id from Reserve where exp_id=? and seat=? and date=? and start=? and end=?`;
+                db.query(sql, [body.Exp, body.Tab, body.Date, body.Start, body.End], (err, reserves) => {
+                    if (err)
+                        reject(err);
+                    else
+                        resolve(reserves[0].id);
+                });
+            });
+            body.NUM = NUM;
+            body.ID = id;
+            let data = await spliceData(body);
+            console.log(data);
             // await new Promise((resolve, reject) => {
             //     let sql = 'update Tab set status=? where seat=?';
             //     db.query(sql, [1, body.Tab], err => {
@@ -92,8 +105,6 @@ exports.addReserve = async (req, res) => {
             //         let sql = 'update '
             //     });
             // }
-            let data = await spliceData(body, id);
-            console.log(data);
             // send(data);
         }
         res.json({
@@ -199,6 +210,22 @@ exports.switchReserve = async (req, res) => {
                     resolve();
             });
         });
+        let reserve = await new Promise((resolve, reject) => {
+            let sql = 'select * from Reserve where id=?';
+            db.query(sql, [body.id], (err, reserves) => {
+                if (err) 
+                    reject(err);
+                else
+                    resolve(reserves[0]);
+            });
+        });
+        let str = await spliceData({
+            NUM: reserve.id,
+            Tab: reserve.seat,
+            Exp: reserve.exp_id,
+            ID: reserve.user_id
+        });
+        console.log(str);
         res.json({
             err: 0,
             msg: '设置成功'
