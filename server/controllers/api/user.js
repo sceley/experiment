@@ -7,7 +7,7 @@ exports.login = async (req, res) => {
 	let body = req.body;
 	try {
 		let user = await new Promise((resolve, reject) => {
-			let sql = 'select id, password from User where account=? or mobile=?';
+			let sql = 'select password from User where account=? or mobile=?';
 			db.query(sql, [body.Account, body.Account], (err, users) => {
 				if (err)
 					reject(err);
@@ -30,7 +30,7 @@ exports.login = async (req, res) => {
 			});
 		});
 		if (result) {
-			let token = await sign("uid", user.id);
+			let token = await sign("uid", body.Account);
 			res.json({
 				err: 0,
 				msg: '登录成功',
@@ -130,7 +130,7 @@ exports.editInfo = async (req, res) => {
 			});
 		}
 		await new Promise((resolve, reject) => {
-			let sql = 'update User set sex=?, grade=?, major=?, name=?, mobile=?, active=? where id=?';
+			let sql = 'update User set sex=?, grade=?, major=?, name=?, mobile=?, active=? where account=?';
 			db.query(sql, [body.Sex, body.Grade, body.Major, body.Name, body.Mobile, true, id], (err) => {
 				if (err)
 					reject(err);
@@ -155,7 +155,7 @@ exports.showInfo = async (req, res) => {
 	let id = req.user_session.uid;
 	try {
 		let user = await new Promise((resolve, reject) => {
-			let sql = 'select * from User where id=?';
+			let sql = 'select * from User where account=?';
 			db.query(sql, [id], (err, users) => {
 				if (err) 
 					reject(err);
@@ -181,7 +181,7 @@ exports.showInfo = async (req, res) => {
 exports.showUsers = async (req, res) => {
 	try {
 		let users = await new Promise((resolve, reject) => {
-			let sql = 'select id, name, grade, major, sex, mobile, account, forbidden, active from User';
+			let sql = 'select name, grade, major, sex, mobile, account, forbidden, active from User';
 			db.query(sql, (err, users) => {
 				if (err) 
 					reject(err);
@@ -205,7 +205,7 @@ exports.monitorUser = async (req, res) => {
 	let body = req.body;
 	try {
 		await new Promise((resolve, reject) => {
-			let sql = 'update User set forbidden=? where id=?';
+			let sql = 'update User set forbidden=? where account=?';
 			db.query(sql, [body.forbidden, body.id], err => {
 				if (err) 
 					reject(err);

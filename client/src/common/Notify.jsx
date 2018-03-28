@@ -22,6 +22,10 @@ class Notify extends Component {
                     if (json && !json.err) {
                         message.info(json.msg);
                         this.props.handleCancel();
+                        this.props.addNotification({
+                            title: values.Title,
+                            msg: values.Notification
+                        });
                     } else {
                         message.error(json.msg);
                     }

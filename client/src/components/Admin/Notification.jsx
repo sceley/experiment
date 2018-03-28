@@ -17,6 +17,13 @@ export default class Notification extends Component {
 			visible: false
 		});
 	}
+	addNotification = (body) => {
+		let notifications = this.state.notifications;
+		notifications.push(body);
+		this.setState({
+			notifications: notifications
+		});
+	}
 	handleDelete = (id) => {
 		fetch(`${config.server}/api/admin/notification/${id}`, {
 			method: 'delete',
@@ -29,6 +36,13 @@ export default class Notification extends Component {
 		}).then(json => {
 			if (json && !json.err) {
 				message.info(json.msg);
+				let notifications = this.state.notifications;
+				notifications = notifications.filter(notification => {
+					return notification.id !== id;
+				});
+				this.setState({
+					notifications: notifications
+				});
 			} else {
 				message.error(json.msg);
 			}
@@ -74,7 +88,7 @@ export default class Notification extends Component {
 					closable={false}
 					onCancel={this.handleCancel}
 				>
-					<Notify handleCancel={this.handleCancel}/>
+					<Notify addNotification={this.addNotification} handleCancel={this.handleCancel}/>
 				</Modal>
 			</div>
 		);

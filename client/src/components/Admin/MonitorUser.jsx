@@ -105,7 +105,7 @@ export default class ManageUser extends Component {
 						return '否';
 				}
 			}, {
-				title: '操作',
+				title: '权限控制',
 				dataIndex: 'id',
 				key: '8',
 				render: (id, record) => {
@@ -132,7 +132,7 @@ export default class ManageUser extends Component {
 		return (
 			<div className="ManageUser Container">
 				<Card>
-					<Table pagination={false} rowKey="id" columns={columns} bordered={true} dataSource={this.state.users}/>
+					<Table pagination={false} rowKey="account" columns={columns} bordered={true} dataSource={this.state.users}/>
 				</Card>
 			</div>
 		);

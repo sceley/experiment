@@ -21,7 +21,7 @@ exports.socket = async socket => {
 			});
 		});
 		await new Promise((resolve, reject) => {
-			let sql = 'update Tab set power_status=? where id=? and exp_id=?';
+			let sql = 'update Tab set power_status=? where seat=? and exp_id=?';
 			db.query(sql, [parseInt(res.POW), parseInt(res.TAB), parseInt(res.EXP)], err => {
 				if (err)
 					reject(err);

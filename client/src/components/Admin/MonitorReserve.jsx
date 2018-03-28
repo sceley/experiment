@@ -29,7 +29,7 @@ export default class ManageReserve extends Component {
 			id,
 			status
 		};
-		fetch(`${config.server}/api/admin/monitorreserve`, {
+		fetch(`${config.server}/api/admin/switchreserve`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ export default class ManageReserve extends Component {
 			render: text => text
 		}, {
 			title: '座位',
-			dataIndex: 'table_id',
+			dataIndex: 'seat',
 			key: '4',
 			render: text => `${text}`
 		}, {

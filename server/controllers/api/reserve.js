@@ -1,5 +1,6 @@
 const moment = require('moment');
 const db = require('../../model/db');
+const spliceData = require('../../common/handlesocket').spliceData;
 const send = require('../tcp/socket').send;
 exports.addReserve = async (req, res) => {
     let id = req.user_session.uid;
@@ -12,7 +13,7 @@ exports.addReserve = async (req, res) => {
             msg: '请选择日期'
         });
     }
-    if (!(body.Start && body.End && body.Start > body.End && body.Start >= hour)) {
+    if (!(body.Start && body.End && body.Start < body.End && body.Start >= hour)) {
         return res.json({
             err: 1,
             msg: '请选择合适的时间段'
@@ -32,7 +33,7 @@ exports.addReserve = async (req, res) => {
     }
     try {
         let reserves_count = await new Promise((resolve, reject) => {
-            let sql = 'select count(id) as count from Reserve where exp_id=? and table_id=? and date=? and ((start<? and start>=?) or (end<=? and end>?) or (start=? and end=?))';
+            let sql = 'select count(id) as count from Reserve where exp_id=? and seat=? and date=? and ((start<? and start>=?) or (end<=? and end>?) or (start=? and end=?))';
             db.query(sql, [body.Exp, body.Tab, body.Date, body.End, body.Start, body.End, body.Start, body.Start, body.End], (err, reserves) => {
                 if (err)
                     reject(err);
@@ -48,7 +49,7 @@ exports.addReserve = async (req, res) => {
         }
         if (body.Equipment) {
             await new Promise((resolve, reject) => {
-                let sql = `insert into Reserve(user_id, exp_id, table_id, start, 
+                let sql = `insert into Reserve(user_id, exp_id, seat, start, 
                 end, date, createAt, equipment) values(?, ?, ?, ?, ?, ?, ?, ?)`;
                 db.query(sql, [id, body.Exp, body.Tab, body.Start, body.End, body.Date, createAt, body.Equipment], err => {
                     if (err)
@@ -59,7 +60,7 @@ exports.addReserve = async (req, res) => {
             });
         } else {
             await new Promise((resolve, reject) => {
-                let sql = `insert into Reserve(user_id, exp_id, table_id, start,
+                let sql = `insert into Reserve(user_id, exp_id, seat, start,
                 end, date, createAt, status) values(?, ?, ?, ?, ?, ?, ?, ?)`;
                 db.query(sql, [id, body.Exp, body.Tab, body.Start, body.End, body.Date, createAt, 1], err => {
                     if (err)
@@ -68,39 +69,32 @@ exports.addReserve = async (req, res) => {
                         resolve();
                 });
             });
-            let reserve_id = await new Promise((resolve, reject) => {
-                let sql = `select id from Reserve where exp_id=? and table_id=? 
-                and date=? and start=? and end=?`;
-                db.query(sql, [body.Exp, body.Tab, body.Date, body.Start, body.End], (err, reserves) => {
-                    if (err)
-                        reject(err);
-                    else
-                        resolve(reserves[0].id);
-                });
-            });
-            let school_number = await new Promise((resolve, reject) => {
-                let sql = 'select account from User where id=?';
-                db.query(sql, [id], (err, users) => {
-                    if (err)
-                        reject(err);
-                    else
-                        resolve(users[0].account);
-                });
-            });
-            let exp = await new Promise((resolve, reject) => {
-                let sql = 'select ip, port from Experiment where id=?';
-                db.query(sql, [body.Exp], (err, exps) => {
-                    if (err)
-                        reject(err);
-                    else
-                        resolve(exps[0]);
-                });
-            });
-            body.reserve_id = reserve_id;
-            body.id = school_number;
-            body.port = exp.port;
-            body.ip = exp.ip;
-            send(body);
+            // await new Promise((resolve, reject) => {
+            //     let sql = 'update Tab set status=? where seat=?';
+            //     db.query(sql, [1, body.Tab], err => {
+            //         if (err) 
+            //             reject(err);
+            //         else
+            //             resolve();
+            //     });
+            // });
+            // let tab = await new Promise((resolve, reject) => {
+            //     let sql = 'select count(id) as count, sum(status) as sum from Tab where exp_id=?';
+            //     db.query(sql, [body.Exp], (err, tabs) => {
+            //         if (err)
+            //             reject(err);
+            //         else
+            //             resolve(tabs[0]);
+            //     });
+            // });
+            // if (tab.count == tab.sum) {
+            //     await new Promise((resolve, reject) => {
+            //         let sql = 'update '
+            //     });
+            // }
+            let data = await spliceData(body, id);
+            console.log(data);
+            // send(data);
         }
         res.json({
             err: 0,
@@ -120,7 +114,7 @@ exports.showOneReserves = async (req, res) => {
     let complete = req.query.complete;
     try {
         let reserves = await new Promise((resolve, reject) => {
-            let sql = `select exp_id, table_id, Reserve.id, equipment, date, name,
+            let sql = `select exp_id, seat, Reserve.id, equipment, date, name,
             address, Reserve.status, start, end, approver from Reserve left join Experiment 
             on Reserve.exp_id=Experiment.id where user_id=? and complete_status=?`;
             db.query(sql, [id, complete], (err, reserves) => {
@@ -146,7 +140,7 @@ exports.showReserves = async (req, res) => {
     let status = req.query.status;
     try {
         let reserves = await new Promise((resolve, reject) => {
-            let sql = `select exp_id, table_id, createAt, Reserve.id, equipment,  
+            let sql = `select exp_id, seat, createAt, Reserve.id, equipment,  
             address, Reserve.status, start, end, approver, name from Reserve left join Experiment 
             on Reserve.exp_id=Experiment.id`;
             db.query(sql, (err, reserves) => {
@@ -192,7 +186,7 @@ exports.deleteReserve = async (req, res) => {
 	}
 };
 
-exports.monitorReserve = async (req, res) => {
+exports.switchReserve = async (req, res) => {
     let body = req.body;
     let approver = req.admin_session.admin;
     try {

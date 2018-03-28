@@ -64,7 +64,7 @@ export default class ConReserve extends Component {
 			render: text => text
 		}, {
 			title: '座位',
-			dataIndex: 'table_id',
+			dataIndex: 'seat',
 			key: '3',
 			render: text => `${text}`
 		}, {
@@ -98,7 +98,7 @@ export default class ConReserve extends Component {
 					return '通过'
 			}
 		}, {
-			title: '操作',
+			title: '预约单操作',
 			dataIndex: 'id',
 			key: '8',
 			render: (id, record) => {

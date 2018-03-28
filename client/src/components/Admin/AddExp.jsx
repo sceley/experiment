@@ -8,7 +8,7 @@ class AddExp extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				fetch(`${config.server}/api/admin/addexperiment`, {
+				fetch(`${config.server}/api/admin/addexp`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ class AddExp extends Component {
 							name: values.Name,
 							ip: values.IP,
 							port: values.Port,
-							tablesCount: values.TableCount,
+							tablesCount: values.TablesCount,
 							address: values.Address
 						});
 					} else if(json) {
@@ -74,7 +74,7 @@ class AddExp extends Component {
 					<FormItem
 						label="实验台数"
 					>
-						{getFieldDecorator('TableCount', {
+						{getFieldDecorator('TablesCount', {
 							rules: [{ required: true, message: '数量不能为空!' }],
 						})(
 							<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}  placeholder="数字" />

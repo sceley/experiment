@@ -61,18 +61,18 @@ export default class ColMonitorExp extends Component {
         const columns = [
             {
                 title: '座位',
-                dataIndex: 'id',
+                dataIndex: 'seat',
                 key: '1',
-                render: text => parseInt(text) % 10
+                render: text => text
             }, {
                 title: '状态',
                 dataIndex: 'status',
                 key: '2',
                 render: text => {
                     if (text) {
-                        return '已被预约'
+                        return '使用中'
                     } else {
-                        return '可预约'
+                        return '空闲状态'
                     }
                 }
             }, {

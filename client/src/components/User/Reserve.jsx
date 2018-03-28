@@ -103,9 +103,9 @@ class Reserve extends Component {
 			residences.push(item);
 		}
 		for (let i = 0; i < this.state.reserves.length; i++) {
-			let reserves = this.state.reserves[i];
-			residences[reserves.exp_id - 1].children[reserves.table_id - 1].disabled = true;
-			residences[reserves.exp_id - 1].children[reserves.table_id - 1].label += '(被占用)';
+			let reserve = this.state.reserves[i];
+			residences[reserve.exp_id - 1].children[reserve.seat - 1].disabled = true;
+			residences[reserve.exp_id - 1].children[reserve.seat - 1].label += '(被占用)';
 		}
 		let Options = [];
 		for (let i = 8; i <= 22; i++) {

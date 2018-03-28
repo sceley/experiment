@@ -32,7 +32,7 @@ exports.oauthUser = async (req, res, next) => {
 	let uid = req.user_session.uid;
 	try {
 		let user = await new Promise((resolve, reject) => {
-			let sql = 'select active, forbidden from User where id=?';
+			let sql = 'select active, forbidden from User where account=?';
 			db.query(sql, [uid], (err, users) => {
 				if (err)
 					reject(err);

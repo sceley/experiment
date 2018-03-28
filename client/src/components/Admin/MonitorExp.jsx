@@ -9,7 +9,7 @@ export default class MonitorExp extends Component {
 		exps: []
 	}
 	componentWillMount = () => {
-		fetch(`${config.server}/api/expscount`)
+		fetch(`${config.server}/api/exps/status`)
 		.then(res => {
 			if (res.ok) {
 				return res.json();
@@ -75,13 +75,13 @@ export default class MonitorExp extends Component {
 			dataIndex: 'status',
 			render: text => {
 				if (text) {
-					return '满'
+					return '满人'
 				} else {
 					return '不满'
 				}
 			}
 		}, {
-			title: '操作',
+			title: '大门控制',
 			key: '4',
 			dataIndex: 'id',
 			render: (id, record) => {

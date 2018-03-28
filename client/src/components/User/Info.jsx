@@ -26,6 +26,7 @@ class Info extends Component {
 					}
 				}).then(json => {
 					if (json && !json.err) {
+						message.destroy();
 						message.info(json.msg);
 					} else if(json) {
 						message.error(json.msg);
@@ -45,6 +46,10 @@ class Info extends Component {
 				return res.json();
 		}).then(json => {
 			if (json && !json.err) {
+				message.destroy();
+				if (!json.user.active) {
+					message.warning("请在编辑页面完善个人信息后，才能进行正常操作", 1000);
+				}
 				this.setState({
 					user: json.user
 				});
