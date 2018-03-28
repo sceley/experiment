@@ -108,10 +108,12 @@ class Reserve extends Component {
 			residences[reserve.exp_id - 1].children[reserve.seat - 1].label += '(被占用)';
 		}
 		let Options = [];
-		for (let i = 8; i <= 22; i++) {
+		for (let i = 8; i <= 24; i++) {
 			let disabled = false;
 			let hour = new Date().getHours();
-			if (i < hour)
+			let date = moment(this.props.form.getFieldValue('Date')).format("YYYY-MM-DD");
+			let _date = moment().format("YYYY-MM-DD");
+			if (date == _date && i < hour)
 				disabled = true;
 			Options.push(<Option disabled={disabled} key={i} value={i}>{`${i}时`}</Option>);
 		}
