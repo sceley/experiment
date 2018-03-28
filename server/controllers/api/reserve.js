@@ -162,7 +162,7 @@ exports.deleteReserve = async (req, res) => {
 					resolve();
 			});
         });
-        cancelTask(id);
+        await cancelTask(id);
         res.json({
             err: 0,
             msg: '删除成功'

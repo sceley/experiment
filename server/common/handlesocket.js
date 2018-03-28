@@ -34,25 +34,23 @@ exports.handleResponse = async (str) => {
 };
 
 exports.execTask = async (id) => {
-    try {
-        let reserve = await new Promise((resolve, reject) => {
-            let sql = 'select id as NUM, exp_id as EXP, user_id as ID, seat as TAB from Reserve where id=?';
-            db.query(sql, [id], (err, reserves) => {
-                if (err)
+    console.log(id);
+    let reserve = await new Promise((resolve, reject) => {
+        let sql = 'select id as NUM, exp_id as EXP, user_id as ID, seat as TAB from Reserve where id=?';
+        db.query(sql, [id], (err, reserves) => {
+            if (err)
                 reject(err);
-                else
+            else
                 resolve(reserves[0]);
-            });
         });
-        let str = convert_to_str(reserve);
-        send(str);
-    } catch (e) {
-        console.log(e);
-    }
+    });
+    let str = convert_to_str(reserve);
+    await send(str);
 };
 
 function convert_to_str (option) {
-    console.log(option);
+    if (!option)
+        return;
     while (option.NUM.length !== 4) {
         option.NUM = '0' + option.NUM;
     }

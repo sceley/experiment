@@ -17,17 +17,13 @@ exports.socket = async socket => {
 		console.log(e);
 	}
 };
-exports.send = async (str) => {
-	try {
-		console.log(str);
-		// const client = net.createConnection({ host: options.ip, port: options.port }, () => {
-		// 	client.write(str);
-		// 	client.end();
-		// 	client.on("close", () => {
-		// 		console.log("关闭成功");
-		// 	});
-		// });
-	} catch (e) {
-		console.log(e);
-	}
+exports.send = (str) => {
+	console.log(str);
+	// const client = net.createConnection({ host: options.ip, port: options.port }, () => {
+	// 	client.write(str);
+	// 	client.end();
+	// 	client.on("close", () => {
+	// 		console.log("关闭成功");
+	// 	});
+	// });
 };
