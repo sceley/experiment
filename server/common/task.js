@@ -125,7 +125,7 @@ async function nextTask () {
             if (err)
                 reject(err);
             else
-                resolve();
+                resolve(res);
         });
     });
     let tasks = JSON.parse(res);

@@ -52,6 +52,7 @@ exports.execTask = async (id) => {
 };
 
 function convert_to_str (option) {
+    console.log(option);
     while (option.NUM.length !== 4) {
         option.NUM = '0' + option.NUM;
     }
@@ -65,8 +66,8 @@ function convert_to_str (option) {
     option.DOR = 1;
     option.FAU = 1;
     let str = '';
-    for (let key in obj) {
-        str += `${key}${obj[key]}`;
+    for (let key in option) {
+        str += `${key}${option[key]}`;
     }
     return str;
 };
