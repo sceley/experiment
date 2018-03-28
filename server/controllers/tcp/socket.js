@@ -16,7 +16,7 @@ exports.socket = async socket => {
 		console.log(e);
 	}
 };
-exports.send = (str) => {
+exports.send = (str, options) => {
 	const client = net.createConnection({ host: options.ip, port: options.port }, () => {
 		client.write(str);
 		client.end();

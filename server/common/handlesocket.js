@@ -34,7 +34,6 @@ exports.handleResponse = async (str) => {
 };
 
 exports.execTask = async (id) => {
-    console.log(id);
     let reserve = await new Promise((resolve, reject) => {
         let sql = 'select id as NUM, exp_id as EXP, user_id as ID, seat as TAB from Reserve where id=?';
         db.query(sql, [id], (err, reserves) => {
@@ -44,8 +43,17 @@ exports.execTask = async (id) => {
                 resolve(reserves[0]);
         });
     });
+    let exp = await new Promise((resolve, reject) => {
+        let sql = 'select ip, port from Experiment where id=?';
+        db.query(sql, [reserve.EXP], (err, exps) => {
+            if (err)
+                reject(err);
+            else
+                resolve(exps[0]);
+        });
+    });
     let str = convert_to_str(reserve);
-    await send(str);
+    await send(str, exp);
 };
 
 function convert_to_str (option) {
