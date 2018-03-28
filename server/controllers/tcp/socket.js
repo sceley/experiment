@@ -9,7 +9,6 @@ exports.socket = async socket => {
 			});
 		});
 		await handleResponse(res);
-		console.log("success");
 		// let start = socket.remoteAddress.search(/\d{1}/);
 		// let ip = socket.remoteAddress.slice(start);
 		// let port = socket.remotePort;
@@ -18,12 +17,11 @@ exports.socket = async socket => {
 	}
 };
 exports.send = (str) => {
-	console.log(str);
-	// const client = net.createConnection({ host: options.ip, port: options.port }, () => {
-	// 	client.write(str);
-	// 	client.end();
-	// 	client.on("close", () => {
-	// 		console.log("关闭成功");
-	// 	});
-	// });
+	const client = net.createConnection({ host: options.ip, port: options.port }, () => {
+		client.write(str);
+		client.end();
+		client.on("close", () => {
+			console.log("关闭成功");
+		});
+	});
 };

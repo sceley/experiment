@@ -54,7 +54,7 @@ const table4 = `create table if not exists Tab (
 const table5 = `create table if not exists Reserve (
 				id int unsigned auto_increment,
 				createAt datetime,
-				date date,
+				date datetime,
 				start int,
 				end int,
 				equipment varchar(30),

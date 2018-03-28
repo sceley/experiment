@@ -6,14 +6,21 @@ exports.addReserve = async (req, res) => {
     let id = req.user_session.uid;
     let body = req.body;
     let hour = new Date().getHours();
-    let createAt = moment(new Date()).format('YYYY-MM-DD');
+    let createAt = moment(new Date()).format('YYYY-MM-DD HH:MM');
+    let _date = moment().format("YYYY-MM-DD");
     if (!body.Date) {
         return res.json({
             err: 1,
             msg: '请选择日期'
         });
     }
-    if (!(body.Start && body.End && body.Start < body.End && body.Start >= hour)) {
+    if (!(body.Start && body.End && body.Start < body.End)) {
+        return res.json({
+            err: 1,
+            msg: '请选择合适的时间段'
+        });
+    }
+    if (body.Date == _date && body.Start > hour) {
         return res.json({
             err: 1,
             msg: '请选择合适的时间段'
@@ -89,7 +96,6 @@ exports.addReserve = async (req, res) => {
             msg: '预约成功'
         });
     } catch (e) {
-        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'
