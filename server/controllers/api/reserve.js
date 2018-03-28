@@ -1,7 +1,7 @@
 const moment = require('moment');
 const db = require('../../model/db');
-const spliceData = require('../../common/handlesocket').spliceData;
-const send = require('../tcp/socket').send;
+const addTask = require('../../common/task').addTask;
+const cancelTask = require('../../common/task').cancelTask;
 exports.addReserve = async (req, res) => {
     let id = req.user_session.uid;
     let body = req.body;
@@ -69,43 +69,20 @@ exports.addReserve = async (req, res) => {
                         resolve();
                 });
             });
-            let NUM = await new Promise((resolve, reject) => {
-                let sql = `select id from Reserve where exp_id=? and seat=? and date=? and start=? and end=?`;
+            let reserve = await new Promise((resolve, reject) => {
+                let sql = `select id, date, start from Reserve where exp_id=? and seat=? and date=? and start=? and end=?`;
                 db.query(sql, [body.Exp, body.Tab, body.Date, body.Start, body.End], (err, reserves) => {
                     if (err)
                         reject(err);
                     else
-                        resolve(reserves[0].id);
+                        resolve(reserves[0]);
                 });
             });
-            body.NUM = NUM;
-            body.ID = id;
-            let data = await spliceData(body);
-            console.log(data);
-            // await new Promise((resolve, reject) => {
-            //     let sql = 'update Tab set status=? where seat=?';
-            //     db.query(sql, [1, body.Tab], err => {
-            //         if (err) 
-            //             reject(err);
-            //         else
-            //             resolve();
-            //     });
-            // });
-            // let tab = await new Promise((resolve, reject) => {
-            //     let sql = 'select count(id) as count, sum(status) as sum from Tab where exp_id=?';
-            //     db.query(sql, [body.Exp], (err, tabs) => {
-            //         if (err)
-            //             reject(err);
-            //         else
-            //             resolve(tabs[0]);
-            //     });
-            // });
-            // if (tab.count == tab.sum) {
-            //     await new Promise((resolve, reject) => {
-            //         let sql = 'update '
-            //     });
-            // }
-            // send(data);
+            await addTask({
+                id: reserve.id,
+                date: reserve.date,
+                hours: reserve.start
+            });
         }
         res.json({
             err: 0,
@@ -185,6 +162,7 @@ exports.deleteReserve = async (req, res) => {
 					resolve();
 			});
         });
+        cancelTask(id);
         res.json({
             err: 0,
             msg: '删除成功'
@@ -211,7 +189,7 @@ exports.switchReserve = async (req, res) => {
             });
         });
         let reserve = await new Promise((resolve, reject) => {
-            let sql = 'select * from Reserve where id=?';
+            let sql = 'select id, start, date from Reserve where id=?';
             db.query(sql, [body.id], (err, reserves) => {
                 if (err) 
                     reject(err);
@@ -219,13 +197,11 @@ exports.switchReserve = async (req, res) => {
                     resolve(reserves[0]);
             });
         });
-        let str = await spliceData({
-            NUM: reserve.id,
-            Tab: reserve.seat,
-            Exp: reserve.exp_id,
-            ID: reserve.user_id
+        await addTask({
+            id: reserve.id,
+            hours: reserve.start,
+            date: reserve.date
         });
-        console.log(str);
         res.json({
             err: 0,
             msg: '设置成功'

@@ -1,5 +1,6 @@
 const Router = require('express').Router;
 const bodyparser = require('body-parser');
+const redis = require('./model/redis');
 
 //controllers
 const login = require('./controllers/api/user').login;
