@@ -36,7 +36,7 @@ exports.handleResponse = async (str) => {
 exports.execTask = async (id) => {
     try {
         let reserve = await new Promise((resolve, reject) => {
-            let sql = 'select id as NUM, exp_id as EXP, user_id as ID, seat as TAB where id=?';
+            let sql = 'select id as NUM, exp_id as EXP, user_id as ID, seat as TAB from Reserve where id=?';
             db.query(sql, [id], (err, reserves) => {
                 if (err)
                 reject(err);
