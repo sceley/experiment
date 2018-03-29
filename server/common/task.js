@@ -29,9 +29,9 @@ exports.addTask = async (option) => {
         tasks.push(current_task);
     }
     tasks.push(option);
-    tasks.sort((pretask, nexttask) => {
+    tasks = tasks.sort((pretask, nexttask) => {
         let a = moment(pretask.date).add(pretask.hours, 'h').valueOf();
-        let b = moment(nexttask.date).add(pretask.hours, 'h').valueOf();
+        let b = moment(nexttask.date).add(nexttask.hours, 'h').valueOf();
         return a - b;
     });
     let task = tasks.shift();

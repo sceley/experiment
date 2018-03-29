@@ -20,7 +20,7 @@ exports.addReserve = async (req, res) => {
             msg: '请选择合适的时间段'
         });
     }
-    if (body.Date == _date && body.Start > hour) {
+    if (body.Date == _date && body.Start < hour) {
         return res.json({
             err: 1,
             msg: '请选择合适的时间段'

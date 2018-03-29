@@ -7,7 +7,8 @@ connection.connect();
 const table1 = `create table if not exists Admin (
 				account varchar(15) unique,
 				name varchar(15),
-				password varchar(100))
+				password varchar(100), 
+				primary key(account))
 				charset=utf8`;
 
 const table2 = `create table if not exists User (
@@ -19,7 +20,8 @@ const table2 = `create table if not exists User (
 				mobile varchar(11),
 				grade varchar(10),
 				forbidden boolean default false,
-				active boolean default false)
+				active boolean default false, 
+				primary key(account))
 				charset=utf8`;
 
 const table3 = `create table if not exists Experiment (
