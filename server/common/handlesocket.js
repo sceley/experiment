@@ -1,41 +1,41 @@
 const db = require('../model/db');
-const send = require('../controllers/tcp/socket').send;
+const net = require('net');
 //let data = "NUM1234EXP12TAB10ID16051223POW1DOR1FAU1";
 
-exports.handleResponse = async (str) => {
+exports.handleResponse = async str => {
     let res = convert_to_obj(str);
     await new Promise((resolve, reject) => {
         let sql = 'update Experiment set door=? where id=?';
         db.query(sql, [parseInt(res.DOR), parseInt(res.EXP)], err => {
             if (err)
-            reject(err);
+                reject(err);
             else
-            resolve();
+                resolve();
         });
     });
     await new Promise((resolve, reject) => {
         let sql = 'update Tab set power_status=? where seat=? and exp_id=?';
         db.query(sql, [parseInt(res.POW), parseInt(res.TAB), parseInt(res.EXP)], err => {
             if (err)
-            reject(err);
+                reject(err);
             else
-            resolve();
+                resolve();
         });
     });
     await new Promise((resolve, reject) => {
         let sql = 'update Reserve set complete_status=? where id=?';
         db.query(sql, [1, parseInt(res.NUM)], err => {
             if (err)
-            reject();
+                reject();
             else
-            resolve();
+                resolve();
         });
     });
 };
 
 exports.execTask = async (id) => {
     let reserve = await new Promise((resolve, reject) => {
-        let sql = 'select id as NUM, exp_id as EXP, user_id as ID, seat as TAB from Reserve where id=?';
+        let sql = 'select id as NUM, exp_id as EXP, seat as TAB, user_id as ID from Reserve where id=?';
         db.query(sql, [id], (err, reserves) => {
             if (err)
                 reject(err);
@@ -87,4 +87,13 @@ function convert_to_obj (str) {
         }
     });
     return obj;
+};
+async function send (str, options) {
+    const client = net.createConnection({ host: options.ip, port: options.port }, () => {
+        client.write(str);
+        client.end();
+        client.on("close", () => {
+            console.log("关闭成功");
+        });
+    });
 };

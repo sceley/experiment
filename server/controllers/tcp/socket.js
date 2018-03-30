@@ -1,6 +1,7 @@
 const net = require('net');
 const db = require('../../model/db');
-const handleResponse = require('../../common/handlesocket').handleResponse;
+// const handleResponse = require('../../common/handlesocket').handleResponse;
+const handleResponse = require("../../common/handlesocket").handleResponse;
 exports.socket = async socket => {
 	try {
 		let res = await new Promise((resolve, reject) => {
@@ -15,13 +16,4 @@ exports.socket = async socket => {
 	} catch (e) {
 		console.log(e);
 	}
-};
-exports.send = (str, options) => {
-	const client = net.createConnection({ host: options.ip, port: options.port }, () => {
-		client.write(str);
-		client.end();
-		client.on("close", () => {
-			console.log("关闭成功");
-		});
-	});
 };
