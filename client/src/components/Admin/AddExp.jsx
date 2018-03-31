@@ -50,7 +50,7 @@ class AddExp extends Component {
 						{getFieldDecorator('Name', {
 							rules: [{ required: true, message: '名称不能为空!' }],
 						})(
-							<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="实验室名称" />
+							<Input placeholder="实验室名称" />
 							)}
 					</FormItem>
 					<FormItem
@@ -59,7 +59,7 @@ class AddExp extends Component {
 						{getFieldDecorator('IP', {
 							rules: [{ required: true, message: 'IP不能为空!' }],
 						})(
-							<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="实验室IP" />
+							<Input placeholder="实验室IP" />
 							)}
 					</FormItem>
 					<FormItem
@@ -68,7 +68,7 @@ class AddExp extends Component {
 						{getFieldDecorator('Port', {
 							rules: [{ required: true, message: '实验室IP端口不能为空!' }],
 						})(
-							<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="实验室IP端口" />
+							<Input placeholder="实验室IP端口" />
 						)}
 					</FormItem>
 					<FormItem
@@ -77,7 +77,7 @@ class AddExp extends Component {
 						{getFieldDecorator('TablesCount', {
 							rules: [{ required: true, message: '数量不能为空!' }],
 						})(
-							<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}  placeholder="数字" />
+							<Input placeholder="数字" />
 							)}
 					</FormItem>
 					<FormItem
@@ -86,7 +86,7 @@ class AddExp extends Component {
 						{getFieldDecorator('Address', {
 							rules: [{ required: true, message: '实验室地址不能为空!' }],
 						})(
-							<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="实验室地址" />
+							<Input placeholder="实验室地址" />
 							)}
 					</FormItem>
 					<FormItem>

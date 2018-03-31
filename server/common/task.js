@@ -150,7 +150,7 @@ async function nextTask () {
 
 async function exec_timer_task(time, task) {
     timer = setTimeout(async () => {
-        await execTask(task.id);
+        await execTask(task);
         await nextTask();
     }, time);
 };

@@ -30,11 +30,11 @@ const table3 = `create table if not exists Experiment (
 				ip varchar(20),
 				port varchar(10),
 				address varchar(15),
-				door boolean default false,
 				status boolean default false,
-				fault boolean default false,
 				primary key(id))
 				charset=utf8`;
+				// door boolean default false,
+				// fault boolean default false,
 
 const table4 = `create table if not exists Tab (
 				id int unsigned auto_increment,
@@ -74,7 +74,8 @@ const table5 = `create table if not exists Reserve (
 */
 /*complete_status:
 	0 未完成
-	1 完成
+	1 执行中
+	2 已执行
 */
 const table6 = `create table if not exists Notification (
 				id int unsigned auto_increment,

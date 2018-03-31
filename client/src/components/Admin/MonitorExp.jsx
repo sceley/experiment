@@ -59,47 +59,49 @@ export default class MonitorExp extends Component {
 			key: '1',
 			dataIndex: 'name',
 		}, {
-			title: '门禁',
-			key: '2',
-			dataIndex: 'door',
-			render: text => {
-				if (text) {
-					return '打开中'
-				} else {
-					return '关闭中'
-				}
-			}
-		}, {
 			title: '状态',
-			key: '3',
+			key: '2',
 			dataIndex: 'status',
 			render: text => {
 				if (text) {
-					return '满人'
+					return '有人'
 				} else {
-					return '不满'
-				}
-			}
-		}, {
-			title: '大门控制',
-			key: '4',
-			dataIndex: 'id',
-			render: (id, record) => {
-				if (record.door) {
-					return (
-						<Popconfirm onConfirm={() => this.switchExp(id, 0)} title="确定关闭实验室门？" okText="Yes" cancelText="No">
-							<a>关闭</a>
-						</Popconfirm>
-					);
-				} else {
-					return (
-						<Popconfirm onConfirm={() => this.switchExp(id, 1)} title="确定打开实验室门？" okText="Yes" cancelText="No">
-							<a href="#">打开</a>
-						</Popconfirm>
-					);
+					return '无人'
 				}
 			}
 		}]
+		// {
+		// 	title: '门禁',
+		// 	key: '2',
+		// 	dataIndex: 'door',
+		// 	render: text => {
+		// 		if (text) {
+		// 			return '打开中'
+		// 		} else {
+		// 			return '关闭中'
+		// 		}
+		// 	}
+		// }
+		// {
+		// 	title: '大门控制',
+		// 	key: '4',
+		// 	dataIndex: 'id',
+		// 	render: (id, record) => {
+		// 		if (record.door) {
+		// 			return (
+		// 				<Popconfirm onConfirm={() => this.switchExp(id, 0)} title="确定关闭实验室门？" okText="Yes" cancelText="No">
+		// 					<a>关闭</a>
+		// 				</Popconfirm>
+		// 			);
+		// 		} else {
+		// 			return (
+		// 				<Popconfirm onConfirm={() => this.switchExp(id, 1)} title="确定打开实验室门？" okText="Yes" cancelText="No">
+		// 					<a href="#">打开</a>
+		// 				</Popconfirm>
+		// 			);
+		// 		}
+		// 	}
+		// }
 		let tabs = [];
 		for (let i = 1; i <= this.state.exps.length; i++) {
 			tabs.push(

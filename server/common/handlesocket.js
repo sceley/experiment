@@ -4,15 +4,15 @@ const net = require('net');
 
 exports.handleResponse = async str => {
     let res = convert_to_obj(str);
-    await new Promise((resolve, reject) => {
-        let sql = 'update Experiment set door=? where id=?';
-        db.query(sql, [parseInt(res.DOR), parseInt(res.EXP)], err => {
-            if (err)
-                reject(err);
-            else
-                resolve();
-        });
-    });
+    // await new Promise((resolve, reject) => {
+    //     let sql = 'update Experiment set door=? where id=?';
+    //     db.query(sql, [parseInt(res.DOR), parseInt(res.EXP)], err => {
+    //         if (err)
+    //             reject(err);
+    //         else
+    //             resolve();
+    //     });
+    // });
     await new Promise((resolve, reject) => {
         let sql = 'update Tab set power_status=? where seat=? and exp_id=?';
         db.query(sql, [parseInt(res.POW), parseInt(res.TAB), parseInt(res.EXP)], err => {
@@ -22,27 +22,40 @@ exports.handleResponse = async str => {
                 resolve();
         });
     });
-    await new Promise((resolve, reject) => {
-        let sql = 'update Reserve set complete_status=? where id=?';
-        db.query(sql, [1, parseInt(res.NUM)], err => {
-            if (err)
-                reject();
-            else
-                resolve();
+    if (res.POW) {
+        await new Promise((resolve, reject) => {
+            let sql = 'update Reserve set complete_status=? where id=?';
+            db.query(sql, [1, parseInt(res.NUM)], err => {
+                if (err)
+                    reject();
+                else
+                    resolve();
+            });
         });
-    });
+    } else {
+        await new Promise((resolve, reject) => {
+            let sql = 'update Reserve set complete_status=? where id=?';
+            db.query(sql, [2, parseInt(res.NUM)], err => {
+                if (err)
+                    reject();
+                else
+                    resolve();
+            });
+        });
+    }
 };
 
-exports.execTask = async (id) => {
+exports.execTask = async (task) => {
     let reserve = await new Promise((resolve, reject) => {
         let sql = 'select id as NUM, exp_id as EXP, seat as TAB, user_id as ID from Reserve where id=?';
-        db.query(sql, [id], (err, reserves) => {
+        db.query(sql, [task.id], (err, reserves) => {
             if (err)
                 reject(err);
             else
                 resolve(reserves[0]);
         });
     });
+    reserve.POW = task.pow;
     let exp = await new Promise((resolve, reject) => {
         let sql = 'select ip, port from Experiment where id=?';
         db.query(sql, [reserve.EXP], (err, exps) => {
@@ -68,9 +81,6 @@ function convert_to_str (option) {
     while (option.TAB.length !== 2) {
         option.TAB = '0' + option.TAB;
     }
-    option.POW = 1;
-    option.DOR = 1;
-    option.FAU = 1;
     let str = '';
     for (let key in option) {
         str += `${key}${option[key]}`;
@@ -79,7 +89,7 @@ function convert_to_str (option) {
 };
 function convert_to_obj (str) {
     let obj = {};
-    let pattern = /(NUM)(\d{4})(EXP)(\d{2})(TAB)(\d{2})(ID)(\d{8})(POW)(\d{1})(DOR)(\d{1})(FAU)(\d{1})/;
+    let pattern = /(NUM)(\d{4})(EXP)(\d{2})(TAB)(\d{2})(ID)(\d{8})(POW)(\d{1})(FAU)(\d{1})/;
     str.replace(pattern, (match, ...code) => {
         let arr = code.slice(0, -2);
         for (let i = 0; i < arr.length; i = i + 2) {
@@ -92,8 +102,16 @@ async function send (str, options) {
     const client = net.createConnection({ host: options.ip, port: options.port }, () => {
         client.write(str);
         client.end();
-        client.on("close", () => {
-            console.log("关闭成功");
-        });
+    });
+    let timer = setInterval(() => {
+        client.write(str);
+    }, 1000);
+    client.on('data', 'utf8', data => {
+        if (data == 'SUC') {
+            clearInterval(timer);
+        }
+    });
+    client.on("close", () => {
+        console.log("关闭成功");
     });
 };

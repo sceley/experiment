@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { Input, Icon, message, Button, Form } from 'antd';
 import HeaderForLog from '../../common/Header-Log';
 import config from '../../config';
@@ -61,6 +62,7 @@ class Login extends Component {
 							)}
 					</FormItem>
 					<FormItem>
+						<Link className="form-right" to="/user/login">学生登陆</Link>
 						<Button type="primary" htmlType="submit" className="login-form-button">
 							Log in
 						</Button>

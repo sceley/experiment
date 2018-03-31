@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link} from 'react-router-dom';
 import { Form, Button, Input, Icon, message } from 'antd';
 import HeaderForLog from '../../common/Header-Log';
 import Notifications from '../../common/Notifications';
@@ -100,6 +101,7 @@ class Logup extends Component {
 								)}
 						</FormItem>
 						<FormItem>
+							<Link className="form-right" to="/user/login">登陆</Link>
 							<Button type="primary" htmlType="submit" className="logup-form-button">
 								Log up
 							</Button>

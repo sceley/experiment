@@ -82,6 +82,7 @@ class Login extends Component {
 								)}
 						</FormItem>
 						<FormItem>
+							<Link className="form-right" to="/admin/login">管理员登陆</Link>
 							<Button type="primary" htmlType="submit" className="login-form-button">
 								Log in
 							</Button>

@@ -77,7 +77,7 @@ exports.addReserve = async (req, res) => {
                 });
             });
             let reserve = await new Promise((resolve, reject) => {
-                let sql = `select id, date, start from Reserve where exp_id=? and seat=? and date=? and start=? and end=?`;
+                let sql = `select id, date, start, end from Reserve where exp_id=? and seat=? and date=? and start=? and end=?`;
                 db.query(sql, [body.Exp, body.Tab, body.Date, body.Start, body.End], (err, reserves) => {
                     if (err)
                         reject(err);
@@ -88,7 +88,14 @@ exports.addReserve = async (req, res) => {
             await addTask({
                 id: reserve.id,
                 date: reserve.date,
-                hours: reserve.start
+                hours: reserve.start,
+                pow: 1
+            });
+            await addTask({
+                id: reserve.id,
+                date: reserve.date,
+                hours: reserve.end,
+                pow: 0
             });
         }
         res.json({
@@ -181,41 +188,48 @@ exports.deleteReserve = async (req, res) => {
 	}
 };
 
-exports.switchReserve = async (req, res) => {
-    let body = req.body;
-    let approver = req.admin_session.admin;
-    try {
-        await new Promise((resolve, reject) => {
-            let sql = 'update Reserve set status=?, approver=? where id=?';
-            db.query(sql, [body.status, approver, body.id], (err) => {
-                if (err)
-                    reject(err);
-                else 
-                    resolve();
-            });
-        });
-        let reserve = await new Promise((resolve, reject) => {
-            let sql = 'select id, start, date from Reserve where id=?';
-            db.query(sql, [body.id], (err, reserves) => {
-                if (err) 
-                    reject(err);
-                else
-                    resolve(reserves[0]);
-            });
-        });
-        await addTask({
-            id: reserve.id,
-            hours: reserve.start,
-            date: reserve.date
-        });
-        res.json({
-            err: 0,
-            msg: '设置成功'
-        });
-    } catch (e) {
-        res.json({
-            err: 1,
-            msg: '服务器出错了'
-        });
-    }
-};
+// exports.switchReserve = async (req, res) => {
+//     let body = req.body;
+//     let approver = req.admin_session.admin;
+//     try {
+//         await new Promise((resolve, reject) => {
+//             let sql = 'update Reserve set status=?, approver=? where id=?';
+//             db.query(sql, [body.status, approver, body.id], (err) => {
+//                 if (err)
+//                     reject(err);
+//                 else 
+//                     resolve();
+//             });
+//         });
+//         let reserve = await new Promise((resolve, reject) => {
+//             let sql = 'select id, start, date, end from Reserve where id=?';
+//             db.query(sql, [body.id], (err, reserves) => {
+//                 if (err) 
+//                     reject(err);
+//                 else
+//                     resolve(reserves[0]);
+//             });
+//         });
+//         await addTask({
+//             id: reserve.id,
+//             date: reserve.date,
+//             hours: reserve.start,
+//             pow: 1
+//         });
+//         await addTask({
+//             id: reserve.id,
+//             date: reserve.date,
+//             hours: reserve.end,
+//             pow: 0
+//         });
+//         res.json({
+//             err: 0,
+//             msg: '设置成功'
+//         });
+//     } catch (e) {
+//         res.json({
+//             err: 1,
+//             msg: '服务器出错了'
+//         });
+//     }
+// };

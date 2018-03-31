@@ -15,7 +15,7 @@ const showRestExps = require('./controllers/api/experiment').showRestExps;
 const showExpsStatus = require('./controllers/api/experiment').showExpsStatus;
 const showExps = require('./controllers/api/experiment').showExps;
 const editExp = require('./controllers/api/experiment').editExp;
-const switchExp = require('./controllers/api/experiment').switchExp;
+// const switchExp = require('./controllers/api/experiment').switchExp;
 const addReserve = require('./controllers/api/reserve').addReserve;
 const showOneReserves = require('./controllers/api/reserve').showOneReserves;
 const showReserves = require('./controllers/api/reserve').showReserves;
@@ -25,7 +25,7 @@ const adminLogin = require('./controllers/api/admin').login;
 const notify = require('./controllers/api/notification').notify;
 const notifications = require('./controllers/api/notification').notifications;
 const deleteNotification = require('./controllers/api/notification').deleteNotification;
-const switchPower = require('./controllers/api/tab').switchPower;
+// const switchPower = require('./controllers/api/tab').switchPower;
 
 //middleware
 const user_session = require('./middleware/oauth').user_session;
@@ -60,9 +60,9 @@ router.post('/api/admin/login', adminLogin);
 router.post('/api/admin/switchreserve', admin_session, switchReserve);
 router.post('/api/admin/monitoruser', admin_session, monitorUser);
 router.post('/api/admin/addexp', admin_session, addExp);
-router.post('/api/admin/switchpower', admin_session, switchPower);
+// router.post('/api/admin/switchpower', admin_session, switchPower);
 router.post('/api/admin/notify', admin_session, notify);
 router.post('/api/admin/exp/edit', admin_session, editExp);
-router.post('/api/admin/exp/switch', admin_session, switchExp);
+// router.post('/api/admin/exp/switch', admin_session, switchExp);
 
 module.exports = router;

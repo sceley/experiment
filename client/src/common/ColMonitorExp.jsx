@@ -70,9 +70,9 @@ export default class ColMonitorExp extends Component {
                 key: '2',
                 render: text => {
                     if (text) {
-                        return '使用中'
+                        return <div style={{ color: '#f5222d'}}>出故障了，等待维修</div>
                     } else {
-                        return '空闲状态'
+                        return <div style={{ color: '#52c41a'}}>正常</div>
                     }
                 }
             }, {
@@ -98,31 +98,32 @@ export default class ColMonitorExp extends Component {
                         )
                     }
                 }
-            }, {
-                title: '电源操作',
-                dataIndex: 'id',
-                key: '4',
-                render: (id, record) => {
-                    let power = record.power_status;
-                    let handleChange = () => {
-                        this.handleSwitch(id, !power);
-                    };
-                    if (power) {
-                        return (
-                            <Popconfirm title="确定关闭?" okText="Yes" cancelText="No" onConfirm={handleChange}>
-                                <a>关闭</a>
-                            </Popconfirm>
-                        );
-                    } else {
-                        return (
-                            <Popconfirm title="确定打开?" okText="Yes" cancelText="No" onConfirm={handleChange}>
-                                <a>打开</a>
-                            </Popconfirm>
-                        );
-                    }
-                }
             }
         ];
+        // {
+        //         title: '电源操作',
+        //         dataIndex: 'id',
+        //         key: '4',
+        //         render: (id, record) => {
+        //             let power = record.power_status;
+        //             let handleChange = () => {
+        //                 this.handleSwitch(id, !power);
+        //             };
+        //             if (power) {
+        //                 return (
+        //                     <Popconfirm title="确定关闭?" okText="Yes" cancelText="No" onConfirm={handleChange}>
+        //                         <a>关闭</a>
+        //                     </Popconfirm>
+        //                 );
+        //             } else {
+        //                 return (
+        //                     <Popconfirm title="确定打开?" okText="Yes" cancelText="No" onConfirm={handleChange}>
+        //                         <a>打开</a>
+        //                     </Popconfirm>
+        //                 );
+        //             }
+        //         }
+        //     }
         return (
             <div className="ColMonitor">
                 <Table pagination={false} rowKey="id" bordered={true} columns={columns} dataSource={this.state.tables} />

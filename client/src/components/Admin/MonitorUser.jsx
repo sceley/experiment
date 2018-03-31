@@ -95,17 +95,17 @@ export default class ManageUser extends Component {
 				key: '6',
 				render: text => text,
 			}, {
-				title: '激活状态',
-				dataIndex: 'active',
+				title: '预约权限',
+				dataIndex: 'forbidden',
 				key: '7',
 				render: text => {
 					if (text)
-						return '是';
+						return '有';
 					else
-						return '否';
+						return '无';
 				}
 			}, {
-				title: '权限控制',
+				title: '预约权限控制',
 				dataIndex: 'id',
 				key: '8',
 				render: (id, record) => {
