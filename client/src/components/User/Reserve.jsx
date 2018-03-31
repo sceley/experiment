@@ -8,7 +8,8 @@ const FormItem = Form.Item;
 class Reserve extends Component {
 	state = {
 		exps: [],
-		reserves: []
+		reserves: [],
+		fault_tabs: []
 	}
 	handleSubmit = (e) => {
 		e.preventDefault();
@@ -79,7 +80,8 @@ class Reserve extends Component {
 			if (json && !json.err) {
 				this.setState({
 					exps: json.exps,
-					reserves: json.reserves
+					reserves: json.reserves,
+					fault_tabs: json.fault_tabs
 				});
 			}
 		});
@@ -106,6 +108,11 @@ class Reserve extends Component {
 			let reserve = this.state.reserves[i];
 			residences[reserve.exp_id - 1].children[reserve.seat - 1].disabled = true;
 			residences[reserve.exp_id - 1].children[reserve.seat - 1].label += '(被占用)';
+		}
+		for (let i = 0; i < this.state.fault_tabs.length; i++) {
+			let fault_tabs = this.state.fault_tabs[i];
+			residences[fault_tabs.exp_id - 1].children[fault_tabs.id - 1].disabled = true;
+			residences[fault_tabs.exp_id - 1].children[fault_tabs.id - 1].label += `(故障中)`;
 		}
 		let Options = [];
 		for (let i = 8; i <= 24; i++) {
@@ -178,7 +185,7 @@ class Reserve extends Component {
 						{getFieldDecorator('Equipment', {
 							rules: [{ required: false }],
 						})(
-							<Input prefix={<Icon type="mobile" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="贵重仪器" />
+							<Input prefix={<Icon type="tool" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="贵重仪器" />
 						)}
 					</FormItem>
 					<FormItem>

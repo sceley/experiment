@@ -1,11 +1,10 @@
 const db = require('../model/db');
 const net = require('net');
-//let data = "NUM1234EXP12TAB10ID16051223POW1DOR1FAU1";
 exports.handleResponse = async str => {
     let res = convert_to_obj(str);
     await new Promise((resolve, reject) => {
-        let sql = 'update Tab set status=? where seat=? and exp_id=?';
-        db.query(sql, [parseInt(res.POW), parseInt(res.TAB), parseInt(res.EXP)], err => {
+        let sql = 'update Tab set status=?, fault=? where seat=? and exp_id=?';
+        db.query(sql, [parseInt(res.POW), parseInt(res.FAU), parseInt(res.TAB), parseInt(res.EXP)], err => {
             if (err)
                 reject(err);
             else
@@ -72,6 +71,9 @@ function convert_to_str (option) {
     while (option.TAB.length !== 2) {
         option.TAB = '0' + option.TAB;
     }
+    while (option.ID.length !== 2) {
+        option.ID = '0' + option.ID;
+    }
     let str = '';
     for (let key in option) {
         str += `${key}${option[key]}`;
@@ -80,7 +82,7 @@ function convert_to_str (option) {
 };
 function convert_to_obj (str) {
     let obj = {};
-    let pattern = /(NUM)(\d{4})(EXP)(\d{2})(TAB)(\d{2})(ID)(\d{8})(POW)(\d{1})(FAU)(\d{1})/;
+    let pattern = /(NUM)(\d{4})(EXP)(\d{2})(TAB)(\d{2})(ID)(\d{2})(POW)(\d{1})(FAU)(\d{1})/;
     str.replace(pattern, (match, ...code) => {
         let arr = code.slice(0, -2);
         for (let i = 0; i < arr.length; i = i + 2) {

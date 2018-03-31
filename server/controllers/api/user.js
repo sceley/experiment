@@ -7,7 +7,7 @@ exports.login = async (req, res) => {
 	let body = req.body;
 	try {
 		let user = await new Promise((resolve, reject) => {
-			let sql = 'select password from User where account=? or mobile=?';
+			let sql = 'select id, password from User where account=? or mobile=?';
 			db.query(sql, [body.Account, body.Account], (err, users) => {
 				if (err)
 					reject(err);
@@ -30,7 +30,7 @@ exports.login = async (req, res) => {
 			});
 		});
 		if (result) {
-			let token = await sign("uid", body.Account);
+			let token = await sign("uid", user.id);
 			res.json({
 				err: 0,
 				msg: '登录成功',
@@ -130,7 +130,7 @@ exports.editInfo = async (req, res) => {
 			});
 		}
 		await new Promise((resolve, reject) => {
-			let sql = 'update User set sex=?, grade=?, major=?, name=?, mobile=? where account=?';
+			let sql = 'update User set sex=?, grade=?, major=?, name=?, mobile=? where id=?';
 			db.query(sql, [body.Sex, body.Grade, body.Major, body.Name, body.Mobile, id], (err) => {
 				if (err)
 					reject(err);
@@ -155,7 +155,7 @@ exports.showInfo = async (req, res) => {
 	let id = req.user_session.uid;
 	try {
 		let user = await new Promise((resolve, reject) => {
-			let sql = 'select * from User where account=?';
+			let sql = 'select * from User where id=?';
 			db.query(sql, [id], (err, users) => {
 				if (err) 
 					reject(err);
@@ -181,7 +181,7 @@ exports.showInfo = async (req, res) => {
 exports.showUsers = async (req, res) => {
 	try {
 		let users = await new Promise((resolve, reject) => {
-			let sql = 'select name, grade, major, sex, mobile, account, forbidden from User';
+			let sql = 'select id, name, grade, major, sex, mobile, account, forbidden from User';
 			db.query(sql, (err, users) => {
 				if (err) 
 					reject(err);

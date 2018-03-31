@@ -70,9 +70,9 @@ export default class ColMonitorExp extends Component {
                 key: '2',
                 render: text => {
                     if (text) {
-                        return <div style={{ color: '#f5222d'}}>出故障了，等待维修</div>
+                        return <div style={{ color: '#f5222d' }}><Icon type="close-square-o" />出故障了，等待维修</div>
                     } else {
-                        return <div style={{ color: '#52c41a'}}>正常</div>
+                        return <div style={{ color: '#52c41a' }}><Icon type="check-square" />正常</div>
                     }
                 }
             }, {
@@ -83,7 +83,8 @@ export default class ColMonitorExp extends Component {
                     if (text) {
                         return (
                             <span>
-                                <Icon style={{ color: 'green', marginRight: '8px' }} type="bulb" />
+                                {/* <Icon type="poweroff" /> */}
+                                <Icon style={{ color: 'green', marginRight: '8px' }} type="poweroff" />
                                 开启中
                             </span>
 
@@ -91,7 +92,7 @@ export default class ColMonitorExp extends Component {
                     } else {
                         return (
                             <span>
-                                <Icon style={{ color: 'red', marginRight: '8px' }} type="bulb" />
+                                <Icon style={{ color: 'red', marginRight: '8px' }} type="poweroff" />
                                 关闭中
                             </span>
 

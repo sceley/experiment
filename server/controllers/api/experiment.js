@@ -102,10 +102,20 @@ exports.showRestExps = async (req, res) => {
 					resolve(exps);
 			});
 		});
+		let fault_tabs = await new Promise((resolve, reject) => {
+			let sql = 'select id, exp_id from Tab where fault=?';
+			db.query(sql, [1], (err, tabs) => {
+				if (err)
+					reject(err);
+				else
+					resolve(tabs);
+			});
+		});
 		res.json({
 			err: 0,
 			reserves,
-			exps
+			exps,
+			fault_tabs
 		});
 	} catch (e) {
 		res.json({

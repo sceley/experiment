@@ -54,6 +54,21 @@ exports.addReserve = async (req, res) => {
                 msg: '该时间段不能预约'
             });
         }
+        let fault = await new Promise((resolve, reject) => {
+            let sql = 'select fault from Tab where seat=? and exp_id=?';
+            db.query(sql, [body.Tab, body.Exp], (err, tabs) => {
+                if (err)
+                    reject(err);
+                else
+                    resolve(tabs[0].fault);
+            });
+        });
+        if (fault) {
+            return res.json({
+                err: 1,
+                msg: '该位置出故障了，不能使用'
+            });
+        }
         if (body.Equipment) {
             await new Promise((resolve, reject) => {
                 let sql = `insert into Reserve(user_id, exp_id, seat, start, 
@@ -103,6 +118,7 @@ exports.addReserve = async (req, res) => {
             msg: '预约成功'
         });
     } catch (e) {
+        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'

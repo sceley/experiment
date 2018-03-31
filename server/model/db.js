@@ -12,6 +12,7 @@ const table1 = `create table if not exists Admin (
 				charset=utf8`;
 
 const table2 = `create table if not exists User (
+				id int unsigned auto_increment,
 				account varchar(8) unique,
 				name varchar(15),
 				password varchar(100),
@@ -20,7 +21,7 @@ const table2 = `create table if not exists User (
 				mobile varchar(11),
 				grade varchar(10),
 				forbidden boolean default false,
-				primary key(account))
+				primary key(id))
 				charset=utf8`;
 				// active boolean default false, 
 
@@ -41,6 +42,7 @@ const table4 = `create table if not exists Tab (
 				seat int unsigned,
 				exp_id int unsigned,
 				status boolean default false,
+				fault boolean default false,
 				primary key(id), 
 				foreign key(exp_id) references Experiment(id))
 				charset=utf8`;

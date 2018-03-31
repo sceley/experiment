@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import config from '../../config';
 import ColMonitorExp from '../../common/ColMonitorExp';
-import { Table, Tabs, Card, message, Popconfirm } from 'antd';
+import { Table, Tabs, Card, message, Popconfirm, Icon } from 'antd';
 const TabPane = Tabs.TabPane;
 
 export default class MonitorExp extends Component {
@@ -64,9 +64,9 @@ export default class MonitorExp extends Component {
 			dataIndex: 'people',
 			render: text => {
 				if (text) {
-					return <div>{`${text}个人`}</div>
+					return <div><Icon type="team" />{`${text}个人`}</div>
 				} else {
-					return '无人'
+					return <div><Icon type="team" />无人</div>
 				}
 			}
 		}]
