@@ -1,7 +1,6 @@
 const db = require('../model/db');
 const net = require('net');
 //let data = "NUM1234EXP12TAB10ID16051223POW1DOR1FAU1";
-
 exports.handleResponse = async str => {
     let res = convert_to_obj(str);
     await new Promise((resolve, reject) => {
@@ -58,6 +57,7 @@ exports.execTask = async (task) => {
     });
     let str = convert_to_str(reserve);
     send(str, exp);
+    return;
 };
 
 function convert_to_str (option) {
@@ -93,6 +93,7 @@ async function send (str, options) {
     const client = net.createConnection({ host: options.ip, port: options.port }, () => {
         let count = 0;
         client.write(str);
+        client.end();
         client.on('data', data => {
             if (data.toString() == 'SUC') {
                 clearInterval(timer);

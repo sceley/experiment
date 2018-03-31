@@ -4,9 +4,7 @@ const execTask = require('./handlesocket').execTask;
 
 let timer;
 exports.addTask = async (option) => {
-    if (timer) {
-        clearTimeout(timer);
-    }
+    clearTimeout(timer);
     let res = await new Promise((resolve, reject) => {
         redis.get('task', (err, res) => {
             if (err) 
@@ -44,23 +42,34 @@ exports.addTask = async (option) => {
                 resolve();
         });
     });
-    await new Promise((resolve, reject) => {
-        let str = JSON.stringify(task);
-        redis.set("current_task", str, err => {
-            if (err)
-                reject(err);
-            else
-                resolve();
+    if (!task) {
+        await new Promise((resolve, reject) => {
+            redis.del("current_task", err => {
+                if (err)
+                    reject(err);
+                else
+                    resolve();
+            });
         });
-    });
-    let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
-    exec_timer_task(time, task);
+        return;
+    } else {
+        await new Promise((resolve, reject) => {
+            let str = JSON.stringify(task);
+            redis.set("current_task", str, err => {
+                if (err)
+                    reject(err);
+                else
+                    resolve();
+            });
+        });
+        let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
+        exec_timer_task(time, task);
+        return;
+    }
 };
 
 exports.cancelTask = async (id) => {
-    if (timer) {
-        clearTimeout(timer);
-    }
+    clearTimeout(timer);
     let res = await new Promise((resolve, reject) => {
         redis.get('task', (err, res) => {
             if (err)
@@ -105,15 +114,24 @@ exports.cancelTask = async (id) => {
             });
         });
         return;
+    } else {
+        await new Promise((resolve, reject) => {
+            let str = JSON.stringify(task);
+            redis.set("current_task", str, err => {
+                if (err)
+                    reject(err);
+                else
+                    resolve();
+            });
+        });
+        let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
+        exec_timer_task(time, task);
+        return;
     }
-    let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
-    exec_timer_task(time, task);
 };
 
 async function nextTask () {
-    if (timer) {
-        clearTimeout(timer);
-    }
+    clearTimeout(timer);
     let res = await new Promise((resolve, reject) => {
         redis.get('task', (err, res) => {
             if (err)
@@ -128,9 +146,9 @@ async function nextTask () {
         let str = JSON.stringify(tasks);
         redis.set('task', str, err => {
             if (err)
-                reject();
+            reject();
             else
-                resolve();
+            resolve();
         });
     });
     if (!task) {
@@ -143,9 +161,20 @@ async function nextTask () {
             });
         });
         return;
+    } else {
+        await new Promise((resolve, reject) => {
+            let str = JSON.stringify(task);
+            redis.set("current_task", str, err => {
+                if (err)
+                    reject(err);
+                else
+                    resolve();
+            });
+        });
+        let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
+        exec_timer_task(time, task);
+        return;
     }
-    let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
-    exec_timer_task(time, task);
 };
 
 async function exec_timer_task(time, task) {
