@@ -32,7 +32,7 @@ exports.oauthUser = async (req, res, next) => {
 	let uid = req.user_session.uid;
 	try {
 		let user = await new Promise((resolve, reject) => {
-			let sql = 'select active, forbidden from User where account=?';
+			let sql = 'select forbidden from User where account=?';
 			db.query(sql, [uid], (err, users) => {
 				if (err)
 					reject(err);
@@ -40,12 +40,12 @@ exports.oauthUser = async (req, res, next) => {
 					resolve(users[0]);
 			});
 		});
-		if (!user.active) {
-			return res.json({
-				err: 1,
-				msg: '您的账号未激活，请完善你的信息'
-			});
-		}
+		// if (!user.active) {
+		// 	return res.json({
+		// 		err: 1,
+		// 		msg: '您的账号未激活，请完善你的信息'
+		// 	});
+		// }
 		if (user.forbidden) {
 			return res.json({
 				err: 1,

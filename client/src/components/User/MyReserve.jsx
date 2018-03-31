@@ -13,10 +13,10 @@ export default class MyReserve extends Component {
             <div className="MyReserve Container">
                 <Card>
                     <Tabs defaultActiveKey="1">
-                        <TabPane tab="未执行" key="1">
+                        <TabPane tab="我的预约" key="1">
                             <ColReserve complete={0}/>
                         </TabPane>
-                        <TabPane tab="已执行" key="2">
+                        <TabPane tab="历史预约" key="2">
                             <ColReserve complete={1} />
                         </TabPane>
                     </Tabs>

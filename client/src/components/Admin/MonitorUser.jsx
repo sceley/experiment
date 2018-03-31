@@ -100,9 +100,9 @@ export default class ManageUser extends Component {
 				key: '7',
 				render: text => {
 					if (text)
-						return '有';
-					else
 						return '无';
+					else
+						return '有';
 				}
 			}, {
 				title: '预约权限控制',

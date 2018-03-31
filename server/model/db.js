@@ -20,9 +20,9 @@ const table2 = `create table if not exists User (
 				mobile varchar(11),
 				grade varchar(10),
 				forbidden boolean default false,
-				active boolean default false, 
 				primary key(account))
 				charset=utf8`;
+				// active boolean default false, 
 
 const table3 = `create table if not exists Experiment (
 				id int unsigned auto_increment,
@@ -30,9 +30,9 @@ const table3 = `create table if not exists Experiment (
 				ip varchar(20),
 				port varchar(10),
 				address varchar(15),
-				status boolean default false,
 				primary key(id))
 				charset=utf8`;
+				// status boolean default false,
 				// door boolean default false,
 				// fault boolean default false,
 
@@ -41,13 +41,13 @@ const table4 = `create table if not exists Tab (
 				seat int unsigned,
 				exp_id int unsigned,
 				status boolean default false,
-				power_status boolean default false,
 				primary key(id), 
 				foreign key(exp_id) references Experiment(id))
 				charset=utf8`;
+				// power_status boolean default false,
 /*status:
-	0 无人
-	1 有人
+	0 电源关闭状态
+	1 电源打开状态
 */
 /*power_status:
 	0 关闭状态
@@ -61,16 +61,18 @@ const table5 = `create table if not exists Reserve (
 				end int,
 				equipment varchar(30),
 				approver varchar(15),
-				status boolean default false,
-				complete_status boolean default false,
+				status tinyint(1),
 				user_id int unsigned,
 				exp_id int unsigned,
 				seat int unsigned,
 				primary key(id))
 				charset=utf8`;
+				// complete_status boolean default false,
 /*status:
 	0 审核中
 	1 审核通过
+	2 执行中
+	3 已执行
 */
 /*complete_status:
 	0 未完成

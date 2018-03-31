@@ -66,7 +66,7 @@ export default class ColMonitorExp extends Component {
                 render: text => text
             }, {
                 title: '状态',
-                dataIndex: 'status',
+                dataIndex: 'fault',
                 key: '2',
                 render: text => {
                     if (text) {
@@ -77,7 +77,7 @@ export default class ColMonitorExp extends Component {
                 }
             }, {
                 title: '电源状态',
-                dataIndex: 'power_status',
+                dataIndex: 'status',
                 key: '3',
                 render: text => {
                     if (text) {

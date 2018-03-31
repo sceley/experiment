@@ -130,8 +130,8 @@ exports.editInfo = async (req, res) => {
 			});
 		}
 		await new Promise((resolve, reject) => {
-			let sql = 'update User set sex=?, grade=?, major=?, name=?, mobile=?, active=? where account=?';
-			db.query(sql, [body.Sex, body.Grade, body.Major, body.Name, body.Mobile, true, id], (err) => {
+			let sql = 'update User set sex=?, grade=?, major=?, name=?, mobile=? where account=?';
+			db.query(sql, [body.Sex, body.Grade, body.Major, body.Name, body.Mobile, id], (err) => {
 				if (err)
 					reject(err);
 				else 
@@ -181,7 +181,7 @@ exports.showInfo = async (req, res) => {
 exports.showUsers = async (req, res) => {
 	try {
 		let users = await new Promise((resolve, reject) => {
-			let sql = 'select name, grade, major, sex, mobile, account, forbidden, active from User';
+			let sql = 'select name, grade, major, sex, mobile, account, forbidden from User';
 			db.query(sql, (err, users) => {
 				if (err) 
 					reject(err);

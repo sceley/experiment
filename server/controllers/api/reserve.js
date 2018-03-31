@@ -57,8 +57,8 @@ exports.addReserve = async (req, res) => {
         if (body.Equipment) {
             await new Promise((resolve, reject) => {
                 let sql = `insert into Reserve(user_id, exp_id, seat, start, 
-                end, date, createAt, equipment) values(?, ?, ?, ?, ?, ?, ?, ?)`;
-                db.query(sql, [id, body.Exp, body.Tab, body.Start, body.End, body.Date, createAt, body.Equipment], err => {
+                end, date, createAt, equipment, status) values(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                db.query(sql, [id, body.Exp, body.Tab, body.Start, body.End, body.Date, createAt, body.Equipment, 0], err => {
                     if (err)
                         reject(err);
                     else 
@@ -112,13 +112,20 @@ exports.addReserve = async (req, res) => {
 
 exports.showOneReserves = async (req, res) => {
     let id = req.user_session.uid;
-    let complete = req.query.complete;
+    let complete = parseInt(req.query.complete);
     try {
-        let reserves = await new Promise((resolve, reject) => {
-            let sql = `select exp_id, seat, Reserve.id, equipment, date, name,
+        let sql;
+        if (complete) {
+            sql = `select exp_id, seat, Reserve.id, equipment, date, name,
             address, Reserve.status, start, end, approver from Reserve left join Experiment 
-            on Reserve.exp_id=Experiment.id where user_id=? and complete_status=?`;
-            db.query(sql, [id, complete], (err, reserves) => {
+            on Reserve.exp_id=Experiment.id where user_id=? and status=3`;
+        } else {
+            sql = `select exp_id, seat, Reserve.id, equipment, date, name,
+            address, Reserve.status, start, end, approver from Reserve left join Experiment 
+            on Reserve.exp_id=Experiment.id where user_id=? and status!=3`;
+        }
+        let reserves = await new Promise((resolve, reject) => {
+            db.query(sql, [id], (err, reserves) => {
                 if (err)
                     reject(err);
                 else
@@ -143,8 +150,8 @@ exports.showReserves = async (req, res) => {
         let reserves = await new Promise((resolve, reject) => {
             let sql = `select exp_id, seat, createAt, Reserve.id, equipment,  
             address, Reserve.status, start, end, approver, name from Reserve left join Experiment 
-            on Reserve.exp_id=Experiment.id`;
-            db.query(sql, (err, reserves) => {
+            on Reserve.exp_id=Experiment.id where Reserve.status=?`;
+            db.query(sql, [status], (err, reserves) => {
                 if (err)
                     reject(err);
                 else
@@ -188,48 +195,48 @@ exports.deleteReserve = async (req, res) => {
 	}
 };
 
-// exports.switchReserve = async (req, res) => {
-//     let body = req.body;
-//     let approver = req.admin_session.admin;
-//     try {
-//         await new Promise((resolve, reject) => {
-//             let sql = 'update Reserve set status=?, approver=? where id=?';
-//             db.query(sql, [body.status, approver, body.id], (err) => {
-//                 if (err)
-//                     reject(err);
-//                 else 
-//                     resolve();
-//             });
-//         });
-//         let reserve = await new Promise((resolve, reject) => {
-//             let sql = 'select id, start, date, end from Reserve where id=?';
-//             db.query(sql, [body.id], (err, reserves) => {
-//                 if (err) 
-//                     reject(err);
-//                 else
-//                     resolve(reserves[0]);
-//             });
-//         });
-//         await addTask({
-//             id: reserve.id,
-//             date: reserve.date,
-//             hours: reserve.start,
-//             pow: 1
-//         });
-//         await addTask({
-//             id: reserve.id,
-//             date: reserve.date,
-//             hours: reserve.end,
-//             pow: 0
-//         });
-//         res.json({
-//             err: 0,
-//             msg: '设置成功'
-//         });
-//     } catch (e) {
-//         res.json({
-//             err: 1,
-//             msg: '服务器出错了'
-//         });
-//     }
-// };
+exports.switchReserve = async (req, res) => {
+    let body = req.body;
+    let approver = req.admin_session.admin;
+    try {
+        await new Promise((resolve, reject) => {
+            let sql = 'update Reserve set status=?, approver=? where id=?';
+            db.query(sql, [body.status, approver, body.id], (err) => {
+                if (err)
+                    reject(err);
+                else 
+                    resolve();
+            });
+        });
+        let reserve = await new Promise((resolve, reject) => {
+            let sql = 'select id, start, date, end from Reserve where id=?';
+            db.query(sql, [body.id], (err, reserves) => {
+                if (err) 
+                    reject(err);
+                else
+                    resolve(reserves[0]);
+            });
+        });
+        await addTask({
+            id: reserve.id,
+            date: reserve.date,
+            hours: reserve.start,
+            pow: 1
+        });
+        await addTask({
+            id: reserve.id,
+            date: reserve.date,
+            hours: reserve.end,
+            pow: 0
+        });
+        res.json({
+            err: 0,
+            msg: '设置成功'
+        });
+    } catch (e) {
+        res.json({
+            err: 1,
+            msg: '服务器出错了'
+        });
+    }
+};

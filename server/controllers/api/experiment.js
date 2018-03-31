@@ -118,7 +118,8 @@ exports.showRestExps = async (req, res) => {
 exports.showExpsStatus = async (req, res) => {
 	try {
 		let exps = await new Promise((resolve, reject) => {
-			let sql = 'select id, name, door, status from Experiment';
+			let sql = `select Experiment.id, name, sum(status) as people from Experiment 
+			left join Tab on Tab.exp_id=Experiment.id group by Experiment.id`;
 			db.query(sql, (err, exps) => {
 				if (err)
 					reject(err);

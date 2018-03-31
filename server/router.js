@@ -60,9 +60,9 @@ router.post('/api/admin/login', adminLogin);
 router.post('/api/admin/switchreserve', admin_session, switchReserve);
 router.post('/api/admin/monitoruser', admin_session, monitorUser);
 router.post('/api/admin/addexp', admin_session, addExp);
-// router.post('/api/admin/switchpower', admin_session, switchPower);
 router.post('/api/admin/notify', admin_session, notify);
 router.post('/api/admin/exp/edit', admin_session, editExp);
+// router.post('/api/admin/switchpower', admin_session, switchPower);
 // router.post('/api/admin/exp/switch', admin_session, switchExp);
 
 module.exports = router;

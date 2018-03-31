@@ -92,28 +92,36 @@ export default class ConReserve extends Component {
 			dataIndex: 'status',
 			key: '7',
 			render: text => {
-				if (text === 0)
+				if (text === 0) {
 					return '审核中'
-				else
-					return '通过'
-			}
-		}, {
-			title: '预约单操作',
-			dataIndex: 'id',
-			key: '8',
-			render: (id, record) => {
-				let handleCancel = () => {
-					this.cancelReserve(id);
-				};
-				return (
-					<Popconfirm title="确定取消?" okText="Yes" cancelText="No" onConfirm={handleCancel}>
-						<a>
-							取消
-  						</a>
-					</Popconfirm>
-				);
+				} else if (text === 1) {
+					return '审核通过'
+				} else if (text === 2) {
+					return '执行中'
+				} else {
+					return '已执行'
+				}
 			}
 		}];
+		if (!this.props.complete) {
+			columns.push({
+				title: '预约单操作',
+				dataIndex: 'id',
+				key: '8',
+				render: (id, record) => {
+					let handleCancel = () => {
+						this.cancelReserve(id);
+					};
+					return (
+						<Popconfirm title="确定取消?" okText="Yes" cancelText="No" onConfirm={handleCancel}>
+							<a>
+								取消
+  						</a>
+						</Popconfirm>
+					);
+				}
+			});
+		}
 		return (
 			<div>
 				<Table pagination={false} rowKey="id" columns={columns} bordered={true} dataSource={this.state.reserves} />

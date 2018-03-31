@@ -4,17 +4,8 @@ const net = require('net');
 
 exports.handleResponse = async str => {
     let res = convert_to_obj(str);
-    // await new Promise((resolve, reject) => {
-    //     let sql = 'update Experiment set door=? where id=?';
-    //     db.query(sql, [parseInt(res.DOR), parseInt(res.EXP)], err => {
-    //         if (err)
-    //             reject(err);
-    //         else
-    //             resolve();
-    //     });
-    // });
     await new Promise((resolve, reject) => {
-        let sql = 'update Tab set power_status=? where seat=? and exp_id=?';
+        let sql = 'update Tab set status=? where seat=? and exp_id=?';
         db.query(sql, [parseInt(res.POW), parseInt(res.TAB), parseInt(res.EXP)], err => {
             if (err)
                 reject(err);
@@ -22,10 +13,10 @@ exports.handleResponse = async str => {
                 resolve();
         });
     });
-    if (res.POW) {
+    if (parseInt(res.POW)) {
         await new Promise((resolve, reject) => {
-            let sql = 'update Reserve set complete_status=? where id=?';
-            db.query(sql, [1, parseInt(res.NUM)], err => {
+            let sql = 'update Reserve set status=? where id=?';
+            db.query(sql, [2, parseInt(res.NUM)], err => {
                 if (err)
                     reject();
                 else
@@ -34,8 +25,8 @@ exports.handleResponse = async str => {
         });
     } else {
         await new Promise((resolve, reject) => {
-            let sql = 'update Reserve set complete_status=? where id=?';
-            db.query(sql, [2, parseInt(res.NUM)], err => {
+            let sql = 'update Reserve set status=? where id=?';
+            db.query(sql, [3, parseInt(res.NUM)], err => {
                 if (err)
                     reject();
                 else
@@ -66,7 +57,7 @@ exports.execTask = async (task) => {
         });
     });
     let str = convert_to_str(reserve);
-    await send(str, exp);
+    send(str, exp);
 };
 
 function convert_to_str (option) {
@@ -100,18 +91,20 @@ function convert_to_obj (str) {
 };
 async function send (str, options) {
     const client = net.createConnection({ host: options.ip, port: options.port }, () => {
+        let count = 0;
         client.write(str);
-        client.end();
-    });
-    let timer = setInterval(() => {
-        client.write(str);
-    }, 1000);
-    client.on('data', 'utf8', data => {
-        if (data == 'SUC') {
-            clearInterval(timer);
-        }
-    });
-    client.on("close", () => {
-        console.log("关闭成功");
+        client.on('data', data => {
+            if (data.toString() == 'SUC') {
+                clearInterval(timer);
+                client.end();
+            }
+        });
+        let timer = setInterval(() => {
+            client.write(str);
+            count++;
+            if (count == 10) {
+                clearInterval(timer);
+            }
+        }, 1000);
     });
 };

@@ -61,10 +61,10 @@ export default class MonitorExp extends Component {
 		}, {
 			title: '状态',
 			key: '2',
-			dataIndex: 'status',
+			dataIndex: 'people',
 			render: text => {
 				if (text) {
-					return '有人'
+					return <div>{`${text}个人`}</div>
 				} else {
 					return '无人'
 				}
