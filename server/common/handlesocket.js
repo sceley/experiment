@@ -93,21 +93,6 @@ function convert_to_obj (str) {
 };
 async function send (str, options) {
     const client = net.createConnection({ host: options.ip, port: options.port }, () => {
-        let count = 0;
         client.write(str);
-        client.end();
-        client.on('data', data => {
-            if (data.toString() == 'SUC') {
-                clearInterval(timer);
-                client.end();
-            }
-        });
-        let timer = setInterval(() => {
-            client.write(str);
-            count++;
-            if (count == 10) {
-                clearInterval(timer);
-            }
-        }, 1000);
     });
 };
