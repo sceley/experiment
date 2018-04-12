@@ -31,7 +31,6 @@ export default class Admin extends Component {
 	}
 	componentWillMount = () => {
 		if (!localStorage.admin_token) {
-			message.error('请先进行登陆');
 			this.props.history.push('/admin/login');
 		}
 	}

@@ -40,6 +40,13 @@ class Logup extends Component {
 			cb("请输入8位数字的学号");
 		}
 	}
+	checkID = (rule, value, cb) => {
+		if (value && value.length == 2) {
+			cb();
+		} else {
+			cb("请输入2位数字的ID");
+		}
+	}
 	checkMobile = (rule, value, cb) => {
 		if (value && value.length == 11) {
 			cb();
@@ -77,6 +84,18 @@ class Logup extends Component {
 								)}
 						</FormItem>
 						<FormItem
+							label="ID"
+						>
+							{getFieldDecorator('ID', {
+								rules: [{
+									required: true, message: 'ID不能为空',
+									validator: this.checkID
+								}],
+							})(
+								<Input prefix={<Icon type="code-o" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="2位数字的ID" />
+							)}
+						</FormItem>
+						<FormItem
 							label="手机号"
 						>
 							{getFieldDecorator('Mobile', {
@@ -103,7 +122,7 @@ class Logup extends Component {
 						<FormItem>
 							<Link className="form-right" to="/user/login">登陆</Link>
 							<Button type="primary" htmlType="submit" className="logup-form-button">
-								Log up
+								注册
 							</Button>
 						</FormItem>
 					</Form>

@@ -9,13 +9,9 @@ import Admin from '../Admin/Admin';
 
 export default class Home extends Component {
 	componentWillMount = () => {
-        if (localStorage.admin_token) {
-            this.props.history.push('/admin');
-        } else if (localStorage.user_token) {
-            this.props.history.push('/user');
-        } else {
-        	this.props.history.push('/user/login');
-        }
+        // if (localStorage.user_token) {
+        //     this.props.history.push('/user');
+        // }
     }
 	render () {
 		return (

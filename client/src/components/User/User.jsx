@@ -25,7 +25,6 @@ export default class Person extends Component {
 	}
 	componentWillMount = () => {
 		if (!localStorage.user_token) {
-			message.error("请先登陆");
 			this.props.history.push('/user/login');
 		}
 	}

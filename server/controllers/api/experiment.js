@@ -2,6 +2,30 @@ const db = require('../../model/db');
 exports.addExp = async (req, res) => {
 	let body = req.body;
 	try {
+		if (!body.Name) {
+			return res.json({
+				err: 1,
+				msg: '实验室名称不能为空'
+			});
+		}
+		if (!body.IP) {
+			return res.json({
+				err: 1,
+				msg: 'IP不能为空'
+			});
+		}
+		if (!body.Address) {
+			return res.json({
+				err: 1,
+				msg: '实验室地址不能为空'
+			});
+		}
+		if (!body.Port) {
+			return res.json({
+				err: 1,
+				msg: 'PORT不能为空'
+			})
+		}
 		let exps = await new Promise((resolve, reject) => {
 			let sql = 'select * from Experiment where name=?';
 			db.query(sql, [body.Name], (err, exps) => {

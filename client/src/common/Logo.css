@@ -1,13 +1,13 @@
 .Logo {
 	display: flex;
-	align-items: center;
+    align-items: center;
 	height: 64px;
-    background: #002140;
+    background: #fff;
     padding-left: 24px;
 }
 .Logo .logo {
-    height: 40px;
-    margin-right: 5px;
+    height: 54px;
+    margin: 5px 0;
 }
 .Logo span {
     color: white;

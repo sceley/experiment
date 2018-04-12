@@ -32,6 +32,11 @@ class Login extends Component {
 			}
 		});
 	}
+	componentDidMount = () => {
+		if (localStorage.admin_token) {
+			this.props.history.push('/admin');
+		}
+	}
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
@@ -64,7 +69,7 @@ class Login extends Component {
 					<FormItem>
 						<Link className="form-right" to="/user/login">学生登陆</Link>
 						<Button type="primary" htmlType="submit" className="login-form-button">
-							Log in
+							登陆
 						</Button>
 					</FormItem>
 				</Form>

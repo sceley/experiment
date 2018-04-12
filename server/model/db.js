@@ -12,7 +12,7 @@ const table1 = `create table if not exists Admin (
 				charset=utf8`;
 
 const table2 = `create table if not exists User (
-				id int unsigned auto_increment,
+				id int unsigned not null,
 				account varchar(8) unique,
 				name varchar(15),
 				password varchar(100),
@@ -58,7 +58,7 @@ const table4 = `create table if not exists Tab (
 const table5 = `create table if not exists Reserve (
 				id int unsigned auto_increment,
 				createAt datetime,
-				date datetime,
+				date date,
 				start double,
 				end double,
 				equipment varchar(30),

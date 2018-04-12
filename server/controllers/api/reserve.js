@@ -3,42 +3,42 @@ const db = require('../../model/db');
 const addTask = require('../../common/task').addTask;
 const cancelTask = require('../../common/task').cancelTask;
 exports.addReserve = async (req, res) => {
-    let id = req.user_session.uid;
-    let body = req.body;
-    let hour = new Date().getHours();
-    let createAt = moment(new Date()).format('YYYY-MM-DD HH:MM');
-    let _date = moment().format("YYYY-MM-DD");
-    if (!body.Date) {
-        return res.json({
-            err: 1,
-            msg: '请选择日期'
-        });
-    }
-    if (!(body.Start && body.End && body.Start < body.End)) {
-        return res.json({
-            err: 1,
-            msg: '请选择合适的时间段'
-        });
-    }
-    if (body.Date == _date && body.Start < hour) {
-        return res.json({
-            err: 1,
-            msg: '请选择合适的时间段'
-        });
-    }
-    if (!body.Exp) {
-        return res.json({
-            err: 1,
-            msg: '请选择实验室'
-        });
-    }
-    if (!body.Tab) {
-        return res.json({
-            err: 1,
-            msg: '请选择位置'
-        });
-    }
     try {
+        let id = req.user_session.uid;
+        let body = req.body;
+        let hour = new Date().getHours();
+        let createAt = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+        let _date = moment().format("YYYY-MM-DD");
+        if (!body.Date) {
+            return res.json({
+                err: 1,
+                msg: '请选择日期'
+            });
+        }
+        if (!(body.Start && body.End && body.Start < body.End)) {
+            return res.json({
+                err: 1,
+                msg: '请选择合适的时间段'
+            });
+        }
+        if (body.Date == _date && body.Start < hour) {
+            return res.json({
+                err: 1,
+                msg: '请选择合适的时间段'
+            });
+        }
+        if (!body.Exp) {
+            return res.json({
+                err: 1,
+                msg: '请选择实验室'
+            });
+        }
+        if (!body.Tab) {
+            return res.json({
+                err: 1,
+                msg: '请选择位置'
+            });
+        }
         let reserves_count = await new Promise((resolve, reject) => {
             let sql = 'select count(id) as count from Reserve where exp_id=? and seat=? and date=? and ((start<? and start>=?) or (end<=? and end>?) or (start=? and end=?))';
             db.query(sql, [body.Exp, body.Tab, body.Date, body.End, body.Start, body.End, body.Start, body.Start, body.End], (err, reserves) => {
@@ -117,8 +117,8 @@ exports.addReserve = async (req, res) => {
             err: 0,
             msg: '预约成功'
         });
+        return;
     } catch (e) {
-        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'
@@ -249,6 +249,7 @@ exports.switchReserve = async (req, res) => {
             err: 0,
             msg: '设置成功'
         });
+        return;
     } catch (e) {
         res.json({
             err: 1,

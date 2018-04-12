@@ -4,8 +4,20 @@ const sign = require('../../common/sign').sign;
 const saltRounds = 10;
 
 exports.login = async (req, res) => {
-	let body = req.body;
 	try {
+		let body = req.body;
+		if (!body.Account) {
+			return res.json({
+				err: 1,
+				msg: '账号不能为空'
+			});
+		}
+		if (!(body.Password && body.Password.length >= 6 && body.Password.length <= 16)) {
+			return res.json({
+				err: 1,
+				msg: '密码应为6-16位字符'
+			});
+		}
 		let user = await new Promise((resolve, reject) => {
 			let sql = 'select id, password from User where account=? or mobile=?';
 			db.query(sql, [body.Account, body.Account], (err, users) => {
@@ -51,21 +63,69 @@ exports.login = async (req, res) => {
 
 };
 exports.logup = async (req, res) => {
-	let body = req.body;
 	try {
-		let users = await new Promise((resolve, reject) => {
-			let sql = 'select account from User where account=?';
-			db.query(sql, [body.Account], (err, users) => {
+		let body = req.body;
+		if (!(body.Account && body.Account.length == 8)) {
+			return res.json({
+				err: 1,
+				msg: '学号应该为8位'
+			});
+		}
+		if (!(body.Mobile && body.Mobile.length == 11)) {
+			return res.json({
+				err: 1,
+				msg: '手机号应该为11位'
+			});
+		}
+		if (!(body.ID && body.ID.length == 2)) {
+			return res.json({
+				err: 1,
+				msg: 'ID应该为2位'
+			});
+		}
+		let users_count = await new Promise((resolve, reject) => {
+			let sql = 'select count(account) as count from User where account=?';
+			db.query(sql, [body.Account], (err, result) => {
 				if (err)
 					reject(err);
 				else
-					resolve(users);
+					resolve(result[0].count);
 			});
 		});
-		if (users.length > 0) {
+		let mobiles_count = await new Promise((resolve, reject) => {
+			let sql = 'select count(mobile) as count from User where mobile=?';
+			db.query(sql, [body.Mobile], (err, result) => {
+				if (err)
+					reject(err);
+				else
+					resolve(result[0].count);
+			});
+		});
+		let id_count = await new Promise((resolve, reject) => {
+			let sql = 'select count(id) as count from User where id=?';
+			db.query(sql, [body.ID], (err, result) => {
+				if (err)
+					reject(err);
+				else
+					resolve(result[0].count);
+			});
+		});
+		if (users_count > 0) {
 			return res.json({
 				err: 1,
 				msg: '该学号已经被注册'
+			});
+		}
+		if (mobiles_count > 0) {
+			return res.json({
+				err: 1,
+				msg: '该手机号已经被注册'
+			});
+		}
+		if (id_count > 0) {
+			return res.json({
+				err: 1,
+				msg: '该ID已经被注册'
 			});
 		}
 		body.Password = await new Promise((resolve, reject) => {
@@ -77,8 +137,8 @@ exports.logup = async (req, res) => {
 			});
 		});
 		await new Promise((resolve, reject) => {
-			let sql = 'insert into User(account, mobile, password) values(?, ?, ?)';
-			db.query(sql, [body.Account, body.Mobile, body.Password], (err) => {
+			let sql = 'insert into User(id, account, mobile, password) values(?, ?, ?, ?)';
+			db.query(sql, [body.ID, body.Account, body.Mobile, body.Password], (err) => {
 				if (err)
 					reject(err);
 				else
@@ -91,14 +151,15 @@ exports.logup = async (req, res) => {
 		});
 	} catch (e) {
 		res.json({
-			err: 1
+			err: 1,
+			msg: '服务器出错了'
 		});
 	}
 };
 exports.editInfo = async (req, res) => {
-	let body = req.body;
-	let id = req.user_session.uid;
 	try {
+		let body = req.body;
+		let id = req.user_session.uid;
 		if (!body.Name) {
 			return res.json({
 				err: 1,
@@ -202,10 +263,10 @@ exports.showUsers = async (req, res) => {
 };
 
 exports.monitorUser = async (req, res) => {
-	let body = req.body;
 	try {
+		let body = req.body;
 		await new Promise((resolve, reject) => {
-			let sql = 'update User set forbidden=? where account=?';
+			let sql = 'update User set forbidden=? where id=?';
 			db.query(sql, [body.forbidden, body.id], err => {
 				if (err) 
 					reject(err);

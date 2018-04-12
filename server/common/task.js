@@ -182,4 +182,5 @@ async function exec_timer_task(time, task) {
         await execTask(task);
         await nextTask();
     }, time);
+    return;
 };
