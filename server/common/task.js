@@ -2,19 +2,8 @@ const moment = require('moment');
 const redis = require('../model/redis');
 const execTask = require('./handlesocket').execTask;
 
-let timer;
-exports.addTask = async (option) => {
-    clearTimeout(timer);
-    let res = await new Promise((resolve, reject) => {
-        redis.get('task', (err, res) => {
-            if (err) 
-                reject(err);
-            else
-                resolve(res);
-        });
-    });
-    let tasks = JSON.parse(res);
-    let current_res = await new Promise((resolve, reject) => {
+const timer = setInterval(async() => {
+    const current_str = await new Promise((resolve, reject) => {
         redis.get('current_task', (err, res) => {
             if (err)
                 reject(err);
@@ -22,64 +11,90 @@ exports.addTask = async (option) => {
                 resolve(res);
         });
     });
-    if (current_res) {
-        let current_task = JSON.parse(current_res);
+    if (current_str) {
+        const current_task = JSON.parse(current_str);
+        const time = moment(current_task.date).add(current_task.hours, 'h').diff(moment(), 'milliseconds');
+        if (time <= 0) {
+            await execTask(current_task);
+            await new Promise((resolve, reject) => {
+                redis.del('current_task', (err, res) => {
+                    if (err)
+                        reject(err);
+                    else
+                        resolve(res);
+                });
+            });
+            await nextTask();
+        } 
+    }
+}, 1000 * 60);
+
+exports.addTask = async (option) => {
+    const tasks_str = await new Promise((resolve, reject) => {
+        redis.get('tasks', (err, res) => {
+            if (err) 
+                reject(err);
+            else
+                resolve(res);
+        });
+    });
+    let tasks;
+    if (tasks_str) {
+        tasks = JSON.parse(tasks_str);
+    } else {
+        tasks = [];
+    }
+    const current_str = await new Promise((resolve, reject) => {
+        redis.get('current_task', (err, res) => {
+            if (err)
+                reject(err);
+            else
+                resolve(res);
+        });
+    });
+    if (current_str) {
+        const current_task = JSON.parse(current_str);
         tasks.push(current_task);
     }
     tasks.push(option);
     tasks = tasks.sort((pretask, nexttask) => {
-        let a = moment(pretask.date).add(pretask.hours, 'h').valueOf();
-        let b = moment(nexttask.date).add(nexttask.hours, 'h').valueOf();
+        const a = moment(pretask.date).add(pretask.hours, 'h').valueOf();
+        const b = moment(nexttask.date).add(nexttask.hours, 'h').valueOf();
         return a - b;
     });
-    let task = tasks.shift();
+    const task = tasks.shift();
     await new Promise((resolve, reject) => {
-        let str = JSON.stringify(tasks);
-        redis.set('task', str, err => {
+        const str = JSON.stringify(tasks);
+        redis.set('tasks', str, err => {
             if (err) 
                 reject(err);
             else
                 resolve();
         });
     });
-    if (!task) {
-        await new Promise((resolve, reject) => {
-            redis.del("current_task", err => {
-                if (err)
-                    reject(err);
-                else
-                    resolve();
-            });
+    await new Promise((resolve, reject) => {
+        const str = JSON.stringify(task);
+        redis.set("current_task", str, err => {
+            if (err)
+                reject(err);
+            else
+                resolve();
         });
-        return;
-    } else {
-        await new Promise((resolve, reject) => {
-            let str = JSON.stringify(task);
-            redis.set("current_task", str, err => {
-                if (err)
-                    reject(err);
-                else
-                    resolve();
-            });
-        });
-        let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
-        exec_timer_task(time, task);
-        return;
-    }
+    });
 };
+// let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
 
 exports.cancelTask = async (id) => {
-    clearTimeout(timer);
-    let res = await new Promise((resolve, reject) => {
-        redis.get('task', (err, res) => {
+    let tasks_str = await new Promise((resolve, reject) => {
+        redis.get('tasks', (err, res) => {
             if (err)
                 reject(err);
             else
                 resolve(res);
         });
     });
-    let tasks = JSON.parse(res);
-    let current_res = await new Promise((resolve, reject) => {
+    let tasks = JSON.parse(tasks_str);
+    let current_str = await new Promise((resolve, reject) => {
         redis.get('current_task', (err, res) => {
             if (err)
                 reject(err);
@@ -87,8 +102,8 @@ exports.cancelTask = async (id) => {
                 resolve(res);
         });
     });
-    if (current_res) {
-        let current_task = JSON.parse(current_res);
+    if (current_str) {
+        let current_task = JSON.parse(current_str);
         tasks.unshift(current_task);
     }
     tasks = tasks.filter(task => {
@@ -97,14 +112,24 @@ exports.cancelTask = async (id) => {
     let task = tasks.shift();
     await new Promise((resolve, reject) => {
         let str = JSON.stringify(tasks);
-        redis.set('task', str, err => {
+        redis.set('tasks', str, err => {
             if (err)
                 reject(err);
             else
                 resolve();
         });
     });
-    if (!task) {
+    if (task) {
+        await new Promise((resolve, reject) => {
+            let str = JSON.stringify(task);
+            redis.set("current_task", str, err => {
+                if (err)
+                    reject(err);
+                else
+                    resolve();
+            });
+        });
+    } else {
         await new Promise((resolve, reject) => {
             redis.del("current_task", err => {
                 if (err)
@@ -113,45 +138,30 @@ exports.cancelTask = async (id) => {
                     resolve();
             });
         });
-        return;
-    } else {
-        await new Promise((resolve, reject) => {
-            let str = JSON.stringify(task);
-            redis.set("current_task", str, err => {
-                if (err)
-                    reject(err);
-                else
-                    resolve();
-            });
-        });
-        let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
-        exec_timer_task(time, task);
-        return;
     }
 };
 
 async function nextTask () {
-    clearTimeout(timer);
-    let res = await new Promise((resolve, reject) => {
-        redis.get('task', (err, res) => {
+    let tasks_str = await new Promise((resolve, reject) => {
+        redis.get('tasks', (err, res) => {
             if (err)
                 reject(err);
             else
                 resolve(res);
         });
     });
-    let tasks = JSON.parse(res);
+    let tasks = JSON.parse(tasks_str);
     let task = tasks.shift();
     await new Promise((resolve, reject) => {
         let str = JSON.stringify(tasks);
-        redis.set('task', str, err => {
+        redis.set('tasks', str, err => {
             if (err)
             reject();
             else
             resolve();
         });
     });
-    if (!task) {
+    if (task) {
         await new Promise((resolve, reject) => {
             redis.del('current_task', err => {
                 if (err)
@@ -160,7 +170,6 @@ async function nextTask () {
                     resolve();
             });
         });
-        return;
     } else {
         await new Promise((resolve, reject) => {
             let str = JSON.stringify(task);
@@ -171,16 +180,5 @@ async function nextTask () {
                     resolve();
             });
         });
-        let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
-        exec_timer_task(time, task);
-        return;
     }
-};
-
-async function exec_timer_task(time, task) {
-    timer = setTimeout(async () => {
-        await execTask(task);
-        await nextTask();
-    }, time);
-    return;
 };
