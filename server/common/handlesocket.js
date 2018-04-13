@@ -54,25 +54,39 @@ exports.execTask = async (task) => {
                 resolve(exps[0]);
         });
     });
-    let str = convert_to_str(reserve);
-    send(str, exp);
-    return;
+    if (reserve instanceof Object) {
+        let str = convert_to_str(reserve);
+        send(str, exp);
+    }
 };
 
 function convert_to_str (option) {
-    if (!option)
-        return;
+    for (const key in option) {
+        option[key] = String(option[key]);
+    }
     while (option.NUM.length !== 4) {
         option.NUM = '0' + option.NUM;
+        if (option.NUM.length > 4) {
+            break;
+        }
     }
     while (option.EXP.length !== 2) {
         option.EXP = '0' + option.EXP;
+        if (option.EXP.length > 2) {
+            break;
+        }
     }
     while (option.TAB.length !== 2) {
         option.TAB = '0' + option.TAB;
+        if (option.TAB.length > 2) {
+            break;
+        }
     }
     while (option.ID.length !== 2) {
         option.ID = '0' + option.ID;
+        if (option.ID.length > 2) {
+            break;
+        }
     }
     let str = '';
     for (let key in option) {
@@ -91,8 +105,9 @@ function convert_to_obj (str) {
     });
     return obj;
 };
-async function send (str, options) {
+function send (str, options) {
     const client = net.createConnection({ host: options.ip, port: options.port }, () => {
         client.write(str);
+        client.end();
     });
 };

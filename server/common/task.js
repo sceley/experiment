@@ -15,7 +15,6 @@ const timer = setInterval(async() => {
         const current_task = JSON.parse(current_str);
         const time = moment(current_task.date).add(current_task.hours, 'h').diff(moment(), 'milliseconds');
         if (time <= 0) {
-            await execTask(current_task);
             await new Promise((resolve, reject) => {
                 redis.del('current_task', (err, res) => {
                     if (err)
@@ -24,10 +23,11 @@ const timer = setInterval(async() => {
                         resolve(res);
                 });
             });
+            await execTask(current_task);
             await nextTask();
         } 
     }
-}, 1000 * 60);
+}, 1000 * 10);
 
 exports.addTask = async (option) => {
     const tasks_str = await new Promise((resolve, reject) => {
@@ -85,7 +85,7 @@ exports.addTask = async (option) => {
 // let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
 
 exports.cancelTask = async (id) => {
-    let tasks_str = await new Promise((resolve, reject) => {
+    const tasks_str = await new Promise((resolve, reject) => {
         redis.get('tasks', (err, res) => {
             if (err)
                 reject(err);
@@ -94,7 +94,7 @@ exports.cancelTask = async (id) => {
         });
     });
     let tasks = JSON.parse(tasks_str);
-    let current_str = await new Promise((resolve, reject) => {
+    const current_str = await new Promise((resolve, reject) => {
         redis.get('current_task', (err, res) => {
             if (err)
                 reject(err);
@@ -103,15 +103,15 @@ exports.cancelTask = async (id) => {
         });
     });
     if (current_str) {
-        let current_task = JSON.parse(current_str);
+        const current_task = JSON.parse(current_str);
         tasks.unshift(current_task);
     }
     tasks = tasks.filter(task => {
         return task.id != id;
     });
-    let task = tasks.shift();
+    const task = tasks.shift();
     await new Promise((resolve, reject) => {
-        let str = JSON.stringify(tasks);
+        const str = JSON.stringify(tasks);
         redis.set('tasks', str, err => {
             if (err)
                 reject(err);
@@ -121,7 +121,7 @@ exports.cancelTask = async (id) => {
     });
     if (task) {
         await new Promise((resolve, reject) => {
-            let str = JSON.stringify(task);
+            const str = JSON.stringify(task);
             redis.set("current_task", str, err => {
                 if (err)
                     reject(err);
@@ -142,7 +142,7 @@ exports.cancelTask = async (id) => {
 };
 
 async function nextTask () {
-    let tasks_str = await new Promise((resolve, reject) => {
+    const tasks_str = await new Promise((resolve, reject) => {
         redis.get('tasks', (err, res) => {
             if (err)
                 reject(err);
@@ -150,15 +150,15 @@ async function nextTask () {
                 resolve(res);
         });
     });
-    let tasks = JSON.parse(tasks_str);
-    let task = tasks.shift();
+    const tasks = JSON.parse(tasks_str);
+    const task = tasks.shift();
     await new Promise((resolve, reject) => {
-        let str = JSON.stringify(tasks);
+        const str = JSON.stringify(tasks);
         redis.set('tasks', str, err => {
             if (err)
-            reject();
+                reject();
             else
-            resolve();
+                resolve();
         });
     });
     if (task) {
@@ -172,7 +172,7 @@ async function nextTask () {
         });
     } else {
         await new Promise((resolve, reject) => {
-            let str = JSON.stringify(task);
+            const str = JSON.stringify(task);
             redis.set("current_task", str, err => {
                 if (err)
                     reject(err);
