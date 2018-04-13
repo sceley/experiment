@@ -1,9 +1,9 @@
 const db = require('../model/db');
 const net = require('net');
 exports.handleResponse = async str => {
-    let res = convert_to_obj(str);
+    const res = convert_to_obj(str);
     await new Promise((resolve, reject) => {
-        let sql = 'update Tab set status=?, fault=? where seat=? and exp_id=?';
+        const sql = 'update Tab set status=?, fault=? where seat=? and exp_id=?';
         db.query(sql, [parseInt(res.POW), parseInt(res.FAU), parseInt(res.TAB), parseInt(res.EXP)], err => {
             if (err)
                 reject(err);
@@ -13,7 +13,7 @@ exports.handleResponse = async str => {
     });
     if (parseInt(res.POW)) {
         await new Promise((resolve, reject) => {
-            let sql = 'update Reserve set status=? where id=?';
+            const sql = 'update Reserve set status=? where id=?';
             db.query(sql, [2, parseInt(res.NUM)], err => {
                 if (err)
                     reject();
@@ -23,7 +23,7 @@ exports.handleResponse = async str => {
         });
     } else {
         await new Promise((resolve, reject) => {
-            let sql = 'update Reserve set status=? where id=?';
+            const sql = 'update Reserve set status=? where id=?';
             db.query(sql, [3, parseInt(res.NUM)], err => {
                 if (err)
                     reject();
@@ -105,7 +105,7 @@ function convert_to_obj (str) {
     });
     return obj;
 };
-function send (str, options) {
+async function send (str, options) {
     const client = net.createConnection({ host: options.ip, port: options.port }, () => {
         client.write(str);
         client.end();

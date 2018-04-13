@@ -38,7 +38,7 @@ export default class Admin extends Component {
 		return (
 			<div className="Admin">
 				<Layout>
-					<Sider width={256}>
+					<Sider className="Sider-shadow" width={256}>
 						<Link onClick={this.handleBack} to="/admin">
 							<Logo/>
 						</Link>

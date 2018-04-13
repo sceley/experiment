@@ -28,7 +28,7 @@ exports.login = async (req, res) => {
 			});
 		});
 		if (!user) {
-			return res.json({
+			res.json({
 				err: 1,
 				msg: '该用户不存在'
 			});

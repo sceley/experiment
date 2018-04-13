@@ -4,3 +4,6 @@
 .App-header h1 {
   color: white;
 }
+.Sider-shadow {
+  box-shadow: 2px 0 6px rgba(0,21,41,.35);
+}

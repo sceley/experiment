@@ -52,7 +52,7 @@ export default class Person extends Component {
 							</Menu.Item>
 							<Menu.Item key="reserve">
 								<Link to={`${this.props.match.url}/reserve`}>
-									<Icon type="form" />预约实验室
+									<Icon type="form" />在线预约
 								</Link>
 							</Menu.Item>
 							<Menu.Item key="myreserve">
