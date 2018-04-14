@@ -21,9 +21,9 @@ const table2 = `create table if not exists User (
 				mobile varchar(11),
 				grade varchar(10),
 				forbidden boolean default false,
+				filling boolean default false,
 				primary key(account))
 				charset=utf8`;
-				// active boolean default false, 
 
 const table3 = `create table if not exists Experiment (
 				id int unsigned auto_increment,
@@ -33,9 +33,6 @@ const table3 = `create table if not exists Experiment (
 				address varchar(15),
 				primary key(id))
 				charset=utf8`;
-				// status boolean default false,
-				// door boolean default false,
-				// fault boolean default false,
 
 const table4 = `create table if not exists Tab (
 				id int unsigned auto_increment,
@@ -46,15 +43,11 @@ const table4 = `create table if not exists Tab (
 				primary key(id), 
 				foreign key(exp_id) references Experiment(id))
 				charset=utf8`;
-				// power_status boolean default false,
 /*status:
 	0 电源关闭状态
 	1 电源打开状态
 */
-/*power_status:
-	0 关闭状态
-	1 打开状态
-*/
+
 const table5 = `create table if not exists Reserve (
 				id int unsigned auto_increment,
 				createAt datetime,
@@ -69,18 +62,13 @@ const table5 = `create table if not exists Reserve (
 				seat int unsigned,
 				primary key(id))
 				charset=utf8`;
-				// complete_status boolean default false,
 /*status:
 	0 审核中
 	1 审核通过
 	2 执行中
 	3 已执行
 */
-/*complete_status:
-	0 未完成
-	1 执行中
-	2 已执行
-*/
+
 const table6 = `create table if not exists Notification (
 				id int unsigned auto_increment,
 				title varchar(50),
@@ -99,16 +87,7 @@ const table7 = `create table if not exists Feedback (
 				primary key(id))
 				charset=utf8`;
 
-const table8 = `create table if not exists Rate (
-				id int unsigned auto_increment,
-				reserve_id int unsigned,
-				rate int unsigned,
-				message longtext,
-				reply longtext,
-				createAt datetime,
-				primary key(id))
-				charset=utf8`;
-const table9 = `create table if not exists ID (
+const table8 = `create table if not exists ID (
 				id int unsigned not null,
 				account varchar(8) unique,
 				primary key(id))
@@ -122,6 +101,5 @@ connection.query(table5);
 connection.query(table6);
 connection.query(table7);
 connection.query(table8);
-connection.query(table9);
 
 module.exports = connection;

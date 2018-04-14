@@ -6,6 +6,7 @@ const redis = require('./model/redis');
 const login = require('./controllers/api/user').login;
 const logup = require('./controllers/api/user').logup;
 const editInfo = require('./controllers/api/user').editInfo;
+const filling = require('./controllers/api/user').filling;
 const showInfo = require('./controllers/api/user').showInfo;
 const showUsers = require('./controllers/api/user').showUsers;
 const monitorUser = require('./controllers/api/user').monitorUser;
@@ -28,8 +29,6 @@ const feedback = require('./controllers/api/feedback').feedback;
 const feedbackReply = require('./controllers/api/feedback').reply;
 const getFeedback = require('./controllers/api/feedback').getFeedback;
 const getFeedbackReply = require('./controllers/api/feedback').getFeedbackReply;
-const rate = require('./controllers/api/rate').rate;
-const rateReply = require('./controllers/api/rate').reply;
 
 //middleware
 const user_session = require('./middleware/oauth').user_session;
@@ -62,9 +61,9 @@ router.post('/api/restexps', showRestExps);
 router.post('/api/user/login', login);
 router.post('/api/user/logup', logup);
 router.post('/api/user/info/edit', user_session, editInfo);
+router.post('/api/user/fillinginfo', user_session, filling);
 router.post('/api/user/addreserve', user_session, authFinger, oauthUser, addReserve);
 router.post('/api/user/feedback', user_session, feedback);
-router.post('/api/user/reserve/:id/rate', user_session, rate);
 router.post('/api/admin/login', adminLogin);
 router.post('/api/admin/switchreserve', admin_session, switchReserve);
 router.post('/api/admin/monitoruser', admin_session, monitorUser);
@@ -72,7 +71,6 @@ router.post('/api/admin/addexp', admin_session, addExp);
 router.post('/api/admin/notify', admin_session, notify);
 router.post('/api/admin/exp/edit', admin_session, editExp);
 router.post('/api/admin/feedback/:id/reply', admin_session, feedbackReply);
-router.post('/api/admin/rate/:id/reply', admin_session, rateReply);
 
 
 module.exports = router;

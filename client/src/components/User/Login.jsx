@@ -21,11 +21,13 @@ class Login extends Component {
 						return res.json();
 					}
 				}).then(json => {
-					if (json && !json.err) {
+					if (json && json.warning) {
 						localStorage.user_token = json.token;
-						message.info(json.msg);
+						this.props.history.push('/user/fillinginfo');
+					} else if(json && !json.err) {
+						localStorage.user_token = json.token;
 						this.props.history.push('/user');
-					} else if(json) {
+					} else if (json && json.err) {
 						message.error(json.msg);
 					}
 				});

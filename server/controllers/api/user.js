@@ -43,11 +43,29 @@ exports.login = async (req, res) => {
 		});
 		if (result) {
 			let token = await sign("account", user.account);
-			res.json({
-				err: 0,
-				msg: '登录成功',
-				token
+			const filling = await new Promise((resolve, reject) => {
+				const sql = 'select filling from User where account=?';
+				db.query(sql, [user.account], (err, users) => {
+					if (err) {
+						reject(err);
+					} else {
+						resolve(users[0].filling);
+					}
+				});
 			});
+			if (filling) {
+				res.json({
+					err: 0,
+					msg: '登录成功',
+					token
+				});
+			} else {
+				res.json({
+					warning: 1,
+					msg: '登录成功，信息需要完善',
+					token
+				});
+			}
 		} else {
 			res.json({
 				err: 1,
@@ -146,6 +164,54 @@ exports.logup = async (req, res) => {
 		});
 	} catch (e) {
 		console.log(e);
+		res.json({
+			err: 1,
+			msg: '服务器出错了'
+		});
+	}
+};
+exports.filling = async (req, res) => {
+	try {
+		const body = req.body;
+		const account = req.user_session.account;
+		if (!body.Name) {
+			return res.json({
+				err: 1,
+				msg: '姓名不能为空'
+			});
+		}
+		if (!body.Sex) {
+			return res.json({
+				err: 1,
+				msg: '请选择性别'
+			});
+		} 
+		if (!body.Major) {
+			return res.json({
+				err: 1,
+				msg: '专业不能为空'
+			});
+		}
+		if (!body.Grade) {
+			return res.json({
+				err: 1,
+				msg: '请选择年级'
+			});
+		}
+		await new Promise((resolve, reject) => {
+			let sql = 'update User set filling=?, grade=?, major=?, name=?, sex=? where account=?';
+			db.query(sql, [true, body.Grade, body.Major, body.Name, body.Sex, account], (err) => {
+				if (err)
+					reject(err);
+				else
+					resolve();
+			});
+		});
+		res.json({
+			err: 0,
+			msg: '完善成功'
+		});
+	} catch (e) {
 		res.json({
 			err: 1,
 			msg: '服务器出错了'
