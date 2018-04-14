@@ -1,42 +1,67 @@
 const db = require('../model/db');
 const net = require('net');
 exports.handleResponse = async str => {
-    const res = convert_to_obj(str);
-    await new Promise((resolve, reject) => {
-        const sql = 'update Tab set status=?, fault=? where seat=? and exp_id=?';
-        db.query(sql, [parseInt(res.POW), parseInt(res.FAU), parseInt(res.TAB), parseInt(res.EXP)], err => {
-            if (err)
-                reject(err);
-            else
-                resolve();
-        });
-    });
-    if (parseInt(res.POW)) {
+    if (str.length == 15) {
+        const account = str.slice(3, 11);
+        const id = str.slice(13);
         await new Promise((resolve, reject) => {
-            const sql = 'update Reserve set status=? where id=?';
-            db.query(sql, [2, parseInt(res.NUM)], err => {
-                if (err)
-                    reject();
-                else
+            const sql = 'insert into ID(account, id) values(?, ?)';
+            db.query(sql, [account, id], err => {
+                if (err) {
+                    reject(err);
+                } else {
                     resolve();
+                }
+            });
+        });
+        await new Promise((resolve, reject) => {
+            const sql = 'update User set id=? where account=?';
+            db.query(sql, [id, account], err => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve();
+                }
             });
         });
     } else {
+        const res = convert_to_obj(str);
         await new Promise((resolve, reject) => {
-            const sql = 'update Reserve set status=? where id=?';
-            db.query(sql, [3, parseInt(res.NUM)], err => {
+            const sql = 'update Tab set status=?, fault=? where seat=? and exp_id=?';
+            db.query(sql, [parseInt(res.POW), parseInt(res.FAU), parseInt(res.TAB), parseInt(res.EXP)], err => {
                 if (err)
-                    reject();
+                    reject(err);
                 else
                     resolve();
             });
         });
+        if (parseInt(res.POW)) {
+            await new Promise((resolve, reject) => {
+                const sql = 'update Reserve set status=? where id=?';
+                db.query(sql, [2, parseInt(res.NUM)], err => {
+                    if (err)
+                        reject();
+                    else
+                        resolve();
+                });
+            });
+        } else {
+            await new Promise((resolve, reject) => {
+                const sql = 'update Reserve set status=? where id=?';
+                db.query(sql, [3, parseInt(res.NUM)], err => {
+                    if (err)
+                        reject();
+                    else
+                        resolve();
+                });
+            });
+        }
     }
 };
 
 exports.execTask = async (task) => {
     let reserve = await new Promise((resolve, reject) => {
-        let sql = 'select id as NUM, exp_id as EXP, seat as TAB, user_id as ID from Reserve where id=?';
+        let sql = 'select id as NUM, exp_id as EXP, seat as TAB, user_id as account from Reserve where id=?';
         db.query(sql, [task.id], (err, reserves) => {
             if (err)
                 reject(err);
@@ -44,6 +69,17 @@ exports.execTask = async (task) => {
                 resolve(reserves[0]);
         });
     });
+    reserve.ID = await new Promise((resolve, reject) => {
+        const sql = 'select id from User where account=?';
+        db.query(sql, [reserve.account], (err, users) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(users[0].id);
+            }
+        });
+    });
+    delete reserve.account;
     reserve.POW = task.pow;
     let exp = await new Promise((resolve, reject) => {
         let sql = 'select ip, port from Experiment where id=?';

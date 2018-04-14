@@ -4,7 +4,7 @@ const addTask = require('../../common/task').addTask;
 const cancelTask = require('../../common/task').cancelTask;
 exports.addReserve = async (req, res) => {
     try {
-        let id = req.user_session.uid;
+        let account = req.user_session.account;
         let body = req.body;
         let hour = new Date().getHours();
         let createAt = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
@@ -87,7 +87,7 @@ exports.addReserve = async (req, res) => {
             await new Promise((resolve, reject) => {
                 let sql = `insert into Reserve(user_id, exp_id, seat, start, 
                 end, date, createAt, equipment, status) values(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-                db.query(sql, [id, body.Exp, body.Tab, body.Start, body.End, body.Date, createAt, body.Equipment, 0], err => {
+                db.query(sql, [account, body.Exp, body.Tab, body.Start, body.End, body.Date, createAt, body.Equipment, 0], err => {
                     if (err)
                         reject(err);
                     else 
@@ -98,7 +98,7 @@ exports.addReserve = async (req, res) => {
             await new Promise((resolve, reject) => {
                 let sql = `insert into Reserve(user_id, exp_id, seat, start,
                 end, date, createAt, status) values(?, ?, ?, ?, ?, ?, ?, ?)`;
-                db.query(sql, [id, body.Exp, body.Tab, body.Start, body.End, body.Date, createAt, 1], err => {
+                db.query(sql, [account, body.Exp, body.Tab, body.Start, body.End, body.Date, createAt, 1], err => {
                     if (err)
                         reject(err);
                     else 
@@ -131,7 +131,6 @@ exports.addReserve = async (req, res) => {
             err: 0,
             msg: '预约成功'
         });
-        return;
     } catch (e) {
         console.log(e);
         res.json({
@@ -142,7 +141,7 @@ exports.addReserve = async (req, res) => {
 };
 
 exports.showOneReserves = async (req, res) => {
-    let id = req.user_session.uid;
+    let account = req.user_session.account;
     let complete = parseInt(req.query.complete);
     try {
         let sql;
@@ -156,7 +155,7 @@ exports.showOneReserves = async (req, res) => {
             on Reserve.exp_id=Experiment.id where user_id=? and status!=3`;
         }
         let reserves = await new Promise((resolve, reject) => {
-            db.query(sql, [id], (err, reserves) => {
+            db.query(sql, [account], (err, reserves) => {
                 if (err)
                     reject(err);
                 else

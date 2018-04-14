@@ -23,9 +23,9 @@ export default class ManageUser extends Component {
 			}
 		});
 	}
-	handleSwitch = (id, e) => {
+	handleSwitch = (account, e) => {
 		let body = {
-			id,
+			account,
 			forbidden: e
 		};
 		fetch(`${config.server}/api/admin/monitoruser`, {
@@ -42,7 +42,7 @@ export default class ManageUser extends Component {
 			if (json && !json.err) {
 				let users = this.state.users;
 				users = users.map(user => {
-					if (user.id == id) {
+					if (user.account == account) {
 						user.forbidden = e;
 					}
 					return user;
@@ -106,12 +106,12 @@ export default class ManageUser extends Component {
 				}
 			}, {
 				title: '预约权限控制',
-				dataIndex: 'id',
+				dataIndex: 'account',
 				key: '8',
-				render: (id, record) => {
+				render: (account, record) => {
 					let forbidden = record.forbidden;
 					let handleChange = () => {
-						this.handleSwitch(id, !forbidden);
+						this.handleSwitch(account, !forbidden);
 					}
 					if (!forbidden) {
 						return (

@@ -3,7 +3,7 @@ const moment = require('moment');
 exports.feedback = async (req, res) => {
     try {
         const body = req.body;
-        const uid = req.user_session.uid;
+        const account = req.user_session.account;
         const createAt = moment().format('YYYY-MM-DD HH:mm:ss');
         if (!body.message) {
             return res.json({
@@ -12,8 +12,8 @@ exports.feedback = async (req, res) => {
             });
         }
         const author = await new Promise((resolve, reject) => {
-            const sql = 'select name from User where id=?';
-            db.query(sql, [uid], (err, users) => {
+            const sql = 'select name from User where account=?';
+            db.query(sql, [account], (err, users) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -99,9 +99,10 @@ exports.getFeedback = async (req, res) => {
 };
 exports.getFeedbackReply = async (req, res) => {
     try {
+        const account = req.user_session.account;
         const replys = await new Promise((resolve, reject) => {
-            const sql = 'select * from Feedback where replyable=false';
-            db.query(sql, (err, replys) => {
+            const sql = 'select * from Feedback where replyable=false and account=?';
+            db.query(sql, [account], (err, replys) => {
                 if (err) {
                     reject(err);
                 } else {

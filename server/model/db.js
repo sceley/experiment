@@ -12,8 +12,8 @@ const table1 = `create table if not exists Admin (
 				charset=utf8`;
 
 const table2 = `create table if not exists User (
-				id int unsigned not null,
-				account varchar(8) unique,
+				account varchar(8) not null,
+				id int unsigned,
 				name varchar(15),
 				password varchar(100),
 				sex varchar(5),
@@ -21,7 +21,7 @@ const table2 = `create table if not exists User (
 				mobile varchar(11),
 				grade varchar(10),
 				forbidden boolean default false,
-				primary key(id))
+				primary key(account))
 				charset=utf8`;
 				// active boolean default false, 
 
@@ -64,7 +64,7 @@ const table5 = `create table if not exists Reserve (
 				equipment varchar(30),
 				approver varchar(15),
 				status tinyint(1),
-				user_id int unsigned,
+				user_id varchar(8),
 				exp_id int unsigned,
 				seat int unsigned,
 				primary key(id))
@@ -108,6 +108,11 @@ const table8 = `create table if not exists Rate (
 				createAt datetime,
 				primary key(id))
 				charset=utf8`;
+const table9 = `create table if not exists ID (
+				id int unsigned not null,
+				account varchar(8) unique,
+				primary key(id))
+				charset=utf8`;
 				
 connection.query(table1);
 connection.query(table2);
@@ -117,5 +122,6 @@ connection.query(table5);
 connection.query(table6);
 connection.query(table7);
 connection.query(table8);
+connection.query(table9);
 
 module.exports = connection;

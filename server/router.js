@@ -35,6 +35,7 @@ const rateReply = require('./controllers/api/rate').reply;
 const user_session = require('./middleware/oauth').user_session;
 const admin_session = require('./middleware/oauth').admin_session;
 const oauthUser = require('./middleware/oauth').oauthUser;
+const authFinger = require('./middleware/oauth').authFinger;
 
 //powerswitch
 let router = Router();
@@ -49,7 +50,7 @@ router.get('/api/admin/monitorexp/:id', admin_session, monitorExp);
 router.get('/api/admin/reserves', admin_session, showReserves);
 router.get('/api/admin/exps', admin_session, showExps);
 router.get('/api/feedback', getFeedback);
-router.get('/api/feedback/reply', getFeedbackReply);
+router.get('/api/feedback/reply', user_session, getFeedbackReply);
 
 //delete
 router.delete('/api/user/reserve/:id', deleteReserve);
@@ -61,7 +62,7 @@ router.post('/api/restexps', showRestExps);
 router.post('/api/user/login', login);
 router.post('/api/user/logup', logup);
 router.post('/api/user/info/edit', user_session, editInfo);
-router.post('/api/user/addreserve', user_session, oauthUser, addReserve);
+router.post('/api/user/addreserve', user_session, authFinger, oauthUser, addReserve);
 router.post('/api/user/feedback', user_session, feedback);
 router.post('/api/user/reserve/:id/rate', user_session, rate);
 router.post('/api/admin/login', adminLogin);

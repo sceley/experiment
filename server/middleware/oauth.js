@@ -12,7 +12,7 @@ exports.user_session = async (req, res, next) => {
 					resolve(session);
 			});
 		});
-		if (session.uid) {
+		if (session.account) {
 			req.user_session = session;	
 			next();
 		} else {
@@ -29,23 +29,17 @@ exports.user_session = async (req, res, next) => {
 	}
 };
 exports.oauthUser = async (req, res, next) => {
-	let uid = req.user_session.uid;
 	try {
+		let account = req.user_session.account;
 		let user = await new Promise((resolve, reject) => {
-			let sql = 'select forbidden from User where id=?';
-			db.query(sql, [uid], (err, users) => {
+			let sql = 'select forbidden from User where account=?';
+			db.query(sql, [account], (err, users) => {
 				if (err)
 					reject(err);
 				else 
 					resolve(users[0]);
 			});
 		});
-		// if (!user.active) {
-		// 	return res.json({
-		// 		err: 1,
-		// 		msg: '您的账号未激活，请完善你的信息'
-		// 	});
-		// }
 		if (user.forbidden) {
 			return res.json({
 				err: 1,
@@ -60,6 +54,35 @@ exports.oauthUser = async (req, res, next) => {
 		});
 	}
 };
+
+exports.authFinger = async (req, res, next) => {
+	try {
+		const account = req.user_session.account;
+		const user = await new Promise((resolve, reject) => {
+			const sql = 'select * from User where account=?';
+			db.query(sql, [account], (err, users) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(users[0]);
+				}
+			});
+		});
+		if (user.id) {
+			next();
+		} else {
+			res.json({
+				err: 1,
+				msg: '请先到实验室入指纹'
+			});
+		}
+	} catch (e) {
+		res.json({
+			err: 1,
+			msg: '服务器出错了'
+		});
+	}
+}
 
 exports.admin_session = async (req, res, next) => {
 	let token = req.headers['x-access-token'];

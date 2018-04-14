@@ -19,7 +19,7 @@ exports.login = async (req, res) => {
 			});
 		}
 		let user = await new Promise((resolve, reject) => {
-			let sql = 'select id, password from User where account=? or mobile=?';
+			let sql = 'select account, password from User where account=? or mobile=?';
 			db.query(sql, [body.Account, body.Account], (err, users) => {
 				if (err)
 					reject(err);
@@ -42,7 +42,7 @@ exports.login = async (req, res) => {
 			});
 		});
 		if (result) {
-			let token = await sign("uid", user.id);
+			let token = await sign("account", user.account);
 			res.json({
 				err: 0,
 				msg: '登录成功',
@@ -77,12 +77,6 @@ exports.logup = async (req, res) => {
 				msg: '手机号应该为11位'
 			});
 		}
-		if (!(body.ID && body.ID.length == 2)) {
-			return res.json({
-				err: 1,
-				msg: 'ID应该为2位'
-			});
-		}
 		let users_count = await new Promise((resolve, reject) => {
 			let sql = 'select count(account) as count from User where account=?';
 			db.query(sql, [body.Account], (err, result) => {
@@ -101,15 +95,6 @@ exports.logup = async (req, res) => {
 					resolve(result[0].count);
 			});
 		});
-		let id_count = await new Promise((resolve, reject) => {
-			let sql = 'select count(id) as count from User where id=?';
-			db.query(sql, [body.ID], (err, result) => {
-				if (err)
-					reject(err);
-				else
-					resolve(result[0].count);
-			});
-		});
 		if (users_count > 0) {
 			return res.json({
 				err: 1,
@@ -122,12 +107,6 @@ exports.logup = async (req, res) => {
 				msg: '该手机号已经被注册'
 			});
 		}
-		if (id_count > 0) {
-			return res.json({
-				err: 1,
-				msg: '该ID已经被注册'
-			});
-		}
 		body.Password = await new Promise((resolve, reject) => {
 			bcrypt.hash(body.Password, saltRounds, (err, hash) => {
 				if (err)
@@ -136,6 +115,22 @@ exports.logup = async (req, res) => {
 					resolve(hash);
 			});
 		});
+		const Oid = await new Promise((resolve, reject) => {
+			const sql = 'select id from ID where account=?';
+			db.query(sql, [body.Account], (err, ids) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(ids[0]);
+				}
+			});
+
+		});
+		if (Oid) {
+			body.ID = Oid.id;
+		} else {
+			body.ID = null;
+		}
 		await new Promise((resolve, reject) => {
 			let sql = 'insert into User(id, account, mobile, password) values(?, ?, ?, ?)';
 			db.query(sql, [body.ID, body.Account, body.Mobile, body.Password], (err) => {
@@ -150,6 +145,7 @@ exports.logup = async (req, res) => {
 			msg: '注册成功'
 		});
 	} catch (e) {
+		console.log(e);
 		res.json({
 			err: 1,
 			msg: '服务器出错了'
@@ -159,7 +155,7 @@ exports.logup = async (req, res) => {
 exports.editInfo = async (req, res) => {
 	try {
 		let body = req.body;
-		let id = req.user_session.uid;
+		let account = req.user_session.account;
 		if (!body.Name) {
 			return res.json({
 				err: 1,
@@ -191,8 +187,8 @@ exports.editInfo = async (req, res) => {
 			});
 		}
 		await new Promise((resolve, reject) => {
-			let sql = 'update User set sex=?, grade=?, major=?, name=?, mobile=? where id=?';
-			db.query(sql, [body.Sex, body.Grade, body.Major, body.Name, body.Mobile, id], (err) => {
+			let sql = 'update User set sex=?, grade=?, major=?, name=?, mobile=? where account=?';
+			db.query(sql, [body.Sex, body.Grade, body.Major, body.Name, body.Mobile, account], (err) => {
 				if (err)
 					reject(err);
 				else 
@@ -213,11 +209,11 @@ exports.editInfo = async (req, res) => {
 
 exports.showInfo = async (req, res) => {
 	let body = req.body;
-	let id = req.user_session.uid;
+	let account = req.user_session.account;
 	try {
 		let user = await new Promise((resolve, reject) => {
-			let sql = 'select * from User where id=?';
-			db.query(sql, [id], (err, users) => {
+			let sql = 'select * from User where account=?';
+			db.query(sql, [account], (err, users) => {
 				if (err) 
 					reject(err);
 				else
@@ -266,8 +262,8 @@ exports.monitorUser = async (req, res) => {
 	try {
 		let body = req.body;
 		await new Promise((resolve, reject) => {
-			let sql = 'update User set forbidden=? where id=?';
-			db.query(sql, [body.forbidden, body.id], err => {
+			let sql = 'update User set forbidden=? where account=?';
+			db.query(sql, [body.forbidden, body.account], err => {
 				if (err) 
 					reject(err);
 				else
