@@ -8,6 +8,7 @@ import MonitorUser from './MonitorUser';
 import MonitorReserve from './MonitorReserve';
 import Exps from './Exps';
 import Notification from './Notification';
+import UserFeedback from './UserFeedback';
 import './Admin.css';
 const { Sider, Content } = Layout;
 
@@ -68,6 +69,11 @@ export default class Admin extends Component {
 									<Icon type="user" />我的实验室
 								</Link>
 							</Menu.Item>
+							<Menu.Item key="user-feedback">
+								<Link to={`${this.props.match.url}/user-feedback`}>
+									<Icon type="user" />用户反馈
+								</Link>
+							</Menu.Item>
 							<Menu.Item key="notification">
 								<Link to={`${this.props.match.url}/notification`}>
 									<Icon type="notification" />公告
@@ -84,6 +90,7 @@ export default class Admin extends Component {
 								<Route path={`${this.props.match.url}/reserve`} component={MonitorReserve}/>
 								<Route path={`${this.props.match.url}/notification`} component={Notification}/>
 								<Route path={`${this.props.match.url}/exps`} component={Exps}/>
+								<Route path={`${this.props.match.url}/user-feedback`} component={UserFeedback} />
 							</Content>
 						</Layout>
 					</Content>

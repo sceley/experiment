@@ -86,8 +86,28 @@ const table6 = `create table if not exists Notification (
 				title varchar(50),
 				createAt datetime,
 				msg longtext,
-				primary key(id)
-				)`;
+				primary key(id))
+				charset=utf8`;
+
+const table7 = `create table if not exists Feedback (
+				id int unsigned auto_increment,
+				message longtext,
+				createAt datetime,
+				author varchar(15),
+				reply longtext,
+				replyable boolean default true,
+				primary key(id))
+				charset=utf8`;
+
+const table8 = `create table if not exists Rate (
+				id int unsigned auto_increment,
+				reserve_id int unsigned,
+				rate int unsigned,
+				message longtext,
+				reply longtext,
+				createAt datetime,
+				primary key(id))
+				charset=utf8`;
 				
 connection.query(table1);
 connection.query(table2);
@@ -95,5 +115,7 @@ connection.query(table3);
 connection.query(table4);
 connection.query(table5);
 connection.query(table6);
+connection.query(table7);
+connection.query(table8);
 
 module.exports = connection;

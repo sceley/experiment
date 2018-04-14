@@ -15,7 +15,6 @@ const showRestExps = require('./controllers/api/experiment').showRestExps;
 const showExpsStatus = require('./controllers/api/experiment').showExpsStatus;
 const showExps = require('./controllers/api/experiment').showExps;
 const editExp = require('./controllers/api/experiment').editExp;
-// const switchExp = require('./controllers/api/experiment').switchExp;
 const addReserve = require('./controllers/api/reserve').addReserve;
 const showOneReserves = require('./controllers/api/reserve').showOneReserves;
 const showReserves = require('./controllers/api/reserve').showReserves;
@@ -25,7 +24,12 @@ const adminLogin = require('./controllers/api/admin').login;
 const notify = require('./controllers/api/notification').notify;
 const notifications = require('./controllers/api/notification').notifications;
 const deleteNotification = require('./controllers/api/notification').deleteNotification;
-// const switchPower = require('./controllers/api/tab').switchPower;
+const feedback = require('./controllers/api/feedback').feedback;
+const feedbackReply = require('./controllers/api/feedback').reply;
+const getFeedback = require('./controllers/api/feedback').getFeedback;
+const getFeedbackReply = require('./controllers/api/feedback').getFeedbackReply;
+const rate = require('./controllers/api/rate').rate;
+const rateReply = require('./controllers/api/rate').reply;
 
 //middleware
 const user_session = require('./middleware/oauth').user_session;
@@ -44,6 +48,8 @@ router.get('/api/admin/users', admin_session, showUsers);
 router.get('/api/admin/monitorexp/:id', admin_session, monitorExp);
 router.get('/api/admin/reserves', admin_session, showReserves);
 router.get('/api/admin/exps', admin_session, showExps);
+router.get('/api/feedback', getFeedback);
+router.get('/api/feedback/reply', getFeedbackReply);
 
 //delete
 router.delete('/api/user/reserve/:id', deleteReserve);
@@ -56,13 +62,16 @@ router.post('/api/user/login', login);
 router.post('/api/user/logup', logup);
 router.post('/api/user/info/edit', user_session, editInfo);
 router.post('/api/user/addreserve', user_session, oauthUser, addReserve);
+router.post('/api/user/feedback', user_session, feedback);
+router.post('/api/user/reserve/:id/rate', user_session, rate);
 router.post('/api/admin/login', adminLogin);
 router.post('/api/admin/switchreserve', admin_session, switchReserve);
 router.post('/api/admin/monitoruser', admin_session, monitorUser);
 router.post('/api/admin/addexp', admin_session, addExp);
 router.post('/api/admin/notify', admin_session, notify);
 router.post('/api/admin/exp/edit', admin_session, editExp);
-// router.post('/api/admin/switchpower', admin_session, switchPower);
-// router.post('/api/admin/exp/switch', admin_session, switchExp);
+router.post('/api/admin/feedback/:id/reply', admin_session, feedbackReply);
+router.post('/api/admin/rate/:id/reply', admin_session, rateReply);
+
 
 module.exports = router;

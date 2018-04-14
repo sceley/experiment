@@ -6,6 +6,8 @@ import Logo from '../../common/Logo';
 import Info from './Info';
 import Reserve from './Reserve';
 import MyReserve from './MyReserve';
+import Feedback from './Feedback';
+import Message from './Message';
 import logo from './logo.png';
 import './User.css';
 const { Sider, Content, Header } = Layout;
@@ -60,6 +62,16 @@ export default class Person extends Component {
 									<Icon type="table" />我的预约
 								</Link>
 							</Menu.Item>
+							<Menu.Item key="feedback">
+								<Link to={`${this.props.match.url}/feedback`}>
+									<Icon type="message" />反馈
+								</Link>
+							</Menu.Item>
+							<Menu.Item key="message">
+								<Link to={`${this.props.match.url}/feedback/reply`}>
+									<Icon type="message" />消息通知
+								</Link>
+							</Menu.Item>
 						</Menu>
 					</Sider>
 					<Content>
@@ -69,6 +81,8 @@ export default class Person extends Component {
 								<Route exact path={`${this.props.match.url}`} component={Info}/>
 								<Route path={`${this.props.match.url}/reserve`} component={Reserve}/>
 								<Route path={`${this.props.match.url}/myreserve`} component={MyReserve}/>
+								<Route exact path={`${this.props.match.url}/feedback`} component={Feedback}/>
+								<Route path={`${this.props.match.url}/feedback/reply`} component={Message} />
 							</Content>
 						</Layout>
 					</Content>
