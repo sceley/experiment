@@ -1,7 +1,104 @@
 import React, { Component } from 'react';
-import { Table, Button, Modal, Card, Input, Icon, Popconfirm, Divider, message } from 'antd';
-import AddExp from './AddExp';
+import { Table, Button, Modal, Card,Form, Input, Icon, Popconfirm, Divider, message } from 'antd';
 import config from '../../config';
+const FormItem = Form.Item;
+class AddExpForm extends Component {
+	handleSubmit = (e) => {
+		e.preventDefault();
+		this.props.form.validateFields((err, values) => {
+			if (!err) {
+				fetch(`${config.server}/api/admin/addexp`, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+						'x-access-token': localStorage.admin_token
+					},
+					body: JSON.stringify(values)
+				}).then(res => {
+					if (res.ok) {
+						return res.json();
+					}
+				}).then(json => {
+					if (json && !json.err) {
+						localStorage.token = json.token;
+						message.info(json.msg);
+						this.props.handleCancel();
+						this.props.addExp({
+							name: values.Name,
+							ip: values.IP,
+							port: values.Port,
+							tablesCount: values.TablesCount,
+							address: values.Address
+						});
+					} else if (json) {
+						message.error(json.msg);
+					}
+				});
+			}
+		});
+	}
+
+	render() {
+		const { getFieldDecorator } = this.props.form;
+		return (
+			<div className="AddExp">
+				<Form onSubmit={this.handleSubmit}>
+					<FormItem
+						label="名称"
+					>
+						{getFieldDecorator('Name', {
+							rules: [{ required: true, message: '名称不能为空!' }],
+						})(
+							<Input placeholder="实验室名称" />
+						)}
+					</FormItem>
+					<FormItem
+						label="实验室IP"
+					>
+						{getFieldDecorator('IP', {
+							rules: [{ required: true, message: 'IP不能为空!' }],
+						})(
+							<Input placeholder="实验室IP" />
+						)}
+					</FormItem>
+					<FormItem
+						label="实验室IP端口"
+					>
+						{getFieldDecorator('Port', {
+							rules: [{ required: true, message: '实验室IP端口不能为空!' }],
+						})(
+							<Input placeholder="实验室IP端口" />
+						)}
+					</FormItem>
+					<FormItem
+						label="实验台数"
+					>
+						{getFieldDecorator('TablesCount', {
+							rules: [{ required: true, message: '数量不能为空!' }],
+						})(
+							<Input placeholder="数字" />
+						)}
+					</FormItem>
+					<FormItem
+						label="实验室地址"
+					>
+						{getFieldDecorator('Address', {
+							rules: [{ required: true, message: '实验室地址不能为空!' }],
+						})(
+							<Input placeholder="实验室地址" />
+						)}
+					</FormItem>
+					<FormItem>
+						<Button type="primary" htmlType="submit">
+							添加
+						</Button>
+					</FormItem>
+				</Form>
+			</div>
+		);
+	}
+};
+const AddExp = Form.create()(AddExpForm);
 export default class Exps extends Component {
 	state = {
 		visible: false,
@@ -175,4 +272,4 @@ export default class Exps extends Component {
 			</div>
 		);
 	}
-}
+};

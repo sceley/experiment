@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Input, Icon, message, Button, Form } from 'antd';
-import HeaderForLog from '../../common/Header-Log';
+import logo from '../../logo.png';
 import config from '../../config';
 const FormItem = Form.Item;
 
@@ -41,39 +41,41 @@ class Login extends Component {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
-			<div className="Login-Wrap">
-			<div className="Login">
-				<HeaderForLog/>
-				<div className="Title">
-					管理员登录
+			<div style={{ height: '100vh' }} className="Log-Container">
+				<div className="Login">
+					<div className="log-logo-wrap">
+						<img className="log-logo" src={logo} alt="logo"/>
+					</div>
+					<div className="Title">
+						管理员登录
+					</div>
+					<Form onSubmit={this.handleSubmit}>
+						<FormItem
+							label="帐号"
+						>
+							{getFieldDecorator('Account', {
+								rules: [{ required: true, message: '账号不能为空!' }],
+							})(
+								<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="账号" />
+								)}
+						</FormItem>
+						<FormItem
+							label="密码"
+						>
+							{getFieldDecorator('Password', {
+								rules: [{ required: true, message: '密码不能为空!' }],
+							})(
+								<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="6-16位字符（字母、数字、符号的组合）" />
+								)}
+						</FormItem>
+						<FormItem>
+							<Link className="form-right" to="/user/login">学生登陆</Link>
+							<Button type="primary" htmlType="submit" className="log-form-button">
+								登陆
+							</Button>
+						</FormItem>
+					</Form>
 				</div>
-				<Form onSubmit={this.handleSubmit}>
-					<FormItem
-						label="帐号"
-					>
-						{getFieldDecorator('Account', {
-							rules: [{ required: true, message: '账号不能为空!' }],
-						})(
-							<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="账号" />
-							)}
-					</FormItem>
-					<FormItem
-						label="密码"
-					>
-						{getFieldDecorator('Password', {
-							rules: [{ required: true, message: '密码不能为空!' }],
-						})(
-							<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="6-16位字符（字母、数字、符号的组合）" />
-							)}
-					</FormItem>
-					<FormItem>
-						<Link className="form-right" to="/user/login">学生登陆</Link>
-						<Button type="primary" htmlType="submit" className="login-form-button">
-							登陆
-						</Button>
-					</FormItem>
-				</Form>
-			</div>
 			</div>
 		);
 	}

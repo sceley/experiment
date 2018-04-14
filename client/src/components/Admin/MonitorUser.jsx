@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Switch, message, Card, Popconfirm} from 'antd';
+import { Table, message, Card, Popconfirm} from 'antd';
 import config from '../../config';
 export default class ManageUser extends Component {
 	state = {
@@ -42,7 +42,7 @@ export default class ManageUser extends Component {
 			if (json && !json.err) {
 				let users = this.state.users;
 				users = users.map(user => {
-					if (user.account == account) {
+					if (user.account === account) {
 						user.forbidden = e;
 					}
 					return user;

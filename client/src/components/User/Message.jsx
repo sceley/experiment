@@ -7,8 +7,12 @@ export default class Message extends Component {
         replys: []
     }
     componentWillMount = () => {
-        fetch(`${config.server}/api/feedback/reply`)
-        .then(res => {
+        fetch(`${config.server}/api/feedback/reply`, {
+            method: 'GET',
+            headers: {
+                'x-access-token': localStorage.user_token
+            }
+        }).then(res => {
             if (res.ok) {
                 return res.json();
             }

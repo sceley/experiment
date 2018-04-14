@@ -1,9 +1,115 @@
-.App {
-	height: 100%;
-}
 .App-header h1 {
   color: white;
 }
 .Sider-shadow {
   box-shadow: 2px 0 6px rgba(0,21,41,.35);
+}
+.Container {
+  margin: 24px 24px 0;
+}
+.Log-Container {
+  background: #f0f2f5;
+}
+.log-logo-wrap {
+  text-align: center;
+  padding-top: 30px;
+}
+.log-logo {
+  height: 64px;
+}
+.Logup, .Login {
+	width: 368px;
+	margin: 0 auto;
+}
+.header-container {
+	padding-right: 12px;
+	background: #fff;
+	box-shadow: 0 1px 4px rgba(0,21,41,.08);
+	display: flex;
+	justify-content: flex-end;
+}
+
+.logo-container {
+	padding-left: 24px;
+}
+.Reserve .media {
+	display: flex;
+	align-items: center;
+}
+.Reserve .media-body {
+	margin: 0 10px;
+	font-size: 20px;
+	font-weight: 600px;
+	display: flex;
+	align-items: center;
+}
+.Reserve .media-header, .Reserve .media-footer {
+	flex: 1;
+}
+
+.form .form-input {
+	margin-top: 10px;
+}
+.form-right {
+	float: right;
+}
+.log-form-button {
+	width: 100%;
+}
+.Login .Title, .Logup .Title {
+	text-align: center;
+	background: #31708f;
+	color: white;
+	border-radius: 4px;
+	padding: 5px 0;
+	margin-top: 30px;
+}
+
+.Login-Wrap {
+	background: #f0f2f5;
+}
+.add-btn {
+	margin-bottom: 8px;
+}
+
+.link-wrap {
+	display: block;
+	padding: 0 24px;
+	margin-right: 12px;
+}
+.link-wrap:hover {
+	background: #e6f7ff;
+}
+.link-wrap {
+	color: rgba(0,0,0,.65);
+}
+.link-wrap span {
+	margin-left: 5px;
+}
+
+.result {
+	color: #f5222d;
+	font-size: 72px;
+}
+.media-body {
+	font-size: 20px;
+	margin-top: 30px;
+}
+
+.media-footer {
+	margin-top: 40px;
+}
+.media-footer button {
+	margin: 0 10px;
+}
+.Logo-wrap {
+	display: flex;
+  align-items: center;
+	height: 64px;
+  background: #fff;
+  padding-left: 24px;
+}
+.Logo-wrap .logo {
+    height: 54px;
+    margin: 5px 0;
 }

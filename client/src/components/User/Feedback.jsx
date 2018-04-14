@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Input, Card, Button, message } from 'antd';
+import { Input, Card, Button } from 'antd';
 import config from '../../config';
 const { TextArea } = Input;
 export default class Feedback extends Component {

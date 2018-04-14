@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
-import { Menu, Layout, Icon, Button, message } from 'antd';
+import { Menu, Layout, Icon, Avatar } from 'antd';
 import { Route, Link } from 'react-router-dom';
-import Header_c from '../../common/Header';
+import Header from '../../common/Header';
 import Logo from '../../common/Logo';
-import Info from './Info';
+import Setting from './Setting';
 import Reserve from './Reserve';
 import MyReserve from './MyReserve';
 import Feedback from './Feedback';
 import Message from './Message';
-import logo from './logo.png';
-import './User.css';
-const { Sider, Content, Header } = Layout;
+import config from '../../config';
+const { Sider, Content } = Layout;
 
-export default class Person extends Component {
+export default class User extends Component {
 	state={
-		current: 'info'
+		current: 'myreserve',
+		user: ''
 	}
 	handleClick = (e) => {
 		this.setState({
@@ -29,17 +29,37 @@ export default class Person extends Component {
 		if (!localStorage.user_token) {
 			this.props.history.push('/user/login');
 		}
+		fetch(`${config.server}/api/user/info`, {
+			method: 'GET',
+			headers: {
+				'x-access-token': localStorage.user_token
+			}
+		}).then(res => {
+			if (res.ok)
+				return res.json();
+		}).then(json => {
+			if (json && !json.err) {
+				this.setState({
+					user: json.user
+				});
+			}
+		});
 	}
 	handleBack = () => {
 		this.setState({
-			current: 'info'
+			current: 'myreserve'
+		});
+	}
+	handleSetting = () => {
+		this.setState({
+			current: ''
 		});
 	}
 	render () {
 		return (
 			<div className="Person">
 				<Layout>
-					<Sider width={256} className="Person-sider">
+					<Sider style={{minHeight: '100vh'}} width={256} className="Sider-shadow">
 						<Link onClick={this.handleBack} to={`${this.props.match.url}`}><Logo /></Link>
 						<Menu
 							onClick={this.handleClick}
@@ -47,9 +67,9 @@ export default class Person extends Component {
 							mode="inline"
 							theme="dark"
 						>
-							<Menu.Item key="info">
+							<Menu.Item key="myreserve">
 								<Link to={`${this.props.match.url}`}>
-									<Icon type="profile" />信息编辑
+									<Icon type="table" />我的预约
 								</Link>
 							</Menu.Item>
 							<Menu.Item key="reserve">
@@ -57,30 +77,33 @@ export default class Person extends Component {
 									<Icon type="form" />在线预约
 								</Link>
 							</Menu.Item>
-							<Menu.Item key="myreserve">
-								<Link to={`${this.props.match.url}/myreserve`}>
-									<Icon type="table" />我的预约
+							<Menu.Item key="message">
+								<Link to={`${this.props.match.url}/feedback/reply`}>
+									<Icon type="message" />消息通知
 								</Link>
 							</Menu.Item>
 							<Menu.Item key="feedback">
 								<Link to={`${this.props.match.url}/feedback`}>
-									<Icon type="message" />反馈
-								</Link>
-							</Menu.Item>
-							<Menu.Item key="message">
-								<Link to={`${this.props.match.url}/feedback/reply`}>
-									<Icon type="message" />消息通知
+									<Icon type="edit" />我要反馈
 								</Link>
 							</Menu.Item>
 						</Menu>
 					</Sider>
 					<Content>
 						<Layout>
-							<Header_c handleLogout={this.handleLogout}/>
-							<Content className="Person-body">
-								<Route exact path={`${this.props.match.url}`} component={Info}/>
+							<Header
+								handleLogout={this.handleLogout}
+								setting={
+									<Link onClick={this.handleSetting} className="link-wrap" to={`${this.props.match.url}/setting`}>
+										<Avatar shape="square" icon="user" />
+										<span>{this.state.user.name}</span>
+									</Link>
+								}
+							/>
+							<Content>
+								<Route exact path={`${this.props.match.url}`} component={MyReserve}/>
+								<Route path={`${this.props.match.url}/setting`} component={Setting}/>
 								<Route path={`${this.props.match.url}/reserve`} component={Reserve}/>
-								<Route path={`${this.props.match.url}/myreserve`} component={MyReserve}/>
 								<Route exact path={`${this.props.match.url}/feedback`} component={Feedback}/>
 								<Route path={`${this.props.match.url}/feedback/reply`} component={Message} />
 							</Content>

@@ -17,7 +17,6 @@ exports.feedback = async (req, res) => {
                 if (err) {
                     reject(err);
                 } else {
-                    console.log(users);
                     resolve(users[0].name);
                 }
             });
@@ -100,9 +99,19 @@ exports.getFeedback = async (req, res) => {
 exports.getFeedbackReply = async (req, res) => {
     try {
         const account = req.user_session.account;
+        const name = await new Promise((resolve, reject) => {
+            const sql = 'select name from User where account=?';
+            db.query(sql, [account], (err, users) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(users[0].name);
+                }
+            });
+        });
         const replys = await new Promise((resolve, reject) => {
-            const sql = 'select * from Feedback where replyable=false and account=?';
-            db.query(sql, [account], (err, replys) => {
+            const sql = 'select * from Feedback where replyable=false and author=?';
+            db.query(sql, [name], (err, replys) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -115,6 +124,7 @@ exports.getFeedbackReply = async (req, res) => {
             replys
         });
     } catch (e) {
+        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Input, Icon, message, Button, Form } from 'antd';
-import HeaderForLog from '../../common/Header-Log';
+import logo from '../../logo.png';
 import config from '../../config';
-import './Login.css';
 const FormItem = Form.Item;
 
 class Login extends Component {
@@ -34,7 +33,7 @@ class Login extends Component {
 		});
 	}
 	checkAccount = (rule, value, cb) => {
-		if (value && (value.length == 11 || value.length == 8)) {
+		if (value && (value.length === 11 || value.length === 8)) {
 			cb();
 		} else {
 			cb("账号格式不正确");
@@ -50,9 +49,11 @@ class Login extends Component {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
-			<div className="Login-Wrap">
+			<div style={{ height: '100vh' }} className="Log-Container">
 				<div className="Login">
-					<HeaderForLog/>
+					<div className="log-logo-wrap">
+						<img className="log-logo" style={{height: 64}} src={logo} alt="logo"/>
+					</div>
 					<div className="Title">
 						账号登录
 					</div>
@@ -83,7 +84,7 @@ class Login extends Component {
 						</FormItem>
 						<FormItem>
 							<Link className="form-right" to="/admin/login">管理员登陆</Link>
-							<Button type="primary" htmlType="submit" className="login-form-button">
+							<Button type="primary" htmlType="submit" className="log-form-button">
 								登陆
 							</Button>
 							<Link to="/user/logup">现在注册!</Link>

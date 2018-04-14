@@ -142,8 +142,15 @@ function convert_to_obj (str) {
     return obj;
 };
 async function send (str, options) {
-    const client = net.createConnection({ host: options.ip, port: options.port }, () => {
-        client.write(str);
-        client.end();
-    });
+    try {
+        const client = net.createConnection({ host: options.ip, port: options.port }, () => {
+            client.write(str);
+            console.log("连接成功");
+        // client.end();
+        });
+    } catch (e) {
+        console.log("发生错误");
+    }
+    
 };
+//

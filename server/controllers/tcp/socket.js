@@ -9,6 +9,7 @@ exports.socket = async socket => {
 				resolve(res.toString());
 			});
 		});
+		console.log(res);
 		await handleResponse(res);
 		// let start = socket.remoteAddress.search(/\d{1}/);
 		// let ip = socket.remoteAddress.slice(start);

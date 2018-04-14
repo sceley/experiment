@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Button, Input, Icon, Select, message, DatePicker, Cascader, Row, Col, Card } from 'antd';
+import { Form, Button, Input, Icon, Select, message, DatePicker, Cascader, Card } from 'antd';
 import config from '../../config';
 import moment from 'moment';
 const { Option } = Select;
@@ -120,7 +120,7 @@ class Reserve extends Component {
 			let hour = new Date().getHours();
 			let date = moment(this.props.form.getFieldValue('Date')).format("YYYY-MM-DD");
 			let _date = moment().format("YYYY-MM-DD");
-			if (date == _date && i < hour)
+			if (date === _date && i < hour)
 				disabled = true;
 			Options.push(<Option disabled={disabled} key={i} value={i}>{`${i}时`}</Option>);
 		}

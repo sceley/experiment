@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Route, Link } from 'react-router-dom';
-import { Menu, Layout, message, Icon } from 'antd';
-import Header_c from '../../common/Header';
+import { Menu, Layout, Icon } from 'antd';
+import Header from '../../common/Header';
 import Logo from '../../common/Logo';
 import MonitorExp from './MonitorExp';
 import MonitorUser from './MonitorUser';
@@ -9,7 +9,6 @@ import MonitorReserve from './MonitorReserve';
 import Exps from './Exps';
 import Notification from './Notification';
 import UserFeedback from './UserFeedback';
-import './Admin.css';
 const { Sider, Content } = Layout;
 
 export default class Admin extends Component {
@@ -39,7 +38,7 @@ export default class Admin extends Component {
 		return (
 			<div className="Admin">
 				<Layout>
-					<Sider className="Sider-shadow" width={256}>
+					<Sider style={{minHeight: '100vh'}} className="Sider-shadow" width={256}>
 						<Link onClick={this.handleBack} to="/admin">
 							<Logo/>
 						</Link>
@@ -54,9 +53,9 @@ export default class Admin extends Component {
 									<Icon type="global" />实验室监控
 								</Link>
 							</Menu.Item>
-							<Menu.Item key="user">
-								<Link to={`${this.props.match.url}/user`}>
-									<Icon type="contacts" />用户管理
+							<Menu.Item key="exps">
+								<Link to={`${this.props.match.url}/exps`}>
+									<Icon type="dashboard" />我的实验室
 								</Link>
 							</Menu.Item>
 							<Menu.Item key="reserve">
@@ -64,9 +63,9 @@ export default class Admin extends Component {
 									<Icon type="table" />预约管理
 								</Link>
 							</Menu.Item>
-							<Menu.Item key="exps">
-								<Link to={`${this.props.match.url}/exps`}>
-									<Icon type="user" />我的实验室
+							<Menu.Item key="user">
+								<Link to={`${this.props.match.url}/user`}>
+									<Icon type="contacts" />用户管理
 								</Link>
 							</Menu.Item>
 							<Menu.Item key="user-feedback">
@@ -83,7 +82,7 @@ export default class Admin extends Component {
 					</Sider>
 					<Content>
 						<Layout>
-							<Header_c handleLogout={this.handleLogout}/>
+							<Header handleLogout={this.handleLogout}/>
 							<Content>
 								<Route exact path={`${this.props.match.url}`} component={MonitorExp} />
 								<Route path={`${this.props.match.url}/user`} component={MonitorUser}/>

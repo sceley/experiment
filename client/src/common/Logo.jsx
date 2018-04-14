@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import logo from './_logo.png';
-import './Logo.css';
+import logo from '../logo.png';
 export default class Logo extends Component {
 	render () {
 		return (
-			<div className="Logo">
-				<img className="logo" src={logo}/>
-				{/* <span>实验室管理系统</span> */}
+			<div className="Logo-wrap">
+				<img className="logo" src={logo} alt="logo"/>
 			</div>
 		);
 	}

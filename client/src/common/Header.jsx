@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { Layout, Icon, Button, Modal } from 'antd';
-// import Result from './Result';
-import './Header.css';
 const { Header } = Layout;
 
 export default class Header_c extends Component {
@@ -22,7 +20,13 @@ export default class Header_c extends Component {
 		return (
 			<Header style={{padding: 0}}>
 				<div className="header-container">
-					<a onClick={this.handleLogout} className="logout-wrap">
+					{
+						this.props.setting?	
+							this.props.setting
+							:
+							null
+					}
+					<a onClick={this.handleLogout} className="link-wrap">
 						<Icon type="logout" />
 						<span>退出登陆</span>
 					</a>

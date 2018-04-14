@@ -83,7 +83,7 @@ export default class UserFeedback extends Component {
                         dataSource={this.state.feedbacks}
                         renderItem={item => (
                         <List.Item
-                            actions={[<a onClick={() => this.showModal(item.id)}><Icon type="form" /></a>]}
+                            actions={[<a onClick={() => this.showModal(item.id)}>回复<Icon type="form" /></a>]}
                         >
                             <em style={{marginRight: 5}}>
                                 用户：
