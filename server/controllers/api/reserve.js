@@ -9,6 +9,20 @@ exports.addReserve = async (req, res) => {
         let hour = new Date().getHours();
         let createAt = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
         let _date = moment().format("YYYY-MM-DD");
+        //dsd
+        const starts = body.Start.split(':');
+        const ends = body.End.split(':');
+        body.Start = parseInt(starts[0]);
+        body.End = parseInt(ends[0]);
+        if (typeof (starts[1] - 0) == 'number') {
+            const start_min_to_hour = starts[1] / 60;
+            body.Start += start_min_to_hour;
+        }
+        if (typeof (ends[1] - 0) == 'number') {
+            const end_min_to_hour = ends[1] / 60;
+            body.End += end_min_to_hour;
+        }
+        //dsd
         if (!body.Date) {
             return res.json({
                 err: 1,
@@ -119,6 +133,7 @@ exports.addReserve = async (req, res) => {
         });
         return;
     } catch (e) {
+        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'
