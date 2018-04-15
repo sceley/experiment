@@ -65,8 +65,8 @@ const table5 = `create table if not exists Reserve (
 				primary key(id))
 				charset=utf8`;
 /*status:
-	0 审核中
-	1 审核通过
+	0 待审核
+	1 已审核
 	2 执行中
 	3 已执行
 */

@@ -99,7 +99,7 @@ class Reserve extends Component {
 			for (let j = 1; j <= this.state.exps[i - 1].tablesCount; j++) {
 				item.children.push({
 					value: `${j}`,
-					label: `实验桌${j}`,
+					label: `实验台${j}`,
 				});
 			}
 			residences.push(item);

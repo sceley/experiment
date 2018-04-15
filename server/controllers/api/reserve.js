@@ -142,22 +142,22 @@ exports.addReserve = async (req, res) => {
     }
 };
 
-exports.showOneReserves = async (req, res) => {
-    let account = req.user_session.account;
-    let complete = parseInt(req.query.complete);
+exports.getUserReserves = async (req, res) => {
     try {
-        let sql;
-        if (complete) {
-            sql = `select exp_id, seat, Reserve.id, equipment, date, name,
-            address, Reserve.status, start, end, approver from Reserve left join Experiment 
-            on Reserve.exp_id=Experiment.id where user_id=? and status=3`;
-        } else {
-            sql = `select exp_id, seat, Reserve.id, equipment, date, name,
-            address, Reserve.status, start, end, approver from Reserve left join Experiment 
-            on Reserve.exp_id=Experiment.id where user_id=? and status!=3`;
-        }
-        let reserves = await new Promise((resolve, reject) => {
-            db.query(sql, [account], (err, reserves) => {
+        const account = req.user_session.account;
+        const status = req.query.status;
+        const reserves = await new Promise((resolve, reject) => {
+            const sql = `select Reserve.id, User.name as user_name, date, start, end, 
+                        Experiment.name as exp_name, 
+                        seat, address, equipment, approver, Reserve.status,
+                        go_into_time, leave_time
+                        from Reserve 
+                        left join Experiment 
+                        on Reserve.exp_id=Experiment.id 
+                        left join User
+                        on Reserve.user_id=User.account
+                        where user_id=? and status=? order by Reserve.createAt desc`;
+            db.query(sql, [account, status], (err, reserves) => {
                 if (err)
                     reject(err);
                 else
@@ -169,6 +169,7 @@ exports.showOneReserves = async (req, res) => {
             reserves
         });
     } catch (e) {
+        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'
@@ -176,13 +177,20 @@ exports.showOneReserves = async (req, res) => {
     }
 };
 
-exports.showReserves = async (req, res) => {
-    let status = req.query.status;
+exports.getReserves = async (req, res) => {
     try {
-        let reserves = await new Promise((resolve, reject) => {
-            let sql = `select exp_id, seat, createAt, Reserve.id, equipment,  
-            address, Reserve.status, start, end, approver, name from Reserve left join Experiment 
-            on Reserve.exp_id=Experiment.id where Reserve.status=?`;
+        const status = req.query.status;
+        const reserves = await new Promise((resolve, reject) => {
+            const sql = `select Reserve.id, User.name as user_name, date, start, end, 
+                        Experiment.name as exp_name, 
+                        seat, address, equipment, approver, Reserve.status,
+                        go_into_time, leave_time
+                        from Reserve 
+                        left join Experiment 
+                        on Reserve.exp_id=Experiment.id 
+                        left join User
+                        on Reserve.user_id=User.account
+                        where status=? order by Reserve.createAt desc`;
             db.query(sql, [status], (err, reserves) => {
                 if (err)
                     reject(err);
