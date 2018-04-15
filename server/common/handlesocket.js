@@ -1,5 +1,6 @@
 const db = require('../model/db');
 const net = require('net');
+const moment = require('moment');
 exports.handleResponse = async str => {
     if (str.length == 15) {
         const account = str.slice(3, 11);
@@ -26,6 +27,7 @@ exports.handleResponse = async str => {
         });
     } else {
         const res = convert_to_obj(str);
+        const time = moment().format('YYYY-MM-DD HH:mm:ss');
         await new Promise((resolve, reject) => {
             const sql = 'update Tab set status=?, fault=? where seat=? and exp_id=?';
             db.query(sql, [parseInt(res.POW), parseInt(res.FAU), parseInt(res.TAB), parseInt(res.EXP)], err => {
@@ -37,8 +39,8 @@ exports.handleResponse = async str => {
         });
         if (parseInt(res.POW)) {
             await new Promise((resolve, reject) => {
-                const sql = 'update Reserve set status=? where id=?';
-                db.query(sql, [2, parseInt(res.NUM)], err => {
+                const sql = 'update Reserve set status=?, go_into_time=? where id=?';
+                db.query(sql, [2, time, parseInt(res.NUM)], err => {
                     if (err)
                         reject();
                     else
@@ -47,8 +49,8 @@ exports.handleResponse = async str => {
             });
         } else {
             await new Promise((resolve, reject) => {
-                const sql = 'update Reserve set status=? where id=?';
-                db.query(sql, [3, parseInt(res.NUM)], err => {
+                const sql = 'update Reserve set status=?, leave_time=? where id=?';
+                db.query(sql, [3, time, parseInt(res.NUM)], err => {
                     if (err)
                         reject();
                     else
@@ -145,12 +147,8 @@ async function send (str, options) {
     try {
         const client = net.createConnection({ host: options.ip, port: options.port }, () => {
             client.write(str);
-            console.log("连接成功");
-        // client.end();
         });
     } catch (e) {
         console.log("发生错误");
     }
-    
 };
-//

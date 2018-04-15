@@ -54,6 +54,8 @@ const table5 = `create table if not exists Reserve (
 				date date,
 				start double,
 				end double,
+				go_into_time datetime,
+				leave_time datetime,
 				equipment varchar(30),
 				approver varchar(15),
 				status tinyint(1),
