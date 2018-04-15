@@ -9,6 +9,7 @@ import MonitorReserve from './MonitorReserve';
 import Exps from './Exps';
 import Notification from './Notification';
 import UserFeedback from './UserFeedback';
+import ExpDataStatistics from './ExpDataStatistics';
 const { Sider, Content } = Layout;
 
 export default class Admin extends Component {
@@ -58,6 +59,11 @@ export default class Admin extends Component {
 									<Icon type="dashboard" />我的实验室
 								</Link>
 							</Menu.Item>
+							<Menu.Item key="expdatastatistics">
+								<Link to={`${this.props.match.url}/expdatastatistics`}>
+									<Icon type="dashboard" />实验室数据统计
+								</Link>
+							</Menu.Item>
 							<Menu.Item key="reserve">
 								<Link to={`${this.props.match.url}/reserve`}>
 									<Icon type="table" />预约管理
@@ -90,6 +96,7 @@ export default class Admin extends Component {
 								<Route path={`${this.props.match.url}/notification`} component={Notification}/>
 								<Route path={`${this.props.match.url}/exps`} component={Exps}/>
 								<Route path={`${this.props.match.url}/user-feedback`} component={UserFeedback} />
+								<Route path={`${this.props.match.url}/expdatastatistics`} component={ExpDataStatistics} />
 							</Content>
 						</Layout>
 					</Content>

@@ -1,3 +1,6 @@
+.App {
+	min-width: 1280px;
+}
 .App-header h1 {
   color: white;
 }
@@ -112,4 +115,13 @@
 .Logo-wrap .logo {
     height: 54px;
     margin: 5px 0;
+}
+.graph {
+	display: flex;
+	flex-wrap: wrap;
+}
+.graph-item {
+	display: flex;
+	width: 50%;
+	justify-content: center;
 }
