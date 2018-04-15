@@ -16,12 +16,12 @@ exports.addReserve = async (req, res) => {
         body.End = parseInt(ends[0]);
         if (typeof (starts[1] - 0) == 'number') {
             let start_min_to_hour = starts[1] / 60;
-            start_min_to_hour = Math.round(start_min_to_hour * 100) / 100;
+            // start_min_to_hour = Math.round(start_min_to_hour * 100) / 100;
             body.Start += start_min_to_hour;
         }
         if (typeof (ends[1] - 0) == 'number') {
             let end_min_to_hour = ends[1] / 60;
-            end_min_to_hour = Math.round(end_min_to_hour * 100) / 100;
+            // end_min_to_hour = Math.round(end_min_to_hour * 100) / 100;
             body.End += end_min_to_hour;
         }
         //dsd

@@ -97,7 +97,7 @@ export default class Reservation extends Component {
             title: '预约时间段',
             key: '3',
             render: record => {
-                return `${record.start}-${record.end}`;
+                return `${Math.floor(record.start)}-${Math.ceil(record.end)}时`;
             }
         }, {
             title: '预约实验室',
@@ -129,14 +129,22 @@ export default class Reservation extends Component {
             dataIndex: 'go_into_time',
             key: '9',
             render: go_into_time => {
-                return go_into_time || '暂无';
+                if (go_into_time) {
+                    return moment(go_into_time).format('HH:mm:ss');
+                } else {
+                    return '暂无';
+                }  
             }
         }, {
             title: '离开时间',
             dataIndex: 'leave_time',
             key: '10',
             render: leave_time => {
-                return leave_time || '暂无';
+                if (leave_time) {
+                    return moment(leave_time).format('HH:mm:ss');
+                } else {
+                    return '暂无';
+                } 
             }
         }];
         if (this.props.action) {

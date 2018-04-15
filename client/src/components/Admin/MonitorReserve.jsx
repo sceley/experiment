@@ -42,7 +42,7 @@ export default class MonitorReserve extends Component {
 							<Reserve _role="admin" status={2} />
 						</TabPane>
 						<TabPane tab="已执行预约" key="4">
-							<Reserve _ole="admin" status={3}/>
+							<Reserve _role="admin" status={3}/>
 						</TabPane>
 					</Tabs>
 				</Card>
