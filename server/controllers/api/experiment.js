@@ -1,7 +1,7 @@
 const db = require('../../model/db');
 exports.addExp = async (req, res) => {
-	let body = req.body;
 	try {
+		let body = req.body;
 		if (!body.Name) {
 			return res.json({
 				err: 1,
@@ -106,8 +106,8 @@ exports.showExps = async (req, res) => {
 };
 
 exports.showRestExps = async (req, res) => {
-	let body = req.body;
 	try {
+		let body = req.body;
 		let reserves = await new Promise((resolve, reject) => {
 			let sql = 'select exp_id, seat from Reserve where date=? and ((start<? and start>=?) or (end<=? and end>?) or (start=? and end=?))';
 			db.query(sql, [body.Date, body.End, body.Start, body.End, body.Start, body.Start, body.End], (err, reserves) => {
@@ -174,8 +174,8 @@ exports.showExpsStatus = async (req, res) => {
 };
 
 exports.editExp = async (req, res) => {
-	let body = req.body;
 	try {
+		let body = req.body;
 		await new Promise((resolve, reject) => {
 			let sql = 'update Experiment set name=?, ip=?, port=?, address=? where id=?';
 			db.query(sql, [body.name, body.ip, body.port, body.address, body.id], err => {
@@ -219,8 +219,8 @@ exports.editExp = async (req, res) => {
 };
 
 exports.monitorExp = async (req, res) => {
-	let id = req.params.id;
 	try {
+		let id = req.params.id;
 		let tables = await new Promise((resolve, reject) => {
 			let sql = 'select * from Tab where exp_id=?';
 			db.query(sql, [id], (err, tables) => {
@@ -241,26 +241,3 @@ exports.monitorExp = async (req, res) => {
 		});
 	}
 };
-// exports.switchExp = async (req, res) => {
-// 	let body = req.body;
-// 	try {
-// 		await new Promise((resolve, reject) => {
-// 			let sql = 'update Experiment set door=? where id=?';
-// 			db.query(sql, [body.status, body.id], err => {
-// 				if (err)
-// 					reject(err);
-// 				else
-// 					resolve();
-// 			});
-// 		});
-// 		res.json({
-// 			err: 0,
-// 			msg: '开关拨动成功'
-// 		});
-// 	} catch (e) {
-// 		res.json({
-// 			err: 1,
-// 			msg: '服务器出错了'
-// 		});
-// 	}
-// };

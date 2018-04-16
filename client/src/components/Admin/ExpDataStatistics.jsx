@@ -74,7 +74,7 @@ export default class ExpDataStatistics extends Component {
         const value_datas = this.state.weekdatas.map(weekdata => {
             return Math.ceil(weekdata.hours);
         });
-        echarts.init(this.refs.graph3).setOption({
+        echarts.init(this.refs.week_datas).setOption({
             title: {
                 text: '近一周日约小时量'
             },
@@ -107,7 +107,7 @@ export default class ExpDataStatistics extends Component {
                             <div style={{ width: '400px', height: '400px' }} ref="time_statistics"></div>
                         </div>
                         <div style={{marginTop: 20}} className="graph-item">
-                            <div style={{ width: '400px', height: '400px' }} ref="graph3"></div>
+                            <div style={{ width: '400px', height: '400px' }} ref="week_datas"></div>
                         </div>
                     </div>
                 </Card>

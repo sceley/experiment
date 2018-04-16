@@ -82,7 +82,6 @@ exports.expdatastatics = async (req, res) => {
             weekdatas
         });
     } catch (e) {
-        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'

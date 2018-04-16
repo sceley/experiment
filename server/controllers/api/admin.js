@@ -2,8 +2,8 @@ const db = require('../../model/db');
 const config = require('../../config');
 const sign = require('../../common/sign').sign;
 exports.login = async (req, res) => {
-	let body = req.body;
 	try {
+		let body = req.body;
 		let admin = await new Promise((resolve, reject) => {
 			let sql = 'select name from Admin where account=? and password=?';
 			db.query(sql, [body.Account, body.Password], (err, admins) => {

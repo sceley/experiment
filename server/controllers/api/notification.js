@@ -1,9 +1,9 @@
 const db = require('../../model/db');
 const moment = require('moment');
 exports.notify = async (req, res) => {
-    let body = req.body;
-    let createAt = moment().format("YYYY-MM-DD HH:MM");
     try {
+        let body = req.body;
+        let createAt = moment().format("YYYY-MM-DD HH:MM");
         await new Promise((resolve, reject) => {
             let sql = 'insert into Notification(msg, createAt, title) values(?, ?, ?)';
             db.query(sql, [body.Notification, createAt, body.Title], err => {
@@ -48,8 +48,8 @@ exports.notifications = async (req, res) => {
     }
 };
 exports.deleteNotification = async (req, res) => {
-    let id = req.params.id;
     try {
+        let id = req.params.id;
         await new Promise((resolve, reject) => {
             let sql = 'delete from Notification where id=?';
             db.query(sql, [id], err => {
