@@ -185,7 +185,9 @@ export default class MonitorExp extends Component {
 		}
 		return (
 			<div className="MonitorExp Container">
-				<Card>
+				<Card
+					title="实验室监控"
+				>
 					<Table rowKey="id" bordered={true} columns={columns} dataSource={this.state.exps} pagination={false}/>
 				</Card>
 				<Card>

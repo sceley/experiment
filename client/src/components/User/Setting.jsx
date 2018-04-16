@@ -55,7 +55,9 @@ class Info extends Component {
 		const { getFieldDecorator } = this.props.form;
 		return (
 			<div className="Info Container">
-				<Card>
+				<Card
+					title="设置"
+				>
 					<Form onSubmit={this.handleSubmit}>
 						<FormItem
 							label="姓名"

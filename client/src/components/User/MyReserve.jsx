@@ -23,7 +23,9 @@ export default class MyReserve extends Component {
     render () {
         return (
             <div className="MyReserve Container">
-                <Card>
+                <Card
+                    title="我的预约"
+                >
                     <Tabs defaultActiveKey="1">
                         <TabPane tab="待审核预约" key="1">
                             <Reserve action={this.action} _role="user" status={0}/>

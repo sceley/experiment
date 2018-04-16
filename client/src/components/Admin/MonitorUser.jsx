@@ -131,7 +131,9 @@ export default class ManageUser extends Component {
 		];
 		return (
 			<div className="ManageUser Container">
-				<Card>
+				<Card
+					title="用户管理"
+				>
 					<Table pagination={false} rowKey="account" columns={columns} bordered={true} dataSource={this.state.users}/>
 				</Card>
 			</div>

@@ -61,7 +61,9 @@ class NotifyForm extends Component {
 						)}
 					</FormItem>
 					<FormItem>
-						<Button type="primary" htmlType="submit">发布</Button>
+						<div style={{ textAlign: 'center'}}>
+							<Button type="primary" htmlType="submit">发布</Button>
+						</div>
 					</FormItem>
 				</Form>
 			</div>
@@ -132,7 +134,7 @@ export default class Notification extends Component {
 	render () {
 		return (
 			<div className="Notification Container">
-				<Button onClick={this.showModal} className="add-btn">Add</Button>
+				<Button type="primary" onClick={this.showModal} className="add-btn"><Icon type="plus-circle-o" /></Button>
 				<List
 					grid={{ gutter: 16, column: 3 }}
 					dataSource={this.state.notifications}

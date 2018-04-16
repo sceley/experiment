@@ -34,12 +34,15 @@ export default class MonitorReserve extends Component {
 				<Card
 					title={
 						<div>
-							<em style={{ marginRight: 8 }}>预约单下载</em>
-							<a href={`${config.server}/api/admin/reservation/download`} download="output.xlsx">
-								<Button shape="circle" type="primary">
-									<Icon type="arrow-down" />
-								</Button>
-							</a>
+							<span>预约单统计</span>
+							<div style={{float: 'right', fontSize: 12}}>
+								<em style={{ marginRight: 8 }}>预约单下载</em>
+								<a href={`${config.server}/api/admin/reservation/download`} download="output.xlsx">
+									<Button shape="circle" type="primary">
+										<Icon type="arrow-down" />
+									</Button>
+								</a>
+							</div>
 						</div>
 					}
 				>

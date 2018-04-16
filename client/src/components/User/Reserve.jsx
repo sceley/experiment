@@ -126,7 +126,9 @@ class Reserve extends Component {
 		}
 		return (
 			<div className="Reserve Container">
-				<Card>
+				<Card
+					title="在线预约"
+				>
 				<Form onSubmit={this.handleSubmit}>
 					<FormItem
 						label="日期"
@@ -191,9 +193,11 @@ class Reserve extends Component {
 						)}
 					</FormItem>
 					<FormItem>
-						<Button type="primary" htmlType="submit">
-							申请
-						</Button>
+						<div style={{textAlign: 'center'}}>
+							<Button type="primary" htmlType="submit">
+								申请
+							</Button>
+						</div>
 					</FormItem>
 				</Form>
 				</Card>

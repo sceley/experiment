@@ -89,9 +89,11 @@ class AddExpForm extends Component {
 						)}
 					</FormItem>
 					<FormItem>
-						<Button type="primary" htmlType="submit">
-							添加
-						</Button>
+						<div style={{ textAlign: 'center' }}>
+							<Button type="primary" htmlType="submit">
+								添加
+							</Button>
+						</div>
 					</FormItem>
 				</Form>
 			</div>
@@ -257,8 +259,16 @@ export default class Exps extends Component {
 		}]
 		return (
 			<div className="Exps Container">
-				<Card>
-					<Button onClick={this.showModal} className="add-btn">Add</Button>
+				<Card
+					title={
+						<div>
+							<span>我的实验室</span>
+							<div style={{ float: 'right', fontSize: 12 }}>
+								<Button type="primary" onClick={this.showModal}><Icon type="plus-circle-o" /></Button>
+							</div>
+						</div>
+					}
+				>
 					<Table pagination={false} bordered={true} rowKey="id" boredered={true} columns={columns} dataSource={this.state.exps}/>
 					<Modal
 						visible={this.state.visible}
