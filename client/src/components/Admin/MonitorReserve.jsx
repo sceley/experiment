@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Tabs, Card, Popconfirm } from 'antd';
+import { Tabs, Card, Popconfirm, Button, Icon } from 'antd';
 import Reserve from '../../common/Reservation';
+import config from '../../config';
 const { TabPane } = Tabs;
 export default class MonitorReserve extends Component {
 	action = {
@@ -30,7 +31,18 @@ export default class MonitorReserve extends Component {
 	render () {
 		return (
 			<div className="ManageReserve Container">
-				<Card>
+				<Card
+					title={
+						<div>
+							<em style={{ marginRight: 8 }}>预约单下载</em>
+							<a href={`${config.server}/api/admin/reservation/download`} download="output.xlsx">
+								<Button shape="circle" type="primary">
+									<Icon type="arrow-down" />
+								</Button>
+							</a>
+						</div>
+					}
+				>
 					<Tabs defaultActiveKey="1">
 						<TabPane tab="待审核预约" key="1">
 							<Reserve action={this.action} _role="admin" status={0}/>

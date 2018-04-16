@@ -15,7 +15,8 @@
     "jsonwebtoken": "8.1.0",
     "moment": "^2.21.0",
     "redis": "^2.8.0",
-    "superagent": "^3.8.2"
+    "superagent": "^3.8.2",
+    "xlsx": "^0.12.9"
   },
   "devDependencies": {
     "mysql": "^2.15.0",

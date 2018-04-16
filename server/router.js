@@ -30,6 +30,7 @@ const feedbackReply = require('./controllers/api/feedback').reply;
 const getFeedback = require('./controllers/api/feedback').getFeedback;
 const getFeedbackReply = require('./controllers/api/feedback').getFeedbackReply;
 const expdatastatics = require('./controllers/api/expdatastatistics').expdatastatics;
+const downloadReservations = require('./controllers/api/expdatastatistics').downloadReservations;
 
 //middleware
 const user_session = require('./middleware/oauth').user_session;
@@ -52,6 +53,7 @@ router.get('/api/admin/exps', admin_session, showExps);
 router.get('/api/feedback', getFeedback);
 router.get('/api/feedback/reply', user_session, getFeedbackReply);
 router.get('/api/admin/expdatastatics', expdatastatics);
+router.get('/api/admin/reservation/download', downloadReservations);
 
 //delete
 router.delete('/api/user/reserve/:id', deleteReserve);
