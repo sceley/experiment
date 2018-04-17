@@ -74,7 +74,6 @@ exports.deleteNotification = async (req, res) => {
 exports.notification = async (req, res) => {
     try {
         const id = req.params.id;
-        console.log(id);
         const notification = await new Promise((resolve, reject) => {
             const sql = 'select * from Notification where id=?';
             db.query(sql, [id], (err, notification) => {
