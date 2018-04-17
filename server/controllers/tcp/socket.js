@@ -6,10 +6,10 @@ exports.socket = async socket => {
 		socket.on('data', res => {
 			socket.end();
 			resolve(res.toString());
+			console.log('接收到数据');
 		});
 	});
 	console.log(res);
-	console.log('被连接成功');
 	await handleResponse(res);
 	// let start = socket.remoteAddress.search(/\d{1}/);
 	// let ip = socket.remoteAddress.slice(start);

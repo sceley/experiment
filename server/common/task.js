@@ -5,7 +5,7 @@ const execTask = require('./handlesocket').execTask;
 let timer;
 exports.addTask = async (option) => {
     clearTimeout(timer);
-    let res = await new Promise((resolve, reject) => {
+    let tasks_str = await new Promise((resolve, reject) => {
         redis.get('tasks', (err, res) => {
             if (err) 
                 reject(err);
@@ -13,7 +13,7 @@ exports.addTask = async (option) => {
                 resolve(res);
         });
     });
-    let tasks = JSON.parse(res);
+    let tasks = JSON.parse(tasks_str);
     let current_res = await new Promise((resolve, reject) => {
         redis.get('current_task', (err, res) => {
             if (err)
@@ -68,7 +68,7 @@ exports.addTask = async (option) => {
 
 exports.cancelTask = async (id) => {
     clearTimeout(timer);
-    let res = await new Promise((resolve, reject) => {
+    let tasks_str = await new Promise((resolve, reject) => {
         redis.get('tasks', (err, res) => {
             if (err)
                 reject(err);
@@ -76,7 +76,7 @@ exports.cancelTask = async (id) => {
                 resolve(res);
         });
     });
-    let tasks = JSON.parse(res);
+    let tasks = JSON.parse(tasks_str);
     let current_res = await new Promise((resolve, reject) => {
         redis.get('current_task', (err, res) => {
             if (err)
@@ -128,7 +128,7 @@ exports.cancelTask = async (id) => {
 
 async function nextTask () {
     clearTimeout(timer);
-    let res = await new Promise((resolve, reject) => {
+    let tasks_str = await new Promise((resolve, reject) => {
         redis.get('tasks', (err, res) => {
             if (err)
                 reject(err);
@@ -136,7 +136,7 @@ async function nextTask () {
                 resolve(res);
         });
     });
-    let tasks = JSON.parse(res);
+    let tasks = JSON.parse(tasks_str);
     let task = tasks.shift();
     await new Promise((resolve, reject) => {
         let str = JSON.stringify(tasks);
