@@ -151,16 +151,21 @@ function convert_to_obj (str) {
     });
     return obj;
 };
+let i = 0;
 async function send (str, options) {
     const client = net.createConnection({ host: options.ip, port: options.port }, () => {
-        client.write(str);
-        client.end();
+        i = 0;
+        client.end(str);
         console.log("数据发送成功");
     });
     client.on('error', err => {
         console.log('发生错误', err);
+        if (i < 10) {
+            i++;
+            send(str, options);
+        }
     });
-    client.on('close', () => {
-        console.log('关闭成功');
+    client.on('end', () => {
+        console.log('关闭连接');
     });
 };
