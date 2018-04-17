@@ -9,7 +9,7 @@ exports.socket = async socket => {
 		});
 	});
 	console.log(res);
-	console.log('连接成功');
+	console.log('被连接成功');
 	await handleResponse(res);
 	// let start = socket.remoteAddress.search(/\d{1}/);
 	// let ip = socket.remoteAddress.slice(start);

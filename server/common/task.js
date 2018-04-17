@@ -6,7 +6,7 @@ let timer;
 exports.addTask = async (option) => {
     clearTimeout(timer);
     let res = await new Promise((resolve, reject) => {
-        redis.get('task', (err, res) => {
+        redis.get('tasks', (err, res) => {
             if (err) 
                 reject(err);
             else
@@ -35,7 +35,7 @@ exports.addTask = async (option) => {
     let task = tasks.shift();
     await new Promise((resolve, reject) => {
         let str = JSON.stringify(tasks);
-        redis.set('task', str, err => {
+        redis.set('tasks', str, err => {
             if (err) 
                 reject(err);
             else
@@ -69,7 +69,7 @@ exports.addTask = async (option) => {
 exports.cancelTask = async (id) => {
     clearTimeout(timer);
     let res = await new Promise((resolve, reject) => {
-        redis.get('task', (err, res) => {
+        redis.get('tasks', (err, res) => {
             if (err)
                 reject(err);
             else
@@ -95,7 +95,7 @@ exports.cancelTask = async (id) => {
     let task = tasks.shift();
     await new Promise((resolve, reject) => {
         let str = JSON.stringify(tasks);
-        redis.set('task', str, err => {
+        redis.set('tasks', str, err => {
             if (err)
                 reject(err);
             else
@@ -129,7 +129,7 @@ exports.cancelTask = async (id) => {
 async function nextTask () {
     clearTimeout(timer);
     let res = await new Promise((resolve, reject) => {
-        redis.get('task', (err, res) => {
+        redis.get('tasks', (err, res) => {
             if (err)
                 reject(err);
             else
@@ -140,7 +140,7 @@ async function nextTask () {
     let task = tasks.shift();
     await new Promise((resolve, reject) => {
         let str = JSON.stringify(tasks);
-        redis.set('task', str, err => {
+        redis.set('tasks', str, err => {
             if (err)
             reject();
             else

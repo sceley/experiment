@@ -147,6 +147,9 @@ async function send (str, options) {
     try {
         const client = net.createConnection({ host: options.ip, port: options.port }, () => {
             client.write(str);
+            client.end();
+            console.log(options);
+            console.log("连接成功");
         });
     } catch (e) {
         console.log("发生错误");
