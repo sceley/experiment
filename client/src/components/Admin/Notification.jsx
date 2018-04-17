@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Input, List, Card, Button, Modal, Icon, message, Popconfirm } from 'antd';
 import config from '../../config';
+import { Link } from 'react-router-dom';
 const FormItem = Form.Item;
 const TextArea = Input.TextArea;
 class NotifyForm extends Component {
@@ -145,18 +146,17 @@ export default class Notification extends Component {
 					}
 				>
 					<List
-						grid={{ gutter: 16, column: 3 }}
+						bordered
 						dataSource={this.state.notifications}
 						renderItem={item => (
-							<List.Item>
-								<Card
-									title={item.title}
-									actions={[
-										<Popconfirm title="确定取消?" onConfirm={() => this.handleDelete(item.id)} okText="Yes" cancelText="No">
-											<Icon type="delete"/>
-										</Popconfirm>
-									]}
-								>{item.msg}</Card>
+							<List.Item
+								actions={[
+									<Popconfirm title="确定取消?" onConfirm={() => this.handleDelete(item.id)} okText="Yes" cancelText="No">
+										<Icon type="delete" />
+									</Popconfirm>
+								]}
+							>
+								<Link to={`/notification/details/${item.id}`}>{item.title}</Link>
 							</List.Item>
 						)}
 					/>
