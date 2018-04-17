@@ -14,3 +14,4 @@ services:
     ports: 
       - '6379:6379'
     container_name: redis_exp
+	command: redis-server --appendonly yes
