@@ -52,23 +52,20 @@ export default class ExpDataStatistics extends Component {
             switch (day) {
                 case 0:
                     return `星期天`;
-                    break;
                 case 1:
                     return `星期一`;
-                    break;
                 case 2:
                     return `星期二`;
-                    break;
                 case 3: 
                     return `星期三`;
-                    break;
                 case 4: 
                     return `星期四`;
-                    break;
                 case 5: 
                     return `星期五`;
                 case 6:
                     return `星期六`;
+                default :
+                    return '空';
             }
         });
         const value_datas = this.state.weekdatas.map(weekdata => {

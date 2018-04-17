@@ -36,7 +36,7 @@ class NotifyForm extends Component {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		return (
-			<div className="Notify">
+			<div className="Notify Container">
 				<Form onSubmit={this.handleSubmit}>
 					<FormItem
 						label="标题"
@@ -134,31 +134,41 @@ export default class Notification extends Component {
 	render () {
 		return (
 			<div className="Notification Container">
-				<Button type="primary" onClick={this.showModal} className="add-btn"><Icon type="plus-circle-o" /></Button>
-				<List
-					grid={{ gutter: 16, column: 3 }}
-					dataSource={this.state.notifications}
-					renderItem={item => (
-						<List.Item>
-							<Card
-								title={item.title}
-								actions={[
-									<Popconfirm title="确定取消?" onConfirm={() => this.handleDelete(item.id)} okText="Yes" cancelText="No">
-										<Icon type="delete"/>
-									</Popconfirm>
-								]}
-							>{item.msg}</Card>
-						</List.Item>
-					)}
-				/>
-				<Modal
-					visible={this.state.visible}
-					footer={null}
-					closable={false}
-					onCancel={this.handleCancel}
+				<Card
+					title={
+						<div>
+							<span>公告管理</span>
+							<div style={{ float: 'right', fontSize: 12 }}>
+								<Button type="primary" onClick={this.showModal}><Icon type="plus-circle-o" /></Button>
+							</div>
+						</div>
+					}
 				>
-					<Notify addNotification={this.addNotification} handleCancel={this.handleCancel}/>
-				</Modal>
+					<List
+						grid={{ gutter: 16, column: 3 }}
+						dataSource={this.state.notifications}
+						renderItem={item => (
+							<List.Item>
+								<Card
+									title={item.title}
+									actions={[
+										<Popconfirm title="确定取消?" onConfirm={() => this.handleDelete(item.id)} okText="Yes" cancelText="No">
+											<Icon type="delete"/>
+										</Popconfirm>
+									]}
+								>{item.msg}</Card>
+							</List.Item>
+						)}
+					/>
+					<Modal
+						visible={this.state.visible}
+						footer={null}
+						closable={false}
+						onCancel={this.handleCancel}
+					>
+						<Notify addNotification={this.addNotification} handleCancel={this.handleCancel}/>
+					</Modal>
+				</Card>
 			</div>
 		);
 	}

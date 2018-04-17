@@ -25,6 +25,7 @@ const adminLogin = require('./controllers/api/admin').login;
 const notify = require('./controllers/api/notification').notify;
 const notifications = require('./controllers/api/notification').notifications;
 const deleteNotification = require('./controllers/api/notification').deleteNotification;
+const notification = require('./controllers/api/notification').notification;
 const feedback = require('./controllers/api/feedback').feedback;
 const feedbackReply = require('./controllers/api/feedback').reply;
 const getFeedback = require('./controllers/api/feedback').getFeedback;
@@ -54,6 +55,7 @@ router.get('/api/feedback', getFeedback);
 router.get('/api/feedback/reply', user_session, getFeedbackReply);
 router.get('/api/admin/expdatastatics', expdatastatics);
 router.get('/api/admin/reservation/download', downloadReservations);
+router.get('/api/notification/details/:id', notification);
 
 //delete
 router.delete('/api/user/reserve/:id', deleteReserve);

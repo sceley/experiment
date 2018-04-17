@@ -81,7 +81,7 @@ export default class Admin extends Component {
 							</Menu.Item>
 							<Menu.Item key="notification">
 								<Link to={`${this.props.match.url}/notification`}>
-									<Icon type="notification" />公告
+									<Icon type="notification" />公告管理
 								</Link>
 							</Menu.Item>
 						</Menu>

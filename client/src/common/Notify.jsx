@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { notification } from 'antd';
 import config from '../config';
 
-export default class Notifications extends Component {
-    componentWillMount = () => {
+export default class Notify extends Component {
+    componentDidMount = () => {
         fetch(`${config.server}/api/notifications`)
         .then(res => {
             if (res.ok) 
@@ -14,18 +14,25 @@ export default class Notifications extends Component {
             }
         });
     }
-    notify = (_notifications) => {
-        for (let i = 0; i < _notifications.length; i++) {
+    go = (url) => {
+        this.props.history.push(url);
+    }
+    notify = (data) => {
+        data.forEach(item => {
             notification.info({
-                message: _notifications[i].title,
-                description: _notifications[i].msg,
+                message: 
+                        <a onClick={() => this.go(`/notification/details/${item.id}`)}>
+                            {item.title}
+                        </a>,
                 duration: null
             });
-        }
+        });
     }
     render () {
         return (
-            <div className="Notifications"></div>
+            <div className="Notifications">
+
+            </div>
         );
     }
 }

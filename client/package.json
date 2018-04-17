@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "echarts": "^4.0.4",
+    "markdown-it": "^8.4.1",
     "moment": "^2.22.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",

@@ -76,6 +76,7 @@ const table6 = `create table if not exists Notification (
 				title varchar(50),
 				createAt datetime,
 				msg longtext,
+				author varchar(20),
 				primary key(id))
 				charset=utf8`;
 
