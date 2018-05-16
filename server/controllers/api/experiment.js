@@ -1,66 +1,66 @@
 const db = require('../../model/db');
 exports.addExp = async (req, res) => {
 	try {
-		let body = req.body;
-		if (!body.Name) {
+		const body = req.body;
+		if (!body.name) {
 			return res.json({
 				err: 1,
 				msg: '实验室名称不能为空'
 			});
 		}
-		if (!body.IP) {
+		if (!body.ip) {
 			return res.json({
 				err: 1,
 				msg: 'IP不能为空'
 			});
 		}
-		if (!body.Address) {
+		if (!body.address) {
 			return res.json({
 				err: 1,
 				msg: '实验室地址不能为空'
 			});
 		}
-		if (!body.Port) {
+		if (!body.port) {
 			return res.json({
 				err: 1,
 				msg: 'PORT不能为空'
 			})
 		}
-		let exps = await new Promise((resolve, reject) => {
-			let sql = 'select * from Experiment where name=?';
-			db.query(sql, [body.Name], (err, exps) => {
+		const expsCount = await new Promise((resolve, reject) => {
+			const sql = 'select count(*) as count from Experiment where name=?';
+			db.query(sql, [body.name], (err, exps) => {
 				if (err)
 					reject(err);
 				else
-					resolve(exps);
+					resolve(exps[0].count);
 			});
 		});
-		if (exps.length > 0)
+		if (expsCount > 0)
 			return res.json({
 				err: 1,
 				msg: '该实验室已经存在'
 			});
 		await new Promise((resolve, reject) => {
-			let sql = 'insert into Experiment(name, ip, port, address) values(?, ?, ?, ?)';
-			db.query(sql, [body.Name, body.IP, body.Port, body.Address], (err) => {
+			const sql = 'insert into Experiment(name, ip, port, address) values(?, ?, ?, ?)';
+			db.query(sql, [body.name, body.ip, body.port, body.address], (err) => {
 				if (err)
 					reject(err);
 				else
 					resolve();
 			});
 		});
-		let exp_id = await new Promise((resolve, reject) => {
-			let sql = 'select id from Experiment where name=?';
-			db.query(sql, [body.Name], (err, exps) => {
+		const exp_id = await new Promise((resolve, reject) => {
+			const sql = 'select id from Experiment where name=?';
+			db.query(sql, [body.name], (err, exps) => {
 				if (err)
 					reject(err);
 				else 
 					resolve(exps[0].id);
 			});
 		});
-		for (let i = 1; i <= body.TablesCount; i++)
+		for (let i = 1; i <= body.tablesCount; i++)
 			await new Promise((resolve, reject) => {
-				let sql = 'insert into Tab(exp_id, seat) values(?, ?)';
+				const sql = 'insert into Tab(exp_id, seat) values(?, ?)';
 				db.query(sql, [exp_id, i], err => {
 					if (err)
 						reject(err);
@@ -82,8 +82,8 @@ exports.addExp = async (req, res) => {
 
 exports.showExps = async (req, res) => {
 	try {
-		let exps = await new Promise((resolve, reject) => {
-			let sql = `select Experiment.id, ip, port, count(Tab.id) as tablesCount, 
+		const exps = await new Promise((resolve, reject) => {
+			const sql = `select Experiment.id, ip, port, count(Tab.id) as tablesCount, 
 			address, name from Experiment left join Tab on 
 			Experiment.id=Tab.exp_id group by Experiment.id`;
 			db.query(sql, (err, exps) => {
@@ -107,18 +107,18 @@ exports.showExps = async (req, res) => {
 
 exports.showRestExps = async (req, res) => {
 	try {
-		let body = req.body;
-		let reserves = await new Promise((resolve, reject) => {
-			let sql = 'select exp_id, seat from Reserve where date=? and ((start<? and start>=?) or (end<=? and end>?) or (start=? and end=?))';
-			db.query(sql, [body.Date, body.End, body.Start, body.End, body.Start, body.Start, body.End], (err, reserves) => {
-				if (err) 
+		const body = req.body;
+		const reserves = await new Promise((resolve, reject) => {
+			const sql = 'select exp_id, seat from Reserve where date=? and ((start<? and start>=?) or (end<=? and end>?) or (start=? and end=?))';
+			db.query(sql, [body.date, body.end, body.start, body.end, body.start, body.start, body.end], (err, reserves) => {
+				if (err)
 					reject(err);
 				else
 					resolve(reserves);
 			});
 		});
-		let exps = await new Promise((resolve, reject) => {
-			let sql = 'select Experiment.id, name, count(Tab.id) as tablesCount from Experiment left join Tab on Experiment.id=Tab.exp_id group by Experiment.id';
+		const exps = await new Promise((resolve, reject) => {
+			const sql = 'select Experiment.id, name, count(Tab.id) as tablesCount from Experiment left join Tab on Experiment.id=Tab.exp_id group by Experiment.id';
 			db.query(sql, (err, exps) => {
 				if (err)
 					reject(err);

@@ -2,9 +2,9 @@ const jwt = require('jsonwebtoken');
 const config = require('../config');
 const db = require('../model/db');
 exports.user_session = async (req, res, next) => {
-	let token = req.headers['x-access-token'];
 	try {
-		let session = await new Promise((resolve, reject) => {
+		const token = req.headers['x-access-token'];
+		const user = await new Promise((resolve, reject) => {
 			jwt.verify(token, config.jsonwebtoken.secret, (err, session) => {
 				if (err)
 					reject(err);
@@ -12,8 +12,9 @@ exports.user_session = async (req, res, next) => {
 					resolve(session);
 			});
 		});
-		if (session.account) {
-			req.user_session = session;	
+		if (user && user.account) {
+			req.session = {};
+			req.session.user = user;	
 			next();
 		} else {
 			res.json({
@@ -30,9 +31,9 @@ exports.user_session = async (req, res, next) => {
 };
 exports.oauthUser = async (req, res, next) => {
 	try {
-		let account = req.user_session.account;
-		let user = await new Promise((resolve, reject) => {
-			let sql = 'select forbidden from User where account=?';
+		const account = req.session.user.account;
+		const user = await new Promise((resolve, reject) => {
+			const sql = 'select forbidden from User where account=?';
 			db.query(sql, [account], (err, users) => {
 				if (err)
 					reject(err);
@@ -57,7 +58,7 @@ exports.oauthUser = async (req, res, next) => {
 
 exports.authFinger = async (req, res, next) => {
 	try {
-		const account = req.user_session.account;
+		const account = req.session.user.account;
 		const user = await new Promise((resolve, reject) => {
 			const sql = 'select * from User where account=?';
 			db.query(sql, [account], (err, users) => {
@@ -85,9 +86,9 @@ exports.authFinger = async (req, res, next) => {
 }
 
 exports.admin_session = async (req, res, next) => {
-	let token = req.headers['x-access-token'];
 	try {
-		let session = await new Promise((resolve, reject) => {
+		const token = req.headers['x-access-token'];
+		const admin = await new Promise((resolve, reject) => {
 			jwt.verify(token, config.jsonwebtoken.secret, (err, session) => {
 				if (err)
 					reject(err);
@@ -95,8 +96,9 @@ exports.admin_session = async (req, res, next) => {
 					resolve(session);
 			});
 		});
-		if (session.admin) {
-			req.admin_session = session;
+		if (admin && admin.name) {
+			req.session = {};
+			req.session.admin = admin;
 			next();
 		} else {
 			res.json({

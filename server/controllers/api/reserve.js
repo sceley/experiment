@@ -4,75 +4,73 @@ const addTask = require('../../common/task').addTask;
 const cancelTask = require('../../common/task').cancelTask;
 exports.addReserve = async (req, res) => {
     try {
-        let account = req.user_session.account;
-        let body = req.body;
-        let hour = new Date().getHours();
-        let createAt = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
-        let _date = moment().format("YYYY-MM-DD");
+        const account = req.session.user.account;
+        const body = req.body;
+        const hour = new Date().getHours();
+        const createAt = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+        const date = moment().format("YYYY-MM-DD");
         //dsd
-        const starts = body.Start.split(':');
-        const ends = body.End.split(':');
-        body.Start = parseInt(starts[0]);
-        body.End = parseInt(ends[0]);
+        const starts = body.start.split(':');
+        const ends = body.end.split(':');
+        body.start = parseInt(starts[0]);
+        body.end = parseInt(ends[0]);
         if (starts[1]) {
-            let start_min_to_hour = starts[1] / 60;
-            // start_min_to_hour = Math.round(start_min_to_hour * 100) / 100;
-            body.Start += start_min_to_hour;
+            const start_min_to_hour = starts[1] / 60;
+            body.start += start_min_to_hour;
         }
         if (ends[1]) {
-            let end_min_to_hour = ends[1] / 60;
-            // end_min_to_hour = Math.round(end_min_to_hour * 100) / 100;
-            body.End += end_min_to_hour;
+            const end_min_to_hour = ends[1] / 60;
+            body.end += end_min_to_hour;
         }
         //dsd
-        if (!body.Date) {
+        if (!body.date) {
             return res.json({
                 err: 1,
                 msg: '请选择日期'
             });
         }
-        if (!(body.Start && body.End && body.Start < body.End)) {
+        if (!(body.start && body.end && body.start < body.end)) {
             return res.json({
                 err: 1,
                 msg: '请选择合适的时间段'
             });
         }
-        if (body.Date == _date && body.Start < hour) {
+        if (body.date == date && body.start < hour) {
             return res.json({
                 err: 1,
                 msg: '请选择合适的时间段'
             });
         }
-        if (!body.Exp) {
+        if (!body.exp) {
             return res.json({
                 err: 1,
                 msg: '请选择实验室'
             });
         }
-        if (!body.Tab) {
+        if (!body.tab) {
             return res.json({
                 err: 1,
                 msg: '请选择位置'
             });
         }
-        let reserves_count = await new Promise((resolve, reject) => {
-            let sql = 'select count(id) as count from Reserve where exp_id=? and seat=? and date=? and ((start<? and start>=?) or (end<=? and end>?) or (start=? and end=?))';
-            db.query(sql, [body.Exp, body.Tab, body.Date, body.End, body.Start, body.End, body.Start, body.Start, body.End], (err, reserves) => {
+        const reservesCount = await new Promise((resolve, reject) => {
+            const sql = 'select count(*) as count from Reserve where exp_id=? and seat=? and date=? and ((start<? and start>=?) or (end<=? and end>?) or (start=? and end=?))';
+            db.query(sql, [body.exp, body.tab, body.date, body.end, body.start, body.end, body.start, body.start, body.end], (err, reserves) => {
                 if (err)
                     reject(err);
                 else
                     resolve(reserves[0].count);
             });
         });
-        if (reserves_count > 0) {
+        if (reservesCount > 0) {
             return res.json({
                 err: 1,
                 msg: '该时间段不能预约'
             });
         }
-        let fault = await new Promise((resolve, reject) => {
-            let sql = 'select fault from Tab where seat=? and exp_id=?';
-            db.query(sql, [body.Tab, body.Exp], (err, tabs) => {
+        const fault = await new Promise((resolve, reject) => {
+            const sql = 'select fault from Tab where seat=? and exp_id=?';
+            db.query(sql, [body.tab, body.exp], (err, tabs) => {
                 if (err)
                     reject(err);
                 else
@@ -85,11 +83,12 @@ exports.addReserve = async (req, res) => {
                 msg: '该位置出故障了，不能使用'
             });
         }
-        if (body.Equipment) {
+        if (body.equipment) {
             await new Promise((resolve, reject) => {
-                let sql = `insert into Reserve(user_id, exp_id, seat, start, 
+                const sql = `insert into Reserve(user_id, exp_id, seat, start, 
                 end, date, createAt, equipment, status) values(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-                db.query(sql, [account, body.Exp, body.Tab, body.Start, body.End, body.Date, createAt, body.Equipment, 0], err => {
+                const values = [account, body.exp, body.tab, body.start, body.end, body.date, createAt, body.equipment, 0];
+                db.query(sql, values, err => {
                     if (err)
                         reject(err);
                     else 
@@ -98,18 +97,21 @@ exports.addReserve = async (req, res) => {
             });
         } else {
             await new Promise((resolve, reject) => {
-                let sql = `insert into Reserve(user_id, exp_id, seat, start,
+                const sql = `insert into Reserve(user_id, exp_id, seat, start,
                 end, date, createAt, status) values(?, ?, ?, ?, ?, ?, ?, ?)`;
-                db.query(sql, [account, body.Exp, body.Tab, body.Start, body.End, body.Date, createAt, 1], err => {
+                const values = [account, body.exp, body.tab, body.start, body.end, body.date, createAt, 1];
+                db.query(sql, values, err => {
                     if (err)
                         reject(err);
                     else 
                         resolve();
                 });
             });
-            let reserve = await new Promise((resolve, reject) => {
-                let sql = `select id, date, start, end from Reserve where exp_id=? and seat=? and date=? and start=? and end=?`;
-                db.query(sql, [body.Exp, body.Tab, body.Date, body.Start, body.End], (err, reserves) => {
+            const reserve = await new Promise((resolve, reject) => {
+                const sql = `select id, date, start, end from Reserve 
+                where exp_id=? and seat=? and date=? and start=? and end=?`;
+                const values = [body.exp, body.tab, body.date, body.start, body.end];
+                db.query(sql, values, (err, reserves) => {
                     if (err)
                         reject(err);
                     else
@@ -169,7 +171,6 @@ exports.getUserReserves = async (req, res) => {
             reserves
         });
     } catch (e) {
-        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'
@@ -211,10 +212,10 @@ exports.getReserves = async (req, res) => {
 };
 
 exports.deleteReserve = async (req, res) => {
-	let id = req.params.id;
-	try {
+    try {
+        const id = req.params.id;
 		await new Promise((resolve, reject) => {
-			let sql = 'delete from Reserve where id=?';
+			const sql = 'delete from Reserve where id=?';
 			db.query(sql, [id], err => {
 				if (err)
 					reject(err);
@@ -236,11 +237,11 @@ exports.deleteReserve = async (req, res) => {
 };
 
 exports.switchReserve = async (req, res) => {
-    let body = req.body;
-    let approver = req.admin_session.admin;
     try {
+        const body = req.body;
+        const approver = req.session.admin.name;
         await new Promise((resolve, reject) => {
-            let sql = 'update Reserve set status=?, approver=? where id=?';
+            const sql = 'update Reserve set status=?, approver=? where id=?';
             db.query(sql, [body.status, approver, body.id], (err) => {
                 if (err)
                     reject(err);
@@ -248,8 +249,8 @@ exports.switchReserve = async (req, res) => {
                     resolve();
             });
         });
-        let reserve = await new Promise((resolve, reject) => {
-            let sql = 'select id, start, date, end from Reserve where id=?';
+        const reserve = await new Promise((resolve, reject) => {
+            const sql = 'select id, start, date, end from Reserve where id=?';
             db.query(sql, [body.id], (err, reserves) => {
                 if (err) 
                     reject(err);
@@ -273,7 +274,6 @@ exports.switchReserve = async (req, res) => {
             err: 0,
             msg: '设置成功'
         });
-        return;
     } catch (e) {
         res.json({
             err: 1,

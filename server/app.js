@@ -4,10 +4,12 @@ const net = require('net');
 const config = require('./config');
 const router = require('./router');
 const socket = require('./controllers/tcp/socket').socket;
+const initial = require('./initial').initial;
 
-let app = express();
-let server = http.createServer(app);
-let netServar = net.createServer();
+const app = express();
+const server = http.createServer(app);
+const netServar = net.createServer();
+initial();
 
 netServar.on("connection", socket);
 

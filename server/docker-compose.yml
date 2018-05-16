@@ -8,10 +8,11 @@ services:
       - '$PWD/conf/mysql:/etc/mysql'
     environment: 
       - MYSQL_ROOT_PASSWORD=16051223
+      - MYSQL_DATABASE=experiment
     container_name: mysql_exp
   redis:
     image: redis
     ports: 
       - '6379:6379'
     container_name: redis_exp
-	command: redis-server --appendonly yes
+    command: redis-server --appendonly yes

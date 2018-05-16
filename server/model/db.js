@@ -16,7 +16,7 @@ const table2 = `create table if not exists User (
 				id int unsigned,
 				name varchar(15),
 				password varchar(100),
-				sex varchar(5),
+				gender boolean default true,
 				major varchar(25),
 				mobile varchar(11),
 				grade varchar(10),
