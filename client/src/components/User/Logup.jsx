@@ -67,7 +67,7 @@ class Logup extends Component {
 						<FormItem
 							label="学号"
 						>
-							{getFieldDecorator('Account', {
+							{getFieldDecorator('account', {
 								rules: [{
 									required: true, message: '学号不能为空!'
 								}, {
@@ -80,7 +80,7 @@ class Logup extends Component {
 						<FormItem
 							label="手机号"
 						>
-							{getFieldDecorator('Mobile', {
+							{getFieldDecorator('mobile', {
 								rules: [{
 									required: true, message: '手机号不能为空!'
 								}, {
@@ -93,7 +93,7 @@ class Logup extends Component {
 						<FormItem
 							label="密码"
 						>
-							{getFieldDecorator('Password', {
+							{getFieldDecorator('password', {
 								rules: [{
 									required: true, message: '密码不能为空!'
 								}, {

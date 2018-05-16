@@ -53,7 +53,7 @@ class Login extends Component {
 						<FormItem
 							label="帐号"
 						>
-							{getFieldDecorator('Account', {
+							{getFieldDecorator('account', {
 								rules: [{ required: true, message: '账号不能为空!' }],
 							})(
 								<Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="账号" />
@@ -62,7 +62,7 @@ class Login extends Component {
 						<FormItem
 							label="密码"
 						>
-							{getFieldDecorator('Password', {
+							{getFieldDecorator('password', {
 								rules: [{ required: true, message: '密码不能为空!' }],
 							})(
 								<Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="6-16位字符（字母、数字、符号的组合）" />

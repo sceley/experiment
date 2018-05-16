@@ -24,11 +24,12 @@ class AddExpForm extends Component {
 						message.info(json.msg);
 						this.props.handleCancel();
 						this.props.addExp({
-							name: values.Name,
-							ip: values.IP,
-							port: values.Port,
-							tablesCount: values.TablesCount,
-							address: values.Address
+							name: values.name,
+							ip: values.ip,
+							port: values.port,
+							tablesCount: values.tablesCount,
+							address: values.address,
+							id: Math.random()
 						});
 					} else if (json) {
 						message.error(json.msg);
@@ -46,7 +47,7 @@ class AddExpForm extends Component {
 					<FormItem
 						label="名称"
 					>
-						{getFieldDecorator('Name', {
+						{getFieldDecorator('name', {
 							rules: [{ required: true, message: '名称不能为空!' }],
 						})(
 							<Input placeholder="实验室名称" />
@@ -55,7 +56,7 @@ class AddExpForm extends Component {
 					<FormItem
 						label="实验室IP"
 					>
-						{getFieldDecorator('IP', {
+						{getFieldDecorator('ip', {
 							rules: [{ required: true, message: 'IP不能为空!' }],
 						})(
 							<Input placeholder="实验室IP" />
@@ -64,7 +65,7 @@ class AddExpForm extends Component {
 					<FormItem
 						label="实验室IP端口"
 					>
-						{getFieldDecorator('Port', {
+						{getFieldDecorator('port', {
 							rules: [{ required: true, message: '实验室IP端口不能为空!' }],
 						})(
 							<Input placeholder="实验室IP端口" />
@@ -73,7 +74,7 @@ class AddExpForm extends Component {
 					<FormItem
 						label="实验台数"
 					>
-						{getFieldDecorator('TablesCount', {
+						{getFieldDecorator('tablesCount', {
 							rules: [{ required: true, message: '数量不能为空!' }],
 						})(
 							<Input placeholder="数字" />
@@ -82,7 +83,7 @@ class AddExpForm extends Component {
 					<FormItem
 						label="实验室地址"
 					>
-						{getFieldDecorator('Address', {
+						{getFieldDecorator('address', {
 							rules: [{ required: true, message: '实验室地址不能为空!' }],
 						})(
 							<Input placeholder="实验室地址" />

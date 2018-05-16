@@ -63,7 +63,7 @@ class Login extends Component {
 						<FormItem
 							label="帐号"
 						>
-							{getFieldDecorator('Account', {
+							{getFieldDecorator('account', {
 								rules: [{ required: true, message: '账号不能为空!' 
 								}, {
 									validator: this.checkAccount
@@ -75,7 +75,7 @@ class Login extends Component {
 						<FormItem
 							label="密码"
 						>
-							{getFieldDecorator('Password', {
+							{getFieldDecorator('password', {
 								rules: [{ required: true, message: '密码不能为空!' 
 								}, {
 									validator: this.checkPassword

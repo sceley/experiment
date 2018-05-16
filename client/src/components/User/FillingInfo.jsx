@@ -47,7 +47,7 @@ class FillingInfo extends Component {
                         <FormItem
                             label="姓名"
                         >
-                            {getFieldDecorator('Name', {
+                            {getFieldDecorator('name', {
                                 rules: [{ required: true, message: '姓名不能为空!' }]
                             })(
                                 <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="姓名" />
@@ -56,19 +56,19 @@ class FillingInfo extends Component {
                         <FormItem
                             label="性别"
                         >
-                            {getFieldDecorator('Sex', {
+                            {getFieldDecorator('gender', {
                                 rules: [{ required: true }],
                             })(
                                 <RadioGroup>
-                                    <Radio value="man">男</Radio>
-                                    <Radio value="girl">女</Radio>
+                                    <Radio value="1">男</Radio>
+                                    <Radio value="0">女</Radio>
                                 </RadioGroup>
                             )}
                         </FormItem>
                         <FormItem
                             label="专业"
                         >
-                            {getFieldDecorator('Major', {
+                            {getFieldDecorator('major', {
                                 rules: [{ required: true, message: '专业不能为空!' }]
                             })(
                                 <Input prefix={<Icon type="flag" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="专业" />
@@ -77,7 +77,7 @@ class FillingInfo extends Component {
                         <FormItem
                             label="年级"
                         >
-                            {getFieldDecorator('Grade', {
+                            {getFieldDecorator('grade', {
                                 rules: [{ required: true }]
                             })(
                                 <Select>
