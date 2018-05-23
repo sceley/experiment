@@ -150,7 +150,7 @@ exports.logup = async (req, res) => {
 			body.id = null;
 		}
 		await new Promise((resolve, reject) => {
-			let sql = 'insert into User(id, account, mobile, password) values(?, ?, ?, ?)';
+			const sql = 'insert into User(id, account, mobile, password) values(?, ?, ?, ?)';
 			db.query(sql, [body.id, body.account, body.mobile, body.password], (err) => {
 				if (err)
 					reject(err);
@@ -163,6 +163,126 @@ exports.logup = async (req, res) => {
 			msg: '注册成功'
 		});
 	} catch (e) {
+		res.json({
+			err: 1,
+			msg: '服务器出错了'
+		});
+	}
+};
+exports.mobileLogup = async (req, res) => {
+	try {
+		const body = req.body;
+		if (!(body.account && body.account.length == 8)) {
+			return res.json({
+				err: 1,
+				msg: '学号应该为8位'
+			});
+		}
+		if (!(body.mobile && body.mobile.length == 11)) {
+			return res.json({
+				err: 1,
+				msg: '手机号应该为11位'
+			});
+		}
+		if (!(body.password && body.password.length >= 6 && body.password.length <= 16)) {
+			return res.json({
+				err: 1,
+				msg: '密码为6-16位字符'
+			});
+		}
+		if (!(body.name)) {
+			return res.json({
+				err: 1,
+				msg: '姓名不能为空'
+			});
+		}
+		if (body.gender == undefined) {
+			return res.json({
+				err: 1,
+				msg: '性别不能为空'
+			});
+		}
+		if (!(body.major)) {
+			return res.json({
+				err: 1,
+				msg: '专业课不能为空'
+			});
+		}
+		if (body.grade == undefined) {
+			return res.json({
+				err: 1,
+				msg: '年级不能为空'
+			});
+		}
+		const usersCount = await new Promise((resolve, reject) => {
+			const sql = 'select count(account) as count from User where account=?';
+			db.query(sql, [body.account], (err, result) => {
+				if (err)
+					reject(err);
+				else
+					resolve(result[0].count);
+			});
+		});
+		const mobilesCount = await new Promise((resolve, reject) => {
+			const sql = 'select count(mobile) as count from User where mobile=?';
+			db.query(sql, [body.mobile], (err, result) => {
+				if (err)
+					reject(err);
+				else
+					resolve(result[0].count);
+			});
+		});
+		if (usersCount > 0) {
+			return res.json({
+				err: 1,
+				msg: '该学号已经被注册'
+			});
+		}
+		if (mobilesCount > 0) {
+			return res.json({
+				err: 1,
+				msg: '该手机号已经被注册'
+			});
+		}
+		body.password = await new Promise((resolve, reject) => {
+			bcrypt.hash(body.password, saltRounds, (err, hash) => {
+				if (err)
+					reject(err);
+				else
+					resolve(hash);
+			});
+		});
+		const ID = await new Promise((resolve, reject) => {
+			const sql = 'select id from ID where account=?';
+			db.query(sql, [body.account], (err, ids) => {
+				if (err) {
+					reject(err);
+				} else {
+					resolve(ids[0]);
+				}
+			});
+
+		});
+		if (ID) {
+			body.id = ID.id;
+		} else {
+			body.id = null;
+		}
+		await new Promise((resolve, reject) => {
+			const sql = 'insert into User(id, account, mobile, password, name, gender, grade, major) values(?, ?, ?, ?, ?, ?, ?, ?)';
+			db.query(sql, [body.id, body.account, body.mobile, body.password, body.name, body.gender, body.grade, body.major], (err) => {
+				if (err)
+					reject(err);
+				else
+					resolve();
+			});
+		});
+		res.json({
+			err: 0,
+			msg: '注册成功'
+		});
+	} catch (e) {
+		console.log(e);
 		res.json({
 			err: 1,
 			msg: '服务器出错了'

@@ -85,7 +85,7 @@ export default class Reservation extends Component {
     render() {
         const columns = [{
             title: '用户名',
-            dataIndex: 'user_name',
+            dataIndex: 'userName',
             key: '1',
             render: user_name => user_name,
         }, {

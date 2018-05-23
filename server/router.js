@@ -5,6 +5,7 @@ const redis = require('./model/redis');
 //controllers
 const login = require('./controllers/api/user').login;
 const logup = require('./controllers/api/user').logup;
+const mobileLogup = require('./controllers/api/user').mobileLogup;
 const editInfo = require('./controllers/api/user').editInfo;
 const filling = require('./controllers/api/user').filling;
 const showInfo = require('./controllers/api/user').showInfo;
@@ -32,6 +33,7 @@ const getFeedback = require('./controllers/api/feedback').getFeedback;
 const getFeedbackReply = require('./controllers/api/feedback').getFeedbackReply;
 const expdatastatics = require('./controllers/api/expdatastatistics').expdatastatics;
 const downloadReservations = require('./controllers/api/expdatastatistics').downloadReservations;
+const scanningOpen = require('./controllers/api/scanning').scanningOpen;
 
 //middleware
 const user_session = require('./middleware/oauth').user_session;
@@ -57,6 +59,8 @@ router.get('/api/admin/expdatastatics', expdatastatics);
 router.get('/api/admin/reservation/download', downloadReservations);
 router.get('/api/notification/details/:id', notification);
 
+router.get('/api/scanning/open', user_session, scanningOpen);
+
 //delete
 router.delete('/api/user/reserve/:id', deleteReserve);
 router.delete('/api/admin/notification/:id', admin_session, deleteNotification);
@@ -66,6 +70,7 @@ router.use(bodyparser.json());
 router.post('/api/restexps', showRestExps);
 router.post('/api/user/login', login);
 router.post('/api/user/logup', logup);
+router.post('/api/mobile/user/logup', mobileLogup);
 router.post('/api/user/info/edit', user_session, editInfo);
 router.post('/api/user/fillinginfo', user_session, filling);
 router.post('/api/user/addreserve', user_session, authFinger, oauthUser, addReserve);

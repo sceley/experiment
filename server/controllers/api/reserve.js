@@ -10,31 +10,32 @@ exports.addReserve = async (req, res) => {
         const createAt = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
         const date = moment().format("YYYY-MM-DD");
         //dsd
-        const starts = body.start.split(':');
-        const ends = body.end.split(':');
-        body.start = parseInt(starts[0]);
-        body.end = parseInt(ends[0]);
-        if (starts[1]) {
-            const start_min_to_hour = starts[1] / 60;
-            body.start += start_min_to_hour;
-        }
-        if (ends[1]) {
-            const end_min_to_hour = ends[1] / 60;
-            body.end += end_min_to_hour;
-        }
+        // const starts = body.start.split(':');
+        // const ends = body.end.split(':');
+        // body.start = parseInt(starts[0]);
+        // body.end = parseInt(ends[0]);
+        // if (starts[1]) {
+        //     const start_min_to_hour = starts[1] / 60;
+        //     body.start += start_min_to_hour;
+        // }
+        // if (ends[1]) {
+        //     const end_min_to_hour = ends[1] / 60;
+        //     body.end += end_min_to_hour;
+        // }
         //dsd
+        console.log(body);
         if (!body.date) {
             return res.json({
                 err: 1,
                 msg: '请选择日期'
             });
         }
-        if (!(body.start && body.end && body.start < body.end)) {
-            return res.json({
-                err: 1,
-                msg: '请选择合适的时间段'
-            });
-        }
+        // if (!(body.start && body.end && body.start < body.end)) {
+        //     return res.json({
+        //         err: 1,
+        //         msg: '请选择合适的时间段'
+        //     });
+        // }
         if (body.date == date && body.start < hour) {
             return res.json({
                 err: 1,
@@ -146,10 +147,15 @@ exports.addReserve = async (req, res) => {
 
 exports.getUserReserves = async (req, res) => {
     try {
-        const account = req.user_session.account;
-        const status = req.query.status;
+        const account = req.session.user.account;
+        let status = req.query.status;
+        if (status == undefined) {
+            status = '(0, 1, 2, 3)';
+        } else {
+            status = `(${status})`;
+        }
         const reserves = await new Promise((resolve, reject) => {
-            const sql = `select Reserve.id, User.name as user_name, date, start, end, 
+            const sql = `select Reserve.id, User.name as userName, date, start, end, 
                         Experiment.name as exp_name, 
                         seat, address, equipment, approver, Reserve.status,
                         go_into_time, leave_time
@@ -158,8 +164,8 @@ exports.getUserReserves = async (req, res) => {
                         on Reserve.exp_id=Experiment.id 
                         left join User
                         on Reserve.user_id=User.account
-                        where user_id=? and status=? order by Reserve.createAt desc`;
-            db.query(sql, [account, status], (err, reserves) => {
+                        where user_id=? and status in ${status} order by Reserve.createAt desc`;
+            db.query(sql, [account], (err, reserves) => {
                 if (err)
                     reject(err);
                 else
@@ -171,6 +177,7 @@ exports.getUserReserves = async (req, res) => {
             reserves
         });
     } catch (e) {
+        console.log(e);
         res.json({
             err: 1,
             msg: '服务器出错了'

@@ -15,9 +15,9 @@ class Reserve extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				values.Exp = values.Location[0];
-				values.Tab = values.Location[1];
-				values.Date = moment(values.Date).format("YYYY-MM-DD");
+				values.exp = values.location[0];
+				values.tab = values.location[1];
+				values.date = moment(values.date).format("YYYY-MM-DD");
 				delete values.Location;
 				fetch(`${config.server}/api/user/addreserve`, {
 					method: 'POST',
@@ -41,9 +41,9 @@ class Reserve extends Component {
 		});
 	}
 	checkHour = (rule, value, cb) => {
-		let Start = this.props.form.getFieldValue('Start');
-		let End = this.props.form.getFieldValue('End');
-		if (End <= Start) {
+		let start = this.props.form.getFieldValue('start');
+		let end = this.props.form.getFieldValue('end');
+		if (end <= start) {
 			cb("请选择合适的时间段");
 		} else {
 			this.handleRequset();
@@ -59,13 +59,13 @@ class Reserve extends Component {
 		}
 	}
 	handleRequset = () => {
-		let Date = moment(this.props.form.getFieldValue('Date')).format("YYYY-MM-DD");
-		let Start = this.props.form.getFieldValue('Start');
-		let End = this.props.form.getFieldValue('End');
+		let date = moment(this.props.form.getFieldValue('date')).format("YYYY-MM-DD");
+		let start = this.props.form.getFieldValue('start');
+		let end = this.props.form.getFieldValue('end');
 		let body = {
-			Date,
-			Start,
-			End,
+			date,
+			start,
+			end,
 		};
 		fetch(`${config.server}/api/restexps`, {
 			method: 'post',
@@ -79,9 +79,7 @@ class Reserve extends Component {
 		}).then(json => {
 			if (json && !json.err) {
 				this.setState({
-					exps: json.exps,
-					reserves: json.reserves,
-					fault_tabs: json.fault_tabs
+					exps: json.exps
 				});
 			}
 		});
@@ -89,41 +87,16 @@ class Reserve extends Component {
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		const residences = [];
-		for (let i = 1; i <= this.state.exps.length; i++) {
-			let item = {
-				value: `${i}`,
-				label: this.state.exps[i - 1].name,
-				children: []
-			};
-			for (let j = 1; j <= this.state.exps[i - 1].tablesCount; j++) {
-				item.children.push({
-					value: `${j}`,
-					label: `实验台${j}`,
-				});
-			}
-			residences.push(item);
-		}
-		for (let i = 0; i < this.state.reserves.length; i++) {
-			let reserve = this.state.reserves[i];
-			residences[reserve.exp_id - 1].children[reserve.seat - 1].disabled = true;
-			residences[reserve.exp_id - 1].children[reserve.seat - 1].label += '(被占用)';
-		}
-		for (let i = 0; i < this.state.fault_tabs.length; i++) {
-			let fault_tabs = this.state.fault_tabs[i];
-			residences[fault_tabs.exp_id - 1].children[fault_tabs.id - 1].disabled = true;
-			residences[fault_tabs.exp_id - 1].children[fault_tabs.id - 1].label += `(故障中)`;
-		}
-		let Options = [];
-		for (let i = 8; i <= 24; i++) {
-			let disabled = false;
-			let hour = new Date().getHours();
-			let date = moment(this.props.form.getFieldValue('Date')).format("YYYY-MM-DD");
-			let _date = moment().format("YYYY-MM-DD");
-			if (date === _date && i < hour)
-				disabled = true;
-			Options.push(<Option disabled={disabled} key={i} value={i}>{`${i}时`}</Option>);
-		}
+		// let Options = [];
+		// for (let i = 8; i <= 24; i++) {
+		// 	let disabled = false;
+		// 	let hour = new Date().getHours();
+		// 	let date = moment(this.props.form.getFieldValue('Date')).format("YYYY-MM-DD");
+		// 	let _date = moment().format("YYYY-MM-DD");
+		// 	if (date === _date && i < hour)
+		// 		disabled = true;
+		// 	Options.push(<Option disabled={disabled} key={i} value={i}>{`${i}时`}</Option>);
+		// }
 		return (
 			<div className="Reserve Container">
 				<Card
@@ -133,7 +106,7 @@ class Reserve extends Component {
 					<FormItem
 						label="日期"
 					>
-						{getFieldDecorator('Date', {
+						{getFieldDecorator('date', {
 							rules: [{ required: true, message: '请选择日期!' }],
 						})(
 							<DatePicker disabledDate={this.disabledDate} placeholder="选择日期" />
@@ -144,7 +117,7 @@ class Reserve extends Component {
 							<FormItem
 								label="时间段选择"
 							>
-								{getFieldDecorator('Start', {
+								{getFieldDecorator('start', {
 									rules: [{ required: true, message: '请输入起始时间!' }],
 								})(
 									// <Select>
@@ -160,7 +133,7 @@ class Reserve extends Component {
 						<div className="media-footer">
 							<FormItem
 							>
-								{getFieldDecorator('End', {
+								{getFieldDecorator('end', {
 									rules: [{ required: true, message: '请输入结束时间!' }
 									, {
 										validator: this.checkHour
@@ -177,16 +150,16 @@ class Reserve extends Component {
 					<FormItem
 						label="位置选择"
 					>
-						{getFieldDecorator('Location', {
+						{getFieldDecorator('location', {
 							rules: [{ type: 'array', required: true, message: '请选择位置!' }],
 						})(
-							<Cascader options={residences} placeholder="选择位置" />
+							<Cascader options={this.state.exps} placeholder="选择位置" />
 						)}
 					</FormItem>
 					<FormItem
 						label="贵重仪器(可选)"
 					>
-						{getFieldDecorator('Equipment', {
+						{getFieldDecorator('equipment', {
 							rules: [{ required: false }],
 						})(
 							<Input prefix={<Icon type="tool" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="贵重仪器" />

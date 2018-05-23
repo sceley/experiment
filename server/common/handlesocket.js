@@ -1,6 +1,7 @@
 const db = require('../model/db');
 const net = require('net');
 const moment = require('moment');
+const send = require('../controllers/tcp/socket').send;
 exports.handleResponse = async str => {
     try {
         if (str.length == 15) {
@@ -88,23 +89,16 @@ exports.execTask = async (task) => {
         });
         delete reserve.account;
         reserve.POW = task.pow;
-        let exp = await new Promise((resolve, reject) => {
-            let sql = 'select ip, port from Experiment where id=?';
-            db.query(sql, [reserve.EXP], (err, exps) => {
-                if (err)
-                    reject(err);
-                else
-                    resolve(exps[0]);
-            });
-        });
         if (reserve instanceof Object) {
             let str = convert_to_str(reserve);
-            send(str, exp);
+            send(str);
         }
     } catch (e) {
         console.log(e);
     }
 };
+
+exports.convert_to_str = convert_to_str;
 
 function convert_to_str (option) {
     for (const key in option) {
@@ -150,22 +144,4 @@ function convert_to_obj (str) {
         }
     });
     return obj;
-};
-let i = 0;
-async function send (str, options) {
-    const client = net.createConnection({ host: options.ip, port: options.port }, () => {
-        i = 0;
-        client.end(str);
-        console.log("数据发送成功");
-    });
-    client.on('error', err => {
-        console.log('发生错误', err);
-        if (i < 10) {
-            i++;
-            send(str, options);
-        }
-    });
-    client.on('end', () => {
-        console.log('关闭连接');
-    });
 };
