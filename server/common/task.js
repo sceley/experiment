@@ -1,7 +1,7 @@
 const moment = require('moment');
 const redis = require('../model/redis');
-const execTask = require('./handlesocket').execTask;
-
+const send = require('../controllers/tcp/socket').send;
+const convert_to_str = require('./convert').convert_to_str;
 let timer;
 exports.addTask = async (option) => {
     clearTimeout(timer);
@@ -126,6 +126,8 @@ exports.cancelTask = async (id) => {
     }
 };
 
+
+
 async function nextTask () {
     clearTimeout(timer);
     let tasks_str = await new Promise((resolve, reject) => {
@@ -176,4 +178,36 @@ async function exec_timer_task(time, task) {
         await execTask(task);
         await nextTask();
     }, time);
+};
+
+async function execTask(task) {
+    try {
+        let reserve = await new Promise((resolve, reject) => {
+            let sql = 'select id as NUM, exp_id as EXP, seat as TAB, user_id as account from Reserve where id=?';
+            db.query(sql, [task.id], (err, reserves) => {
+                if (err)
+                    reject(err);
+                else
+                    resolve(reserves[0]);
+            });
+        });
+        reserve.ID = await new Promise((resolve, reject) => {
+            const sql = 'select id from User where account=?';
+            db.query(sql, [reserve.account], (err, users) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(users[0].id);
+                }
+            });
+        });
+        delete reserve.account;
+        reserve.POW = task.pow;
+        if (reserve instanceof Object) {
+            let str = convert_to_str(reserve);
+            send(str);
+        }
+    } catch (e) {
+        console.log(e);
+    }
 };
