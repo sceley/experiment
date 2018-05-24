@@ -87,16 +87,10 @@ class Reserve extends Component {
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		// let Options = [];
-		// for (let i = 8; i <= 24; i++) {
-		// 	let disabled = false;
-		// 	let hour = new Date().getHours();
-		// 	let date = moment(this.props.form.getFieldValue('Date')).format("YYYY-MM-DD");
-		// 	let _date = moment().format("YYYY-MM-DD");
-		// 	if (date === _date && i < hour)
-		// 		disabled = true;
-		// 	Options.push(<Option disabled={disabled} key={i} value={i}>{`${i}时`}</Option>);
-		// }
+		const options = [];
+		for (let i = 8; i <= 22; i++) {
+			options.push(<Option value={i}>{i}</Option>);
+		}
 		return (
 			<div className="Reserve Container">
 				<Card
@@ -120,10 +114,9 @@ class Reserve extends Component {
 								{getFieldDecorator('start', {
 									rules: [{ required: true, message: '请输入起始时间!' }],
 								})(
-									// <Select>
-									// 	{Options}
-									// </Select>
-										<Input placeholder="起始时间" />
+									<Select>
+										{options}
+									</Select>
 								)}
 							</FormItem>
 						</div>
@@ -139,10 +132,9 @@ class Reserve extends Component {
 										validator: this.checkHour
 									}],
 								})(
-										<Input placeholder="结束时间" />
-									// <Select>
-									// 	{Options}
-									// </Select>
+									<Select>
+										{options}
+									</Select>
 								)}
 							</FormItem>
 						</div>
