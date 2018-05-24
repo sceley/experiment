@@ -1,6 +1,7 @@
 const express = require('express');
 const https = require('https');
 const net = require('net');
+const fs = require('fs');
 const config = require('./config');
 const router = require('./router');
 const socket = require('./controllers/tcp/socket').socket;

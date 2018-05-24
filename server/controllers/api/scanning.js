@@ -1,6 +1,6 @@
 const db = require('../../model/db');
 const send = require('../tcp/socket').send;
-const convert_to_str = require('../../common/handlesocket').convert_to_str;
+const convert_to_str = require('../../common/convert').convert_to_str;
 exports.scanningOpen = async (req, res) => {
     try {
         const account = req.session.user.account;
