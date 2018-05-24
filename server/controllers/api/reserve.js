@@ -23,19 +23,18 @@ exports.addReserve = async (req, res) => {
         //     body.end += end_min_to_hour;
         // }
         //dsd
-        console.log(body);
         if (!body.date) {
             return res.json({
                 err: 1,
                 msg: '请选择日期'
             });
         }
-        // if (!(body.start && body.end && body.start < body.end)) {
-        //     return res.json({
-        //         err: 1,
-        //         msg: '请选择合适的时间段'
-        //     });
-        // }
+        if (!(body.start && body.end && body.start < body.end)) {
+            return res.json({
+                err: 1,
+                msg: '请选择合适的时间段'
+            });
+        }
         if (body.date == date && body.start < hour) {
             return res.json({
                 err: 1,

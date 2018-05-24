@@ -340,7 +340,7 @@ exports.filling = async (req, res) => {
 exports.editInfo = async (req, res) => {
 	try {
 		const body = req.body;
-		const account = req.session.account;
+		const account = req.session.user.account;
 		if (!body.name) {
 			return res.json({
 				err: 1,

@@ -19,7 +19,7 @@ const table2 = `create table if not exists User (
 				gender boolean default true,
 				major varchar(25),
 				mobile varchar(11),
-				grade varchar(10),
+				grade int,
 				forbidden boolean default false,
 				filling boolean default false,
 				primary key(account))

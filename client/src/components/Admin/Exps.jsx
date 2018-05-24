@@ -25,8 +25,6 @@ class AddExpForm extends Component {
 						this.props.handleCancel();
 						this.props.addExp({
 							name: values.name,
-							ip: values.ip,
-							port: values.port,
 							tablesCount: values.tablesCount,
 							address: values.address,
 							id: Math.random()
@@ -51,24 +49,6 @@ class AddExpForm extends Component {
 							rules: [{ required: true, message: '名称不能为空!' }],
 						})(
 							<Input placeholder="实验室名称" />
-						)}
-					</FormItem>
-					<FormItem
-						label="实验室IP"
-					>
-						{getFieldDecorator('ip', {
-							rules: [{ required: true, message: 'IP不能为空!' }],
-						})(
-							<Input placeholder="实验室IP" />
-						)}
-					</FormItem>
-					<FormItem
-						label="实验室IP端口"
-					>
-						{getFieldDecorator('port', {
-							rules: [{ required: true, message: '实验室IP端口不能为空!' }],
-						})(
-							<Input placeholder="实验室IP端口" />
 						)}
 					</FormItem>
 					<FormItem
@@ -215,28 +195,18 @@ export default class Exps extends Component {
 			dataIndex: 'name',
 			render: (text, record) => EditableCell(text, record, "name")
 		}, {
-			title: '实验室IP',
-			key: '2',
-			dataIndex: 'ip',
-			render: (text, record) => EditableCell(text, record, "ip")
-		}, {
-			title: '实验室IP端口',
-			key: '3',
-			dataIndex: 'port',
-			render: (text, record) => EditableCell(text, record, "port")
-		}, {
 			title: '实验室台数',
-			key: '4',
+			key: '2',
 			dataIndex: 'tablesCount',
 			render: (text, record) => EditableCell(text, record, "tablesCount")
 		}, {
 			title: '地点',
-			key: '5',
+			key: '3',
 			dataIndex: 'address',
 			render: (text, record) => EditableCell(text, record, "address")
 		}, {
 			title: '操作',
-			key: '6',
+			key: '4',
 			dataIndex: 'id',
 			render: (text, record) => {
 				if (record.editable) {

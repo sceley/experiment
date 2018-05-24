@@ -62,7 +62,7 @@ class Info extends Component {
 						<FormItem
 							label="姓名"
 						>
-							{getFieldDecorator('Name', {
+							{getFieldDecorator('name', {
 								rules: [{ required: true, message: '姓名不能为空!' }],
 								initialValue: this.state.user && this.state.user.name
 							})(
@@ -72,7 +72,7 @@ class Info extends Component {
 						<FormItem
 							label="学号"
 						>
-							{getFieldDecorator('SchoolNumber', {
+							{getFieldDecorator('account', {
 								rules: [{ required: true, message: '学号不能为空!' }],
 								initialValue: this.state.user && this.state.user.account
 							})(
@@ -82,20 +82,20 @@ class Info extends Component {
 						<FormItem
 							label="性别"
 						>
-							{getFieldDecorator('Sex', {
+							{getFieldDecorator('gender', {
 								rules: [{ required: true}],
-								initialValue: this.state.user && this.state.user.sex,
+								initialValue: this.state.user && this.state.user.gender
 							})(
 								<RadioGroup>
-									<Radio value="man">男</Radio>
-									<Radio value="girl">女</Radio>
+									<Radio value={1}>男</Radio>
+									<Radio value={0}>女</Radio>
 								</RadioGroup>
 								)}
 						</FormItem>
 						<FormItem
 							label="手机号"
 						>
-							{getFieldDecorator('Mobile', {
+							{getFieldDecorator('mobile', {
 								rules: [{ required: true, message: '手机号不能为空!' }],
 								initialValue: this.state.user && this.state.user.mobile
 							})(
@@ -105,7 +105,7 @@ class Info extends Component {
 						<FormItem
 							label="专业"
 						>
-							{getFieldDecorator('Major', {
+							{getFieldDecorator('major', {
 								rules: [{ required: true, message: '专业不能为空!' }],
 								initialValue: this.state.user && this.state.user.major
 							})(
@@ -115,15 +115,15 @@ class Info extends Component {
 						<FormItem
 							label="年级"
 						>
-							{getFieldDecorator('Grade', {
+							{getFieldDecorator('grade', {
 								rules: [{ required: true}],
 								initialValue: this.state.user && this.state.user.grade,
 							})(
 								<Select>
-									<Option value="1">大一</Option>
-									<Option value="2">大二</Option>
-									<Option value="3">大三</Option>
-									<Option value="4">大四</Option>
+									<Option value={1}>大一</Option>
+									<Option value={2}>大二</Option>
+									<Option value={3}>大三</Option>
+									<Option value={4}>大四</Option>
 								</Select>
 								)}
 						</FormItem>

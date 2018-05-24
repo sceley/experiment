@@ -1,5 +1,6 @@
 const express = require('express');
-const https = require('https');
+// const https = require('https');
+const http = require('http');
 const net = require('net');
 const fs = require('fs');
 const config = require('./config');
@@ -8,11 +9,12 @@ const socket = require('./controllers/tcp/socket').socket;
 const initial = require('./initial').initial;
 
 const app = express();
-const options = {
-	key: fs.readFileSync("/etc/letsencrypt/live/zhilian.qinyongli.cn/privkey.pem"),
-	cert: fs.readFileSync("/etc/letsencrypt/live/zhilian.qinyongli.cn/fullchain.pem")
-};
-const server = https.createServer(options, app);
+// const options = {
+// 	key: fs.readFileSync("/etc/letsencrypt/live/zhilian.qinyongli.cn/privkey.pem"),
+// 	cert: fs.readFileSync("/etc/letsencrypt/live/zhilian.qinyongli.cn/fullchain.pem")
+// };
+// const server = https.createServer(options, app);
+const server = http.createServer(app);
 const netServar = net.createServer();
 initial();
 

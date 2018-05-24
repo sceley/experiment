@@ -4,7 +4,7 @@ exports.notify = async (req, res) => {
     try {
         const body = req.body;
         const createAt = moment().format("YYYY-MM-DD HH:MM");
-        const author = req.admin_session.admin;
+        const author = req.session.admin.name;
         await new Promise((resolve, reject) => {
             const sql = 'insert into Notification(msg, createAt, title, author) values(?, ?, ?)';
             db.query(sql, [body.Notification, createAt, body.Title, author], err => {

@@ -3,7 +3,7 @@ const moment = require('moment');
 exports.feedback = async (req, res) => {
     try {
         const body = req.body;
-        const account = req.user_session.account;
+        const account = req.session.user.account;
         const createAt = moment().format('YYYY-MM-DD HH:mm:ss');
         if (!body.message) {
             return res.json({
@@ -98,7 +98,7 @@ exports.getFeedback = async (req, res) => {
 };
 exports.getFeedbackReply = async (req, res) => {
     try {
-        const account = req.user_session.account;
+        const account = req.session.user.account;
         const name = await new Promise((resolve, reject) => {
             const sql = 'select name from User where account=?';
             db.query(sql, [account], (err, users) => {

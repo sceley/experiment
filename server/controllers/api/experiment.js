@@ -8,22 +8,16 @@ exports.addExp = async (req, res) => {
 				msg: '实验室名称不能为空'
 			});
 		}
-		if (!body.ip) {
-			return res.json({
-				err: 1,
-				msg: 'IP不能为空'
-			});
-		}
 		if (!body.address) {
 			return res.json({
 				err: 1,
 				msg: '实验室地址不能为空'
 			});
 		}
-		if (!body.port) {
+		if (!body.tablesCount) {
 			return res.json({
 				err: 1,
-				msg: 'PORT不能为空'
+				msg: '桌子数不能为空'
 			})
 		}
 		const expsCount = await new Promise((resolve, reject) => {
@@ -41,8 +35,8 @@ exports.addExp = async (req, res) => {
 				msg: '该实验室已经存在'
 			});
 		await new Promise((resolve, reject) => {
-			const sql = 'insert into Experiment(name, ip, port, address) values(?, ?, ?, ?)';
-			db.query(sql, [body.name, body.ip, body.port, body.address], (err) => {
+			const sql = 'insert into Experiment(name, address) values(?, ?)';
+			db.query(sql, [body.name, body.address], (err) => {
 				if (err)
 					reject(err);
 				else
@@ -83,7 +77,7 @@ exports.addExp = async (req, res) => {
 exports.showExps = async (req, res) => {
 	try {
 		const exps = await new Promise((resolve, reject) => {
-			const sql = `select Experiment.id, ip, port, count(Tab.id) as tablesCount, 
+			const sql = `select Experiment.id, count(Tab.id) as tablesCount, 
 			address, name from Experiment left join Tab on 
 			Experiment.id=Tab.exp_id group by Experiment.id`;
 			db.query(sql, (err, exps) => {
@@ -208,8 +202,8 @@ exports.editExp = async (req, res) => {
 	try {
 		let body = req.body;
 		await new Promise((resolve, reject) => {
-			let sql = 'update Experiment set name=?, ip=?, port=?, address=? where id=?';
-			db.query(sql, [body.name, body.ip, body.port, body.address, body.id], err => {
+			let sql = 'update Experiment set name=?, address=? where id=?';
+			db.query(sql, [body.name, body.address, body.id], err => {
 				if (err)
 					reject(err);
 				else
