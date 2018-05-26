@@ -13,7 +13,7 @@ const adminInitial = async () => {
                 }
             });
         });
-        if (count) {
+        if (count == 0) {
             await new Promise((resolve, reject) => {
                 const sql = 'insert into Admin(account, password, name) values(?, ?, ?)';
                 db.query(sql, [config.admin.user, config.admin.pass, config.admin.name], err => {
