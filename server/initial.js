@@ -13,18 +13,18 @@ const adminInitial = async () => {
                 }
             });
         });
-        if (count > 0)
-            return;
-        await new Promise((resolve, reject) => {
-            const sql = 'insert into Admin(account, password, name) values(?, ?, ?)';
-            db.query(sql, [config.admin.user, config.admin.pass, config.admin.name], err => {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve();
-                }
+        if (count) {
+            await new Promise((resolve, reject) => {
+                const sql = 'insert into Admin(account, password, name) values(?, ?, ?)';
+                db.query(sql, [config.admin.user, config.admin.pass, config.admin.name], err => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                });
             });
-        });
+        }
     } catch (e) {
         console.log(e);
     }
@@ -33,7 +33,7 @@ const adminInitial = async () => {
 const redisInitial = async () => {
     try {
         const tasks_str = await new Promise((resolve, reject) => {
-            client.get('tasks', (err, tasks_str) => {
+            redis.get('tasks', (err, tasks_str) => {
                 if (err)
                     reject(err);
                 else
@@ -44,7 +44,7 @@ const redisInitial = async () => {
             await new Promise((resolve, reject) => {
                 const arr = [];
                 const str = JSON.stringify(arr);
-                client.set('tasks', str, err => {
+                redis.set('tasks', str, err => {
                     if (err)
                         reject(err);
                     else
