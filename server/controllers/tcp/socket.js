@@ -43,7 +43,7 @@ exports.socket = async socket => {
 };
 
 exports.send = async (str) => {
-	for (let i = 0; i < sockets_cnt; i++) {
+	for (let i = 0; i < sockets.length; i++) {
 		sockets[i].write(str);
 	}
 };
