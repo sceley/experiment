@@ -2,25 +2,43 @@ const net = require('net');
 const moment = require('moment');
 const db = require('../../model/db');
 const convert_to_obj = require('../../common/convert').convert_to_obj;
-const sockets  = [];
-let sockets_cnt = 0;
+// const sockets  = [];
+// let sockets_cnt = 0;
+
+// exports.socket = async socket => {
+// 	sockets.push(socket);
+// 	sockets_cnt++;
+// 	socket.on('data', data => {
+// 		handleResponse(data.toString());
+// 	});
+// 	socket.on('end', () => {
+// 		for (let i = 0; i < sockets_cnt; i++) {
+// 			if (sockets[i] == socket) {
+// 				for (; i < sockets_cnt - 1; i++) {
+// 					sockets[i] = sockets[i + 1];
+// 				}
+// 				sockets_cnt--;
+// 				break;
+// 			}
+// 		}
+// 	});
+// };
+
+let sockets  = [];
 
 exports.socket = async socket => {
 	sockets.push(socket);
-	sockets_cnt++;
 	socket.on('data', data => {
 		handleResponse(data.toString());
 	});
 	socket.on('end', () => {
-		for (let i = 0; i < sockets_cnt; i++) {
-			if (sockets[i] == socket) {
-				for (; i < sockets_cnt - 1; i++) {
-					sockets[i] = sockets[i + 1];
-				}
-				sockets_cnt--;
-				break;
+		let tmp = [];
+		for (let i = 0; i < sockets.length; i++) {
+			if (sockets[i] != socket) {
+				tmp.push(sockets[i]);
 			}
 		}
+		sockets = tmp;
 	});
 };
 

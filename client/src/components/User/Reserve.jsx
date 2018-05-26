@@ -114,9 +114,10 @@ class Reserve extends Component {
 								{getFieldDecorator('start', {
 									rules: [{ required: true, message: '请输入起始时间!' }],
 								})(
-									<Select>
-										{options}
-									</Select>
+									// <Select>
+									// 	{options}
+									// </Select>
+										<Input placeholder="起始时间" />
 								)}
 							</FormItem>
 						</div>
@@ -132,9 +133,10 @@ class Reserve extends Component {
 										validator: this.checkHour
 									}],
 								})(
-									<Select>
-										{options}
-									</Select>
+									// <Select>
+									// 	{options}
+									// </Select>
+										<Input placeholder="结束时间" />
 								)}
 							</FormItem>
 						</div>
