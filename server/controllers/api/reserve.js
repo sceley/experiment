@@ -11,8 +11,8 @@ exports.addReserve = async (req, res) => {
         const date = moment().format("YYYY-MM-DD");
         
         //divide
-        const starts = body.start.split(':');
-        const ends = body.end.split(':');
+        const starts = String(body.start).split(':');
+        const ends = String(body.end).split(':');
         body.start = parseInt(starts[0]);
         body.end = parseInt(ends[0]);
         if (starts[1]) {
