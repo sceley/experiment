@@ -38,7 +38,7 @@ exports.convert_to_obj = (str, pattern) => {
     str.replace(pattern, (match, ...code) => {
         const arr = code.slice(0, -2);
         for (let i = 0; i < arr.length; i = i + 2) {
-            obj[arr[i]] = arr[i + 1];
+            json[arr[i]] = arr[i + 1];
         }
     });
     return json;
