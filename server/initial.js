@@ -1,4 +1,5 @@
 const db = require('./model/db');
+const redis = require('./model/redis');
 const config = require('./config');
 const adminInitial = async () => {
     try {
@@ -29,6 +30,34 @@ const adminInitial = async () => {
     }
 };
 
+const redisInitial = async () => {
+    try {
+        const tasks_str = await new Promise((resolve, reject) => {
+            client.get('tasks', (err, tasks_str) => {
+                if (err)
+                    reject(err);
+                else
+                    resolve(tasks_str);
+            });
+        });
+        if (!tasks_str) {
+            await new Promise((resolve, reject) => {
+                const arr = [];
+                const str = JSON.stringify(arr);
+                client.set('tasks', str, err => {
+                    if (err)
+                        reject(err);
+                    else
+                        resolve();
+                });
+            });
+        }
+    } catch (e) {
+        console.log(e);
+    }
+};
+
 module.exports.initial = async () => {
     adminInitial();
+    redisInitial();
 };
