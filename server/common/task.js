@@ -15,7 +15,7 @@ exports.addTask = async (option) => {
         });
     });
     let tasks = JSON.parse(tasks_str);
-    let current_res = await new Promise((resolve, reject) => {
+    let current_str = await new Promise((resolve, reject) => {
         redis.get('current_task', (err, res) => {
             if (err)
                 reject(err);
@@ -23,8 +23,8 @@ exports.addTask = async (option) => {
                 resolve(res);
         });
     });
-    if (current_res) {
-        let current_task = JSON.parse(current_res);
+    if (current_str) {
+        let current_task = JSON.parse(current_str);
         tasks.push(current_task);
     }
     tasks.push(option);
@@ -63,7 +63,6 @@ exports.addTask = async (option) => {
             });
         });
         let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
-        console.log(time);
         exec_timer_task(time, task);
     }
 };
@@ -79,7 +78,7 @@ exports.cancelTask = async (id) => {
         });
     });
     let tasks = JSON.parse(tasks_str);
-    let current_res = await new Promise((resolve, reject) => {
+    let current_str = await new Promise((resolve, reject) => {
         redis.get('current_task', (err, res) => {
             if (err)
                 reject(err);
@@ -87,8 +86,8 @@ exports.cancelTask = async (id) => {
                 resolve(res);
         });
     });
-    if (current_res) {
-        let current_task = JSON.parse(current_res);
+    if (current_str) {
+        let current_task = JSON.parse(current_str);
         tasks.unshift(current_task);
     }
     tasks = tasks.filter(task => {
@@ -184,8 +183,8 @@ async function exec_timer_task(time, task) {
 
 async function execTask(task) {
     try {
-        let reserve = await new Promise((resolve, reject) => {
-            let sql = 'select id as NUM, exp_id as EXP, seat as TAB, user_id as account from Reserve where id=?';
+        const reserve = await new Promise((resolve, reject) => {
+            const sql = 'select id as NUM, exp_id as EXP, seat as TAB, user_id as account from Reserve where id=?';
             db.query(sql, [task.id], (err, reserves) => {
                 if (err)
                     reject(err);
@@ -206,7 +205,7 @@ async function execTask(task) {
         delete reserve.account;
         reserve.POW = task.pow;
         if (reserve instanceof Object) {
-            let str = convert_to_str(reserve);
+            const str = convert_to_str(reserve);
             send(str);
         }
     } catch (e) {
