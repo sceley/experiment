@@ -95,6 +95,12 @@ exports.logup = async (req, res) => {
 				msg: '手机号应该为11位'
 			});
 		}
+		if (!(body.password && body.password.length >= 6 && body.password.length <= 16)) {
+			return res.json({
+				err: 1,
+				msg: '密码应为6-16位字符'
+			});
+		}
 		const usersCount = await new Promise((resolve, reject) => {
 			const sql = 'select count(account) as count from User where account=?';
 			db.query(sql, [body.account], (err, result) => {

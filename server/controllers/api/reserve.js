@@ -9,20 +9,22 @@ exports.addReserve = async (req, res) => {
         const hour = new Date().getHours();
         const createAt = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
         const date = moment().format("YYYY-MM-DD");
-        //dsd
-        // const starts = body.start.split(':');
-        // const ends = body.end.split(':');
-        // body.start = parseInt(starts[0]);
-        // body.end = parseInt(ends[0]);
-        // if (starts[1]) {
-        //     const start_min_to_hour = starts[1] / 60;
-        //     body.start += start_min_to_hour;
-        // }
-        // if (ends[1]) {
-        //     const end_min_to_hour = ends[1] / 60;
-        //     body.end += end_min_to_hour;
-        // }
-        //dsd
+        
+        //divide
+        const starts = body.start.split(':');
+        const ends = body.end.split(':');
+        body.start = parseInt(starts[0]);
+        body.end = parseInt(ends[0]);
+        if (starts[1]) {
+            const start_min_to_hour = starts[1] / 60;
+            body.start += start_min_to_hour;
+        }
+        if (ends[1]) {
+            const end_min_to_hour = ends[1] / 60;
+            body.end += end_min_to_hour;
+        }
+        //divide
+
         if (!body.date) {
             return res.json({
                 err: 1,

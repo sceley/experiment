@@ -33,14 +33,13 @@ exports.convert_to_str = (option) => {
     return str;
 };
 
-exports.convert_to_obj = (str) => {
-    let obj = {};
-    let pattern = /(NUM)(\d{4})(EXP)(\d{2})(TAB)(\d{2})(ID)(\d{2})(POW)(\d{1})(FAU)(\d{1})/;
+exports.convert_to_obj = (str, pattern) => {
+    const json = {};
     str.replace(pattern, (match, ...code) => {
-        let arr = code.slice(0, -2);
+        const arr = code.slice(0, -2);
         for (let i = 0; i < arr.length; i = i + 2) {
             obj[arr[i]] = arr[i + 1];
         }
     });
-    return obj;
+    return json;
 };

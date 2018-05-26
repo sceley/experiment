@@ -63,6 +63,7 @@ exports.addTask = async (option) => {
             });
         });
         let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
+        console.log(time);
         exec_timer_task(time, task);
     }
 };

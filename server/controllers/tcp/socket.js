@@ -2,26 +2,30 @@ const net = require('net');
 const moment = require('moment');
 const db = require('../../model/db');
 const convert_to_obj = require('../../common/convert').convert_to_obj;
-let sockets  = [];
+const sockets  = [];
+let sockets_cnt = 0;
 
 exports.socket = async socket => {
 	sockets.push(socket);
+	sockets_cnt++;
 	socket.on('data', data => {
 		handleResponse(data.toString());
 	});
 	socket.on('end', () => {
-		const tmp = [];
-		for (let i = 0; i < sockets.length; i++) {
-			if (sockets[i] != socket) {
-				tmp.push(socket[i]);
+		for (let i = 0; i < sockets_cnt; i++) {
+			if (sockets[i] == socket) {
+				for (; i < sockets_cnt - 1; i++) {
+					sockets[i] = sockets[i + 1];
+				}
+				sockets_cnt--;
+				break;
 			}
 		}
-		sockets = tmp;
 	});
 };
 
 exports.send = async (str) => {
-	for (let i = 0; i < sockets.length; i++) {
+	for (let i = 0; i < sockets_cnt; i++) {
 		sockets[i].write(str);
 	}
 };
@@ -51,22 +55,49 @@ async function handleResponse (str) {
 					}
 				});
 			});
-		} else {
-			const res = convert_to_obj(str);
+		} else if (str.length == 25) {
+			const pattern = /(NUM)(\d{4})(EXP)(\d{2})(TAB)(\d{2})(ID)(\d{2})(POW)(\d{1})/;
+			if (!pattern.test(str))
+				return;
+			const json = convert_to_obj(str, pattern);
 			const time = moment().format('YYYY-MM-DD HH:mm:ss');
 			await new Promise((resolve, reject) => {
-				const sql = 'update Tab set status=?, fault=? where seat=? and exp_id=?';
-				db.query(sql, [parseInt(res.POW), parseInt(res.FAU), parseInt(res.TAB), parseInt(res.EXP)], err => {
+				const sql = 'update Tab set status=? where seat=? and exp_id=?';
+				db.query(sql, [1, parseInt(json.TAB), parseInt(json.EXP)], err => {
 					if (err)
 						reject(err);
 					else
 						resolve();
 				});
 			});
-			if (parseInt(res.POW)) {
+			await new Promise((resolve, reject) => {
+				const sql = 'update Reserve set status=?, go_into_time=? where id=?';
+				db.query(sql, [2, time, parseInt(json.NUM)], err => {
+					if (err)
+						reject();
+					else
+						resolve();
+				});
+			});
+		} else if (str.length == 29) {
+			const pattern = /(NUM)(\d{4})(EXP)(\d{2})(TAB)(\d{2})(ID)(\d{2})(POW)(\d{1})(FAU)(\d{1})/;
+			if (!pattern.test(str))
+				return;
+			const json = convert_to_obj(str, pattern);
+			const time = moment().format('YYYY-MM-DD HH:mm:ss');
+			await new Promise((resolve, reject) => {
+				const sql = 'update Tab set status=?, fault=? where seat=? and exp_id=?';
+				db.query(sql, [parseInt(json.POW), parseInt(json.FAU), parseInt(json.TAB), parseInt(json.EXP)], err => {
+					if (err)
+						reject(err);
+					else
+						resolve();
+				});
+			});
+			if (parseInt(json.POW)) {
 				await new Promise((resolve, reject) => {
 					const sql = 'update Reserve set status=?, go_into_time=? where id=?';
-					db.query(sql, [2, time, parseInt(res.NUM)], err => {
+					db.query(sql, [2, time, parseInt(json.NUM)], err => {
 						if (err)
 							reject();
 						else
@@ -76,7 +107,7 @@ async function handleResponse (str) {
 			} else {
 				await new Promise((resolve, reject) => {
 					const sql = 'update Reserve set status=?, leave_time=? where id=?';
-					db.query(sql, [3, time, parseInt(res.NUM)], err => {
+					db.query(sql, [3, time, parseInt(json.NUM)], err => {
 						if (err)
 							reject();
 						else
