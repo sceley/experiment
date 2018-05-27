@@ -156,7 +156,7 @@ exports.getUserReserves = async (req, res) => {
             status = `(${status})`;
         }
         const reserves = await new Promise((resolve, reject) => {
-            const sql = `select Reserve.id, User.name as userName, date, start, end, 
+            const sql = `select Reserve.id, User.name as user_name, date, start, end, 
                         Experiment.name as exp_name, 
                         seat, address, equipment, approver, Reserve.status,
                         go_into_time, leave_time
