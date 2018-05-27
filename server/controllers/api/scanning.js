@@ -4,7 +4,7 @@ const convert_to_str = require('../../common/convert').convert_to_str;
 exports.scanningOpen = async (req, res) => {
     try {
         const account = req.session.user.account;
-        const hour = ( new Date() ).getHours();
+        const hour = ( new Date() ).getHours() + ( new Date() ).getMinutes() / 60;
         const reserve = await new Promise((resolve, reject) => {
             const sql = 'select id as NUM, exp_id as EXP, seat as TAB, user_id as account from Reserve where start<=? and end>? and user_id=?';
             db.query(sql, [hour, hour, account], (err, reserves) => {
