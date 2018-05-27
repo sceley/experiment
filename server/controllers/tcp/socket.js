@@ -101,7 +101,7 @@ async function handleResponse (str) {
 						resolve();
 				});
 			});
-		} else if (str.length == 29) {
+		} else if (str.length == 30) {
 			const pattern = /(NUM)(\d{4})(EXP)(\d{2})(TAB)(\d{2})(ID)(\d{2})(POW)(\d{1})(FAU)(\d{1})/;
 			if (!pattern.test(str))
 				return;
