@@ -1,5 +1,6 @@
 const db = require('./model/db');
 const redis = require('./model/redis');
+const initialTask = require('./common/task').initialTask;
 const config = require('./config');
 const adminInitial = async () => {
     try {
@@ -60,4 +61,5 @@ const redisInitial = async () => {
 module.exports.initial = async () => {
     adminInitial();
     redisInitial();
+    initialTask();
 };

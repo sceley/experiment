@@ -127,7 +127,61 @@ exports.cancelTask = async (id) => {
     }
 };
 
-
+exports.initialTask = async () => {
+    let tasks_str = await new Promise((resolve, reject) => {
+        redis.get('tasks', (err, res) => {
+            if (err)
+                reject(err);
+            else
+                resolve(res);
+        });
+    });
+    let tasks = JSON.parse(tasks_str);
+    let current_str = await new Promise((resolve, reject) => {
+        redis.get('current_task', (err, res) => {
+            if (err)
+                reject(err);
+            else
+                resolve(res);
+        });
+    });
+    if (current_str) {
+        let current_task = JSON.parse(current_str);
+        tasks.unshift(current_task);
+    }
+    let task = tasks.shift();
+    await new Promise((resolve, reject) => {
+        let str = JSON.stringify(tasks);
+        redis.set('tasks', str, err => {
+            if (err)
+                reject();
+            else
+                resolve();
+        });
+    });
+    if (!task) {
+        await new Promise((resolve, reject) => {
+            redis.del('current_task', err => {
+                if (err)
+                    reject(err);
+                else
+                    resolve();
+            });
+        });
+    } else {
+        await new Promise((resolve, reject) => {
+            let str = JSON.stringify(task);
+            redis.set("current_task", str, err => {
+                if (err)
+                    reject(err);
+                else
+                    resolve();
+            });
+        });
+        let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
+        exec_timer_task(time, task);
+    }
+};
 
 async function nextTask () {
     clearTimeout(timer);
