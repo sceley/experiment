@@ -15,10 +15,10 @@ const option = {
 };
 const server = https.createServer(option, app);
 // const server = http.createServer(app);
-const tcpServar = net.createServer();
+const tcpServer = net.createServer();
 initial();
 
-tcpServar.on("connection", socket);
+tcpServer.on("connection", socket);
 
 app.use((req, res, next) => {
 	res.setHeader('Access-Control-Allow-Origin', '*');
@@ -31,8 +31,8 @@ app.use(router);
 server.listen(config.server.port, () => {
 	console.log(`server run at ://localhost:${config.server.port}`);
 });
-tcpServar.listen(config.netServer.port, () => {
-	console.log(`tcpServar run at port=>${config.netServer.port}`);
+tcpServer.listen(config.tcpServer.port, () => {
+	console.log(`tcpServer run at port=>${config.tcpServer.port}`);
 });
 
 process.on('uncaugthException', e => {

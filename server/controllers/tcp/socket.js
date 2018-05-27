@@ -34,6 +34,7 @@ exports.socket = async socket => {
 		handleResponse(data.toString());
 	});
 	socket.on('end', () => {
+		console.log('断开连接');
 		let tmp = [];
 		for (let i = 0; i < sockets.length; i++) {
 			if (sockets[i] != socket) {
@@ -52,6 +53,7 @@ exports.send = async (str) => {
 
 async function handleResponse (str) {
 	try {
+		console.log(str.length);
 		if (str.length == 15) {
 			const account = str.slice(3, 11);
 			const id = str.slice(13);
