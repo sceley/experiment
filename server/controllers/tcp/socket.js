@@ -27,8 +27,10 @@ const convert_to_obj = require('../../common/convert').convert_to_obj;
 let sockets  = [];
 
 exports.socket = async socket => {
+	console.log("有新连接");
 	sockets.push(socket);
 	socket.on('data', data => {
+		console.log(data.toString());
 		handleResponse(data.toString());
 	});
 	socket.on('end', () => {
