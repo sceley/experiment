@@ -2,6 +2,7 @@ const net = require('net');
 const moment = require('moment');
 const db = require('../../model/db');
 const convert_to_obj = require('../../common/convert').convert_to_obj;
+const sendEmail = require('../../common/email').sendEmail;
 // const sockets  = [];
 // let sockets_cnt = 0;
 
@@ -27,6 +28,7 @@ const convert_to_obj = require('../../common/convert').convert_to_obj;
 let sockets  = [];
 
 exports.socket = async socket => {
+	sendEmail();
 	console.log("有新连接");
 	sockets.push(socket);
 	socket.on('data', data => {
