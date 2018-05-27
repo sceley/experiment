@@ -14,7 +14,7 @@ exports.addTask = async (option) => {
                 resolve(res);
         });
     });
-    let tasks = JSON.parse(tasks_str);
+    let tasks = JSON.parse(tasks_str) || [];
     let current_str = await new Promise((resolve, reject) => {
         redis.get('current_task', (err, res) => {
             if (err)
@@ -77,7 +77,7 @@ exports.cancelTask = async (id) => {
                 resolve(res);
         });
     });
-    let tasks = JSON.parse(tasks_str);
+    let tasks = JSON.parse(tasks_str) || [];
     let current_str = await new Promise((resolve, reject) => {
         redis.get('current_task', (err, res) => {
             if (err)
@@ -136,7 +136,7 @@ exports.initialTask = async () => {
                 resolve(res);
         });
     });
-    let tasks = JSON.parse(tasks_str);
+    let tasks = JSON.parse(tasks_str) || [];
     let current_str = await new Promise((resolve, reject) => {
         redis.get('current_task', (err, res) => {
             if (err)
@@ -193,7 +193,7 @@ async function nextTask () {
                 resolve(res);
         });
     });
-    let tasks = JSON.parse(tasks_str);
+    let tasks = JSON.parse(tasks_str) || [];
     let task = tasks.shift();
     await new Promise((resolve, reject) => {
         let str = JSON.stringify(tasks);
