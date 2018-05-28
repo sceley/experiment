@@ -135,3 +135,38 @@
 	display: inline-block;
 	padding: 0 10px;
 }
+
+.time-select {
+	display: flex;
+	flex-direction: row;
+}
+
+.start-time-select, .end-time-select {
+	width: 150px;
+	display: flex;
+	flex-direction: row;
+}
+
+.select-item {
+	flex: 1;
+}
+
+.item-divide {
+	width: 20px;
+	text-align: center;
+}
+
+.start-end-divide {
+	width: 50px;
+	text-align: center;
+}
+
+.time-label:before {
+    display: inline-block;
+    margin-right: 4px;
+    content: "*";
+    font-family: SimSun;
+    line-height: 1;
+    font-size: 14px;
+    color: #f5222d;
+}

@@ -15,17 +15,24 @@ class Reserve extends Component {
 		e.preventDefault();
 		this.props.form.validateFields((err, values) => {
 			if (!err) {
-				values.exp = values.location[0];
-				values.tab = values.location[1];
-				values.date = moment(values.date).format("YYYY-MM-DD");
-				delete values.Location;
+				let min_start = values['min-start'];
+				let min_end = values['min-end'];
+				values.start += min_start / 60;
+				values.end += min_end / 60;
 				fetch(`${config.server}/api/user/addreserve`, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
 						'x-access-token': localStorage.user_token
 					},
-					body: JSON.stringify(values)
+					body: JSON.stringify({
+						exp: values.location[0],
+						tab: values.location[1],
+						date: moment(values.date).format("YYYY-MM-DD"),
+						start: values.start,
+						end: values.end,
+						equipment: values.equipment
+					})
 				}).then(res => {
 					if (res.ok) {
 						return res.json();
@@ -43,6 +50,10 @@ class Reserve extends Component {
 	checkHour = (rule, value, cb) => {
 		let start = this.props.form.getFieldValue('start');
 		let end = this.props.form.getFieldValue('end');
+		let min_start = this.props.form.getFieldValue('min-start');
+		let min_end = this.props.form.getFieldValue('min-end');
+		start += min_start / 60;
+		end += min_end / 60;
 		if (end <= start) {
 			cb("请选择合适的时间段");
 		} else {
@@ -62,6 +73,10 @@ class Reserve extends Component {
 		let date = moment(this.props.form.getFieldValue('date')).format("YYYY-MM-DD");
 		let start = this.props.form.getFieldValue('start');
 		let end = this.props.form.getFieldValue('end');
+		let min_start = this.props.form.getFieldValue('min-start');
+		let min_end = this.props.form.getFieldValue('min-end');
+		start += min_start / 60;
+		end += min_end / 60;
 		let body = {
 			date,
 			start,
@@ -84,12 +99,22 @@ class Reserve extends Component {
 			}
 		});
 	}
+	componentDidMount = () => {
+		this.handleRequset();
+	}
 
 	render() {
 		const { getFieldDecorator } = this.props.form;
-		const options = [];
+		const hourOption = [];
 		for (let i = 8; i <= 22; i++) {
-			options.push(<Option value={i}>{i}</Option>);
+			hourOption.push(<Option key={i} value={i}>{i}</Option>);
+		}
+		const minutesOption = [];
+		for (let i = 0; i <= 60; i++) {
+			if (i < 10) {
+				i = `0${i}`;
+			}
+			minutesOption.push(<Option key={i} value={i}>{i}</Option>);
 		}
 		return (
 			<div className="Reserve Container">
@@ -103,40 +128,78 @@ class Reserve extends Component {
 						{getFieldDecorator('date', {
 							rules: [{ required: true, message: '请选择日期!' }],
 						})(
-							<DatePicker disabledDate={this.disabledDate} placeholder="选择日期" />
+							<DatePicker onChange={this.handleRequset} disabledDate={this.disabledDate} placeholder="选择日期" />
 						)}
 					</FormItem>
-					<div className="media">
-						<div className="media-header">
+					<div className="time-label">时间段选择</div>
+					<div className="time-select">
+						<div className="start-time-select">
 							<FormItem
-								label="时间段选择"
+								className="select-item"
 							>
 								{getFieldDecorator('start', {
-									rules: [{ required: true, message: '请输入起始时间!' }],
+									rules: [{ required: true, message: '请输入起始时间!' }, {
+										validator: this.checkHour
+									}],
+									initialValue: new Date().getHours()
 								})(
-									// <Select>
-									// 	{options}
-									// </Select>
-										<Input placeholder="起始时间" />
+									<Select>
+										{hourOption}
+									</Select>
+								)}
+							</FormItem>
+							<div className="item-divide">
+								:
+							</div>
+							<FormItem
+								className="select-item"
+							>
+								{getFieldDecorator('min-start', {
+									rules: [{ required: true, message: '请输入起始时间!' }, {
+										validator: this.checkHour
+									}],
+									initialValue: '00'
+								})(
+									<Select>
+										{minutesOption}
+									</Select>
 								)}
 							</FormItem>
 						</div>
-						<div className="media-body">
+						<div className="start-end-divide">
 							~
 						</div>
-						<div className="media-footer">
+						<div className="end-time-select">
 							<FormItem
+								className="select-item"
 							>
 								{getFieldDecorator('end', {
 									rules: [{ required: true, message: '请输入结束时间!' }
-									, {
+										, {
 										validator: this.checkHour
 									}],
+									initialValue: new Date().getHours() + 1
 								})(
-									// <Select>
-									// 	{options}
-									// </Select>
-										<Input placeholder="结束时间" />
+									<Select>
+										{hourOption}
+									</Select>
+								)}
+							</FormItem>
+							<div className="item-divide">
+								:
+							</div>
+							<FormItem
+								className="select-item"
+							>
+								{getFieldDecorator('min-end', {
+									rules: [{ required: true, message: '请输入起始时间!' }, {
+										validator: this.checkHour
+									}],
+									initialValue: '00'
+								})(
+									<Select>
+										{minutesOption}
+									</Select>
 								)}
 							</FormItem>
 						</div>
