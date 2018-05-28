@@ -47,18 +47,33 @@ class Reserve extends Component {
 			}
 		});
 	}
-	checkHour = (rule, value, cb) => {
-		let start = this.props.form.getFieldValue('start');
-		let end = this.props.form.getFieldValue('end');
-		let min_start = this.props.form.getFieldValue('min-start');
-		let min_end = this.props.form.getFieldValue('min-end');
+	checkHour = (label, value) => {
+		const form = this.props.form;
+		let start = form.getFieldValue('start');
+		let end = form.getFieldValue('end');
+		let min_start = form.getFieldValue('min-start');
+		let min_end = form.getFieldValue('min-end');
+		switch (label) {
+			case 'start':
+				start = value;
+				break;
+			case 'end':
+				end = value;
+				break;
+			case 'min-start':
+				min_start = value;
+				break;
+			case 'min-end':
+				min_end = value;
+				break;
+			default:
+				console.log('default');
+				break;
+		};
 		start += min_start / 60;
 		end += min_end / 60;
-		if (end <= start) {
-			cb("请选择合适的时间段");
-		} else {
+		if (start < end) {
 			this.handleRequset();
-			cb();
 		}
 	}
 	disabledDate = (date) => {
@@ -106,7 +121,7 @@ class Reserve extends Component {
 	render() {
 		const { getFieldDecorator } = this.props.form;
 		const hourOption = [];
-		for (let i = 8; i <= 22; i++) {
+		for (let i = 0; i <= 24; i++) {
 			hourOption.push(<Option key={i} value={i}>{i}</Option>);
 		}
 		const minutesOption = [];
@@ -138,12 +153,10 @@ class Reserve extends Component {
 								className="select-item"
 							>
 								{getFieldDecorator('start', {
-									rules: [{ required: true, message: '请输入起始时间!' }, {
-										validator: this.checkHour
-									}],
+									rules: [{ required: true, message: '请输入起始时间!' }],
 									initialValue: new Date().getHours()
 								})(
-									<Select>
+									<Select onChange={(e) => this.checkHour('start', e)}>
 										{hourOption}
 									</Select>
 								)}
@@ -155,12 +168,10 @@ class Reserve extends Component {
 								className="select-item"
 							>
 								{getFieldDecorator('min-start', {
-									rules: [{ required: true, message: '请输入起始时间!' }, {
-										validator: this.checkHour
-									}],
+									rules: [{ required: true, message: '请输入起始时间!' }],
 									initialValue: '00'
 								})(
-									<Select>
+									<Select onChange={e => this.checkHour('min-start', e)}>
 										{minutesOption}
 									</Select>
 								)}
@@ -174,13 +185,10 @@ class Reserve extends Component {
 								className="select-item"
 							>
 								{getFieldDecorator('end', {
-									rules: [{ required: true, message: '请输入结束时间!' }
-										, {
-										validator: this.checkHour
-									}],
+									rules: [{ required: true, message: '请输入结束时间!' }],
 									initialValue: new Date().getHours() + 1
 								})(
-									<Select>
+									<Select onChange={(e) => this.checkHour('end', e)}>
 										{hourOption}
 									</Select>
 								)}
@@ -192,12 +200,10 @@ class Reserve extends Component {
 								className="select-item"
 							>
 								{getFieldDecorator('min-end', {
-									rules: [{ required: true, message: '请输入起始时间!' }, {
-										validator: this.checkHour
-									}],
+									rules: [{ required: true, message: '请输入起始时间!' }],
 									initialValue: '00'
 								})(
-									<Select>
+									<Select onChange={e => this.checkHour('min-end', e)}>
 										{minutesOption}
 									</Select>
 								)}
