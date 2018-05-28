@@ -275,7 +275,7 @@ exports.mobileLogup = async (req, res) => {
 			body.id = null;
 		}
 		await new Promise((resolve, reject) => {
-			const sql = 'insert into User(filling, id, account, mobile, password, name, gender, grade, major) values(?, ?, ?, ?, ?, ?, ?, ?)';
+			const sql = 'insert into User(filling, id, account, mobile, password, name, gender, grade, major) values(?, ?, ?, ?, ?, ?, ?, ?, ?)';
 			db.query(sql, [true, body.id, body.account, body.mobile, body.password, body.name, body.gender, body.grade, body.major], (err) => {
 				if (err)
 					reject(err);
