@@ -31,6 +31,7 @@ exports.socket = async socket => {
 	sendEmail();
 	console.log("有新连接");
 	sockets.push(socket);
+	socket.setKeepAlive(true);
 	socket.on('data', data => {
 		console.log(data.toString());
 		handleResponse(data.toString());
