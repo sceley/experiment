@@ -31,7 +31,7 @@ exports.socket = async socket => {
 	sendEmail();
 	console.log("有新连接");
 	sockets.push(socket);
-	socket.setKeepAlive(true);
+	socket.setKeepAlive(true, 5000);
 	socket.on('data', data => {
 		console.log(data.toString());
 		handleResponse(data.toString());
@@ -45,6 +45,13 @@ exports.socket = async socket => {
 			}
 		}
 		sockets = tmp;
+	});
+	socket.on('close', () => {
+		console.log('socket关闭');
+	});
+	socket.on('error', (err) => {
+		console.log("socket error:", err);
+		process.exit(1);
 	});
 };
 
