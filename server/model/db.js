@@ -112,13 +112,13 @@ const table8 = `create table if not exists ID (
 				primary key(id))
 				charset=utf8`;
 				
-connection.query(table1);
-connection.query(table2);
-connection.query(table3);
-connection.query(table4);
-connection.query(table5);
-connection.query(table6);
-connection.query(table7);
-connection.query(table8);
+json.connection.query(table1);
+json.connection.query(table2);
+json.connection.query(table3);
+json.connection.query(table4);
+json.connection.query(table5);
+json.connection.query(table6);
+json.connection.query(table7);
+json.connection.query(table8);
 
 module.exports = json;
