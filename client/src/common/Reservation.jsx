@@ -97,7 +97,7 @@ export default class Reservation extends Component {
             title: '预约时间段',
             key: '3',
             render: record => {
-                return `${Math.floor(record.start)}-${Math.ceil(record.end)}时`;
+                return `${record.start}-${record.end}`;
             }
         }, {
             title: '预约实验室',
