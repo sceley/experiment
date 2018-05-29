@@ -62,7 +62,7 @@ async function handleResponse (str) {
 			const id = str.slice(13);
 			await new Promise((resolve, reject) => {
 				const sql = 'insert into ID(account, id) values(?, ?)';
-				db.query(sql, [account, id], err => {
+				db.connection.query(sql, [account, id], err => {
 					if (err) {
 						reject(err);
 					} else {
@@ -72,7 +72,7 @@ async function handleResponse (str) {
 			});
 			await new Promise((resolve, reject) => {
 				const sql = 'update User set id=? where account=?';
-				db.query(sql, [id, account], err => {
+				db.connection.query(sql, [id, account], err => {
 					if (err) {
 						reject(err);
 					} else {
@@ -88,7 +88,7 @@ async function handleResponse (str) {
 			const time = moment().format('YYYY-MM-DD HH:mm:ss');
 			await new Promise((resolve, reject) => {
 				const sql = 'update Tab set status=? where seat=? and exp_id=?';
-				db.query(sql, [1, parseInt(json.TAB), parseInt(json.EXP)], err => {
+				db.connection.query(sql, [1, parseInt(json.TAB), parseInt(json.EXP)], err => {
 					if (err)
 						reject(err);
 					else
@@ -97,7 +97,7 @@ async function handleResponse (str) {
 			});
 			await new Promise((resolve, reject) => {
 				const sql = 'update Reserve set status=?, go_into_time=? where id=?';
-				db.query(sql, [2, time, parseInt(json.NUM)], err => {
+				db.connection.query(sql, [2, time, parseInt(json.NUM)], err => {
 					if (err)
 						reject();
 					else
@@ -112,7 +112,7 @@ async function handleResponse (str) {
 			const time = moment().format('YYYY-MM-DD HH:mm:ss');
 			await new Promise((resolve, reject) => {
 				const sql = 'update Tab set status=?, fault=? where seat=? and exp_id=?';
-				db.query(sql, [parseInt(json.POW), parseInt(json.FAU), parseInt(json.TAB), parseInt(json.EXP)], err => {
+				db.connection.query(sql, [parseInt(json.POW), parseInt(json.FAU), parseInt(json.TAB), parseInt(json.EXP)], err => {
 					if (err)
 						reject(err);
 					else
@@ -122,7 +122,7 @@ async function handleResponse (str) {
 			if (parseInt(json.POW)) {
 				await new Promise((resolve, reject) => {
 					const sql = 'update Reserve set status=?, go_into_time=? where id=?';
-					db.query(sql, [2, time, parseInt(json.NUM)], err => {
+					db.connection.query(sql, [2, time, parseInt(json.NUM)], err => {
 						if (err)
 							reject();
 						else
@@ -132,7 +132,7 @@ async function handleResponse (str) {
 			} else {
 				await new Promise((resolve, reject) => {
 					const sql = 'update Reserve set status=?, leave_time=? where id=?';
-					db.query(sql, [3, time, parseInt(json.NUM)], err => {
+					db.connection.query(sql, [3, time, parseInt(json.NUM)], err => {
 						if (err)
 							reject();
 						else

@@ -7,7 +7,7 @@ exports.notify = async (req, res) => {
         const author = req.session.admin.name;
         await new Promise((resolve, reject) => {
             const sql = 'insert into Notification(msg, createAt, title, author) values(?, ?, ?)';
-            db.query(sql, [body.Notification, createAt, body.Title, author], err => {
+            db.connection.query(sql, [body.Notification, createAt, body.Title, author], err => {
                 if (err) {
                     reject(err);
                 } else {
@@ -30,7 +30,7 @@ exports.notifications = async (req, res) => {
     try {
         let notifications = await new Promise((resolve, reject) => {
             let sql = "select id, title from Notification";
-            db.query(sql, (err, notifications) => {
+            db.connection.query(sql, (err, notifications) => {
                 if (err) 
                     reject(err);
                 else 
@@ -53,7 +53,7 @@ exports.deleteNotification = async (req, res) => {
         let id = req.params.id;
         await new Promise((resolve, reject) => {
             let sql = 'delete from Notification where id=?';
-            db.query(sql, [id], err => {
+            db.connection.query(sql, [id], err => {
                 if (err)
                     reject(err);
                 else 
@@ -76,7 +76,7 @@ exports.notification = async (req, res) => {
         const id = req.params.id;
         const notification = await new Promise((resolve, reject) => {
             const sql = 'select * from Notification where id=?';
-            db.query(sql, [id], (err, notification) => {
+            db.connection.query(sql, [id], (err, notification) => {
                 if (err) {
                     reject(err);
                 } else {

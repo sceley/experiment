@@ -41,7 +41,7 @@ exports.addReserve = async (req, res) => {
         }
         const reservesCount = await new Promise((resolve, reject) => {
             const sql = 'select count(*) as count from Reserve where exp_id=? and seat=? and date=? and ((start<? and start>=?) or (end<=? and end>?) or (start=? and end=?))';
-            db.query(sql, [body.exp, body.tab, body.date, body.end, body.start, body.end, body.start, body.start, body.end], (err, reserves) => {
+            db.connection.query(sql, [body.exp, body.tab, body.date, body.end, body.start, body.end, body.start, body.start, body.end], (err, reserves) => {
                 if (err)
                     reject(err);
                 else
@@ -56,7 +56,7 @@ exports.addReserve = async (req, res) => {
         }
         const fault = await new Promise((resolve, reject) => {
             const sql = 'select fault from Tab where seat=? and exp_id=?';
-            db.query(sql, [body.tab, body.exp], (err, tabs) => {
+            db.connection.query(sql, [body.tab, body.exp], (err, tabs) => {
                 if (err)
                     reject(err);
                 else
@@ -74,7 +74,7 @@ exports.addReserve = async (req, res) => {
                 const sql = `insert into Reserve(user_id, exp_id, seat, start, 
                 end, date, createAt, equipment, status) values(?, ?, ?, ?, ?, ?, ?, ?, ?)`;
                 const values = [account, body.exp, body.tab, body.start, body.end, body.date, createAt, body.equipment, 0];
-                db.query(sql, values, err => {
+                db.connection.query(sql, values, err => {
                     if (err)
                         reject(err);
                     else 
@@ -86,7 +86,7 @@ exports.addReserve = async (req, res) => {
                 const sql = `insert into Reserve(user_id, exp_id, seat, start,
                 end, date, createAt, status) values(?, ?, ?, ?, ?, ?, ?, ?)`;
                 const values = [account, body.exp, body.tab, body.start, body.end, body.date, createAt, 1];
-                db.query(sql, values, err => {
+                db.connection.query(sql, values, err => {
                     if (err)
                         reject(err);
                     else 
@@ -97,7 +97,7 @@ exports.addReserve = async (req, res) => {
                 const sql = `select id, date, start, end from Reserve 
                 where exp_id=? and seat=? and date=? and start=? and end=?`;
                 const values = [body.exp, body.tab, body.date, body.start, body.end];
-                db.query(sql, values, (err, reserves) => {
+                db.connection.query(sql, values, (err, reserves) => {
                     if (err)
                         reject(err);
                     else
@@ -150,7 +150,7 @@ exports.getUserReserves = async (req, res) => {
                         left join User
                         on Reserve.user_id=User.account
                         where user_id=? and status in ${status} order by Reserve.createAt desc`;
-            db.query(sql, [account], (err, reserves) => {
+            db.connection.query(sql, [account], (err, reserves) => {
                 if (err)
                     reject(err);
                 else
@@ -184,7 +184,7 @@ exports.getReserves = async (req, res) => {
                         left join User
                         on Reserve.user_id=User.account
                         where status=? order by Reserve.createAt desc`;
-            db.query(sql, [status], (err, reserves) => {
+            db.connection.query(sql, [status], (err, reserves) => {
                 if (err)
                     reject(err);
                 else
@@ -208,7 +208,7 @@ exports.deleteReserve = async (req, res) => {
         const id = req.params.id;
 		await new Promise((resolve, reject) => {
 			const sql = 'delete from Reserve where id=?';
-			db.query(sql, [id], err => {
+			db.connection.query(sql, [id], err => {
 				if (err)
 					reject(err);
 				else 
@@ -234,7 +234,7 @@ exports.switchReserve = async (req, res) => {
         const approver = req.session.admin.name;
         await new Promise((resolve, reject) => {
             const sql = 'update Reserve set status=?, approver=? where id=?';
-            db.query(sql, [body.status, approver, body.id], (err) => {
+            db.connection.query(sql, [body.status, approver, body.id], (err) => {
                 if (err)
                     reject(err);
                 else 
@@ -243,7 +243,7 @@ exports.switchReserve = async (req, res) => {
         });
         const reserve = await new Promise((resolve, reject) => {
             const sql = 'select id, start, date, end from Reserve where id=?';
-            db.query(sql, [body.id], (err, reserves) => {
+            db.connection.query(sql, [body.id], (err, reserves) => {
                 if (err) 
                     reject(err);
                 else

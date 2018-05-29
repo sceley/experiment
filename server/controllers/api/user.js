@@ -20,7 +20,7 @@ exports.login = async (req, res) => {
 		}
 		const user = await new Promise((resolve, reject) => {
 			const sql = 'select account, password from User where account=? or mobile=?';
-			db.query(sql, [body.account, body.account], (err, users) => {
+			db.connection.query(sql, [body.account, body.account], (err, users) => {
 				if (err)
 					reject(err);
 				else
@@ -45,7 +45,7 @@ exports.login = async (req, res) => {
 			const token = await sign("account", user.account);
 			const filling = await new Promise((resolve, reject) => {
 				const sql = 'select filling from User where account=?';
-				db.query(sql, [user.account], (err, users) => {
+				db.connection.query(sql, [user.account], (err, users) => {
 					if (err) {
 						reject(err);
 					} else {
@@ -103,7 +103,7 @@ exports.logup = async (req, res) => {
 		}
 		const usersCount = await new Promise((resolve, reject) => {
 			const sql = 'select count(account) as count from User where account=?';
-			db.query(sql, [body.account], (err, result) => {
+			db.connection.query(sql, [body.account], (err, result) => {
 				if (err)
 					reject(err);
 				else
@@ -112,7 +112,7 @@ exports.logup = async (req, res) => {
 		});
 		const mobilesCount = await new Promise((resolve, reject) => {
 			const sql = 'select count(mobile) as count from User where mobile=?';
-			db.query(sql, [body.mobile], (err, result) => {
+			db.connection.query(sql, [body.mobile], (err, result) => {
 				if (err)
 					reject(err);
 				else
@@ -141,7 +141,7 @@ exports.logup = async (req, res) => {
 		});
 		const ID = await new Promise((resolve, reject) => {
 			const sql = 'select id from ID where account=?';
-			db.query(sql, [body.account], (err, ids) => {
+			db.connection.query(sql, [body.account], (err, ids) => {
 				if (err) {
 					reject(err);
 				} else {
@@ -157,7 +157,7 @@ exports.logup = async (req, res) => {
 		}
 		await new Promise((resolve, reject) => {
 			const sql = 'insert into User(id, account, mobile, password) values(?, ?, ?, ?)';
-			db.query(sql, [body.id, body.account, body.mobile, body.password], (err) => {
+			db.connection.query(sql, [body.id, body.account, body.mobile, body.password], (err) => {
 				if (err)
 					reject(err);
 				else
@@ -222,7 +222,7 @@ exports.mobileLogup = async (req, res) => {
 		}
 		const usersCount = await new Promise((resolve, reject) => {
 			const sql = 'select count(account) as count from User where account=?';
-			db.query(sql, [body.account], (err, result) => {
+			db.connection.query(sql, [body.account], (err, result) => {
 				if (err)
 					reject(err);
 				else
@@ -231,7 +231,7 @@ exports.mobileLogup = async (req, res) => {
 		});
 		const mobilesCount = await new Promise((resolve, reject) => {
 			const sql = 'select count(mobile) as count from User where mobile=?';
-			db.query(sql, [body.mobile], (err, result) => {
+			db.connection.query(sql, [body.mobile], (err, result) => {
 				if (err)
 					reject(err);
 				else
@@ -260,7 +260,7 @@ exports.mobileLogup = async (req, res) => {
 		});
 		const ID = await new Promise((resolve, reject) => {
 			const sql = 'select id from ID where account=?';
-			db.query(sql, [body.account], (err, ids) => {
+			db.connection.query(sql, [body.account], (err, ids) => {
 				if (err) {
 					reject(err);
 				} else {
@@ -276,7 +276,7 @@ exports.mobileLogup = async (req, res) => {
 		}
 		await new Promise((resolve, reject) => {
 			const sql = 'insert into User(filling, id, account, mobile, password, name, gender, grade, major) values(?, ?, ?, ?, ?, ?, ?, ?, ?)';
-			db.query(sql, [true, body.id, body.account, body.mobile, body.password, body.name, body.gender, body.grade, body.major], (err) => {
+			db.connection.query(sql, [true, body.id, body.account, body.mobile, body.password, body.name, body.gender, body.grade, body.major], (err) => {
 				if (err)
 					reject(err);
 				else
@@ -325,7 +325,7 @@ exports.filling = async (req, res) => {
 		}
 		await new Promise((resolve, reject) => {
 			let sql = 'update User set filling=?, grade=?, major=?, name=?, gender=? where account=?';
-			db.query(sql, [true, body.grade, body.major, body.name, body.gender, account], (err) => {
+			db.connection.query(sql, [true, body.grade, body.major, body.name, body.gender, account], (err) => {
 				if (err)
 					reject(err);
 				else
@@ -379,7 +379,7 @@ exports.editInfo = async (req, res) => {
 		}
 		await new Promise((resolve, reject) => {
 			const sql = 'update User set gender=?, grade=?, major=?, name=?, mobile=? where account=?';
-			db.query(sql, [body.gender, body.grade, body.major, body.name, body.mobile, account], (err) => {
+			db.connection.query(sql, [body.gender, body.grade, body.major, body.name, body.mobile, account], (err) => {
 				if (err)
 					reject(err);
 				else 
@@ -404,7 +404,7 @@ exports.showInfo = async (req, res) => {
 		const account = req.session.user.account;
 		const user = await new Promise((resolve, reject) => {
 			const sql = 'select * from User where account=?';
-			db.query(sql, [account], (err, users) => {
+			db.connection.query(sql, [account], (err, users) => {
 				if (err) 
 					reject(err);
 				else
@@ -430,7 +430,7 @@ exports.showUsers = async (req, res) => {
 	try {
 		const users = await new Promise((resolve, reject) => {
 			const sql = 'select id, name, grade, major, gender, mobile, account, forbidden from User';
-			db.query(sql, (err, users) => {
+			db.connection.query(sql, (err, users) => {
 				if (err) 
 					reject(err);
 				else
@@ -454,7 +454,7 @@ exports.monitorUser = async (req, res) => {
 		const body = req.body;
 		await new Promise((resolve, reject) => {
 			const sql = 'update User set forbidden=? where account=?';
-			db.query(sql, [body.forbidden, body.account], err => {
+			db.connection.query(sql, [body.forbidden, body.account], err => {
 				if (err)
 					reject(err);
 				else

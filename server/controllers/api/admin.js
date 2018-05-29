@@ -6,7 +6,7 @@ exports.login = async (req, res) => {
 		const body = req.body;
 		const admin = await new Promise((resolve, reject) => {
 			const sql = 'select name from Admin where account=? and password=?';
-			db.query(sql, [body.account, body.password], (err, admins) => {
+			db.connection.query(sql, [body.account, body.password], (err, admins) => {
 				if (err)
 					reject(err);
 				else

@@ -6,7 +6,7 @@ const adminInitial = async () => {
     try {
         const count = await new Promise((resolve, reject) => {
             const sql = 'select count(*) as count from Admin';
-            db.query(sql, (err, admins) => {
+            db.connection.query(sql, (err, admins) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -17,7 +17,7 @@ const adminInitial = async () => {
         if (count == 0) {
             await new Promise((resolve, reject) => {
                 const sql = 'insert into Admin(account, password, name) values(?, ?, ?)';
-                db.query(sql, [config.admin.user, config.admin.pass, config.admin.name], err => {
+                db.connection.query(sql, [config.admin.user, config.admin.pass, config.admin.name], err => {
                     if (err) {
                         reject(err);
                     } else {

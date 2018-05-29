@@ -1,15 +1,15 @@
 const mysql = require('mysql');
 const config = require('../config');
-let connection;
+const json = {connection: null};
 function handleDisconnect() {
-	connection = mysql.createConnection(config.db);
-	connection.connect(err => {
+	json.connection = mysql.createConnection(config.db);
+	json.connection.connect(err => {
 		if (err) {
 			console.log('error when connecting to db:', err);
 			setTimeout(handleDisconnect, 2000);
 		}
 	});
-	connection.on('error', err => {
+	json.connection.on('error', err => {
 		console.log('db error', err);
 		if (err.code === 'PROTOCOL_CONNECTION_LOST') {
 			handleDisconnect();
@@ -121,4 +121,4 @@ connection.query(table6);
 connection.query(table7);
 connection.query(table8);
 
-module.exports = connection;
+module.exports = json;

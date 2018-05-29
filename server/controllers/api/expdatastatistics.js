@@ -9,7 +9,7 @@ exports.expdatastatics = async (req, res) => {
                         left join Experiment
                         on Reserve.exp_id=Experiment.id
                         group by name`;
-            db.query(sql, (err, result) => {
+            db.connection.query(sql, (err, result) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -19,7 +19,7 @@ exports.expdatastatics = async (req, res) => {
         });
         const reserves = await new Promise((resolve, reject) => {
             const sql = `select end, start from Reserve`;
-            db.query(sql, (err, reserves) => {
+            db.connection.query(sql, (err, reserves) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -65,7 +65,7 @@ exports.expdatastatics = async (req, res) => {
         const lastweekday = moment().add(-7, 'd').format('YYYY-MM-DD');
         let weekdatas = await new Promise((resolve, reject) => {
             const sql = `select sum(end - start) as hours, date from Reserve group by date`;
-            db.query(sql, (err, result) => {
+            db.connection.query(sql, (err, result) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -103,7 +103,7 @@ exports.downloadReservations = async (req, res) => {
                         left join User
                         on Reserve.user_id=User.account where status=3
                         order by Reserve.createAt desc`;
-            db.query(sql, (err, reserves) => {
+            db.connection.query(sql, (err, reserves) => {
                 if (err) {
                     reject(err);
                 } else {

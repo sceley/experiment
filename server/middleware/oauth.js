@@ -34,7 +34,7 @@ exports.oauthUser = async (req, res, next) => {
 		const account = req.session.user.account;
 		const user = await new Promise((resolve, reject) => {
 			const sql = 'select forbidden from User where account=?';
-			db.query(sql, [account], (err, users) => {
+			db.connection.query(sql, [account], (err, users) => {
 				if (err)
 					reject(err);
 				else 
@@ -61,7 +61,7 @@ exports.authFinger = async (req, res, next) => {
 		const account = req.session.user.account;
 		const user = await new Promise((resolve, reject) => {
 			const sql = 'select * from User where account=?';
-			db.query(sql, [account], (err, users) => {
+			db.connection.query(sql, [account], (err, users) => {
 				if (err) {
 					reject(err);
 				} else {

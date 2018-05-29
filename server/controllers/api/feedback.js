@@ -13,7 +13,7 @@ exports.feedback = async (req, res) => {
         }
         const author = await new Promise((resolve, reject) => {
             const sql = 'select name from User where account=?';
-            db.query(sql, [account], (err, users) => {
+            db.connection.query(sql, [account], (err, users) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -23,7 +23,7 @@ exports.feedback = async (req, res) => {
         });
         await new Promise((resolve, reject) => {
             const sql = 'insert into Feedback (author, message, createAt) values(?, ?, ?)';
-            db.query(sql, [author, body.message, createAt], err => {
+            db.connection.query(sql, [author, body.message, createAt], err => {
                 if (err) {
                     reject(err);
                 } else {
@@ -54,7 +54,7 @@ exports.reply = async (req, res) => {
         }
         await new Promise((resolve, reject) => {
             const sql = 'update Feedback set reply=?, replyable=false where id=?';
-            db.query(sql, [body.message, id], err => {
+            db.connection.query(sql, [body.message, id], err => {
                 if (err) {
                     reject(err);
                 } else {
@@ -77,7 +77,7 @@ exports.getFeedback = async (req, res) => {
     try {
         const feedbacks = await new Promise((resolve, reject) => {
             const sql = 'select * from Feedback';
-            db.query(sql, (err, feedbacks) => {
+            db.connection.query(sql, (err, feedbacks) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -101,7 +101,7 @@ exports.getFeedbackReply = async (req, res) => {
         const account = req.session.user.account;
         const name = await new Promise((resolve, reject) => {
             const sql = 'select name from User where account=?';
-            db.query(sql, [account], (err, users) => {
+            db.connection.query(sql, [account], (err, users) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -111,7 +111,7 @@ exports.getFeedbackReply = async (req, res) => {
         });
         const replys = await new Promise((resolve, reject) => {
             const sql = 'select * from Feedback where replyable=false and author=?';
-            db.query(sql, [name], (err, replys) => {
+            db.connection.query(sql, [name], (err, replys) => {
                 if (err) {
                     reject(err);
                 } else {
