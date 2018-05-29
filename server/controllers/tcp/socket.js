@@ -36,22 +36,25 @@ exports.socket = async socket => {
 		console.log(data.toString());
 		handleResponse(data.toString());
 	});
+	// socket.on('end', () => {
+	// 	console.log('断开连接');
+	// 	let tmp = [];
+	// 	for (let i = 0; i < sockets.length; i++) {
+	// 		if (sockets[i] != socket) {
+	// 			tmp.push(sockets[i]);
+	// 		}
+	// 	}
+	// 	sockets = tmp;
+	// });
 	socket.on('end', () => {
 		console.log('断开连接');
-		let tmp = [];
-		for (let i = 0; i < sockets.length; i++) {
-			if (sockets[i] != socket) {
-				tmp.push(sockets[i]);
-			}
-		}
-		sockets = tmp;
 	});
 	socket.on('close', () => {
 		console.log('socket关闭');
+		sockets = sockets.filter(_socket => _socket != socket);
 	});
 	socket.on('error', (err) => {
-		console.log("socket error:", err);
-		process.exit(1);
+		console.log("error:", err);
 	});
 };
 

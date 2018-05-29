@@ -29,8 +29,10 @@ exports.addTask = async (option) => {
     }
     tasks.push(option);
     tasks = tasks.sort((pretask, nexttask) => {
-        let a = moment(pretask.date).add(pretask.hours, 'h').valueOf();
-        let b = moment(nexttask.date).add(nexttask.hours, 'h').valueOf();
+        // let a = moment(pretask.date).add(pretask.hours, 'h').valueOf();
+        // let b = moment(nexttask.date).add(nexttask.hours, 'h').valueOf();
+        let a = new Date(`${pretask.date} ${pretask.hours}`).getTime();
+        let b = new Date(`${nexttask.date} ${nexttask.hours}`).getTime();
         return a - b;
     });
     let task = tasks.shift();
@@ -62,7 +64,8 @@ exports.addTask = async (option) => {
                     resolve();
             });
         });
-        let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
+        // let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
+        let time = new Date(`${task.date} ${task.hours}`).getTime() - Date.now();
         exec_timer_task(time, task);
     }
 };
@@ -122,7 +125,8 @@ exports.cancelTask = async (id) => {
                     resolve();
             });
         });
-        let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
+        // let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
+        let time = new Date(`${task.date} ${task.hours}`).getTime() - Date.now();
         exec_timer_task(time, task);
     }
 };
@@ -178,7 +182,8 @@ exports.initialTask = async () => {
                     resolve();
             });
         });
-        let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
+        // let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
+        let time = new Date(`${task.date} ${task.hours}`).getTime() - Date.now();
         exec_timer_task(time, task);
     }
 };
@@ -223,7 +228,8 @@ async function nextTask () {
                     resolve();
             });
         });
-        let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
+        // let time = moment(task.date).add(task.hours, 'h').diff(moment(), 'milliseconds');
+        let time = new Date(`${task.date} ${task.hours}`).getTime() - Date.now();
         exec_timer_task(time, task);
     }
 };
